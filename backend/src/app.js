@@ -14,6 +14,7 @@ app.use('/api/productos', require('./routes/producto.routes'));
 app.use('/api/mesas',     require('./routes/mesa.routes'));
 app.use('/api/pedidos',   require('./routes/pedido.routes'));
 app.use('/api/pagos',     require('./routes/pago.routes'));
+app.use('/api/clientes',  require('./routes/cliente.routes'));
 
 // Health check
 app.get('/api/health', (req, res) => {
