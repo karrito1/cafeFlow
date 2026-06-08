@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const recompensaSchema = new Schema({
+const rewardSchema = new Schema({
   nombre:           { type: String, required: true },
   descripcion:      { type: String },
   puntosNecesarios: { type: Number, required: true },
@@ -9,4 +9,4 @@ const recompensaSchema = new Schema({
   activa:           { type: Boolean, default: true },
 }, { timestamps: true });
 
-module.exports = model('Recompensa', recompensaSchema);
+module.exports = model('Reward', rewardSchema);

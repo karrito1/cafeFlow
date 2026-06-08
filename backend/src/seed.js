@@ -11,21 +11,21 @@ const seed = async () => {
 
   await Customer.insertMany([
     {
-      name:     'Juan Pérez',
+      nombre:     'Juan Pérez',
       email:    'juan@gmail.com',
-      phone:    '3001234567',
+      telefono: '3001234567',
       password: await bcrypt.hash('cliente123', 12),
-      points:   150,
-      level:    'silver',
+      puntos:   150,
+      nivel:    'silver',
       status:   true,
     },
     {
-      name:     'María López',
+      nombre:     'María López',
       email:    'maria@gmail.com',
-      phone:    '3009876543',
+      telefono: '3009876543',
       password: await bcrypt.hash('cliente123', 12),
-      points:   50,
-      level:    'bronze',
+      puntos:   50,
+      nivel:    'bronze',
       status:   true,
     },
   ]);

@@ -4,7 +4,7 @@ const Customer = require('../models/Customer');
 // Register customer
 const registerCustomer = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { nombre, email, telefono, password } = req.body;
 
     // Check if email already exists
     const exists = await Customer.findOne({ email });
@@ -15,9 +15,9 @@ const registerCustomer = async (req, res) => {
 
     // Create customer
     const customer = await Customer.create({
-      name,
+      nombre,
       email,
-      phone,
+      telefono,
       password: hash,
     });
 
@@ -25,10 +25,10 @@ const registerCustomer = async (req, res) => {
       msg: 'Customer registered successfully',
       customer: {
         id:     customer._id,
-        name:   customer.name,
+        nombre:   customer.nombre,
         email:  customer.email,
-        points: customer.points,
-        level:  customer.level,
+        puntos: customer.points,
+        nivel:  customer.level,
       }
     });
   } catch (error) {

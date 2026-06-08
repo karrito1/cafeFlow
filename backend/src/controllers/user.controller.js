@@ -1,0 +1,177 @@
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+
+// Create User
+const createUser = async (req, res) => {
+  try {
+    const { nombre, email, password, rol, codigoAcceso, estado } = req.body;
+
+    // Check if email exists
+    const exists = await User.findOne({ email });
+
+    if (exists) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Email already registered",
+      });
+    }
+
+    // Hash password
+    const hash = await bcrypt.hash(password, 12);
+
+    // Create user
+    const createdUser = await User.create({
+      nombre,
+      email,
+      password: hash,
+      rol,
+      codigoAcceso,
+      estado,
+    });
+
+    res.status(201).json({
+      ok: true,
+      msg: "User created successfully",
+      user: {
+        id: createdUser._id,
+        nombre: createdUser.nombre,
+        email: createdUser.email,
+        rol: createdUser.rol,
+        codigoAcceso: createdUser.codigoAcceso,
+        estado: createdUser.estado,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: "Internal server error",
+    });
+  }
+};
+
+// Get all users
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password,codigoAcceso");
+
+    res.status(200).json({
+      ok: true,
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: "Internal server error",
+    });
+  }
+};
+
+// Get user by ID
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id).select("-password -codigoAcceso");
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: "Internal server error",
+    });
+  }
+};
+
+// Update user
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "User not found",
+      });
+    }
+    console.log("User controller loaded");
+
+    const data = { ...req.body };
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 12);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, data, {
+      new: true,
+    }).select("-password -codigoAcceso");
+
+    res.status(200).json({
+      ok: true,
+      msg: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: "Internal server error",
+    });
+  }
+};
+
+// Delete user
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "User not found",
+      });
+    }
+
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({
+      ok: true,
+      msg: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: "Internal server error",
+    });
+  }
+};
+
+module.exports = {
+  createUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+};
