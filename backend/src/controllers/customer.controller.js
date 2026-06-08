@@ -1,60 +1,60 @@
 const bcrypt = require('bcryptjs');
-const Cliente = require('../models/Cliente');
+const Customer = require('../models/Customer');
 
-// Registrar cliente
-const registrarCliente = async (req, res) => {
+// Register customer
+const registerCustomer = async (req, res) => {
   try {
-    const { nombre, email, telefono, password } = req.body;
+    const { name, email, phone, password } = req.body;
 
-    // Verificar si ya existe
-    const existe = await Cliente.findOne({ email });
-    if (existe) return res.status(400).json({ msg: 'El email ya está registrado' });
+    // Check if email already exists
+    const exists = await Customer.findOne({ email });
+    if (exists) return res.status(400).json({ msg: 'Email already registered' });
 
-    // Encriptar contraseña
+    // Encrypt password
     const hash = await bcrypt.hash(password, 12);
 
-    // Crear cliente
-    const cliente = await Cliente.create({
-      nombre,
+    // Create customer
+    const customer = await Customer.create({
+      name,
       email,
-      telefono,
+      phone,
       password: hash,
     });
 
     res.status(201).json({
-      msg: 'Cliente registrado exitosamente',
-      cliente: {
-        id:     cliente._id,
-        nombre: cliente.nombre,
-        email:  cliente.email,
-        puntos: cliente.puntos,
-        nivel:  cliente.nivel,
+      msg: 'Customer registered successfully',
+      customer: {
+        id:     customer._id,
+        name:   customer.name,
+        email:  customer.email,
+        points: customer.points,
+        level:  customer.level,
       }
     });
   } catch (error) {
-    res.status(500).json({ msg: 'Error del servidor', error: error.message });
+    res.status(500).json({ msg: 'Internal server error', error: error.message });
   }
 };
 
-// Obtener todos los clientes
-const getClientes = async (req, res) => {
+// Get all customers
+const getCustomers = async (req, res) => {
   try {
-    const clientes = await Cliente.find({ estado: true }).select('-password');
-    res.json(clientes);
+    const customers = await Customer.find({ status: true }).select('-password');
+    res.json(customers);
   } catch (error) {
-    res.status(500).json({ msg: 'Error del servidor' });
+    res.status(500).json({ msg: 'Internal server error' });
   }
 };
 
-// Obtener un cliente por ID
-const getCliente = async (req, res) => {
+// Get customer by ID
+const getCustomer = async (req, res) => {
   try {
-    const cliente = await Cliente.findById(req.params.id).select('-password');
-    if (!cliente) return res.status(404).json({ msg: 'Cliente no encontrado' });
-    res.json(cliente);
+    const customer = await Customer.findById(req.params.id).select('-password');
+    if (!customer) return res.status(404).json({ msg: 'Customer not found' });
+    res.json(customer);
   } catch (error) {
-    res.status(500).json({ msg: 'Error del servidor' });
+    res.status(500).json({ msg: 'Internal server error' });
   }
 };
 
-module.exports = { registrarCliente, getClientes, getCliente };
+module.exports = { registerCustomer, getCustomers, getCustomer };

@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const {
-  registrarCliente,
-  getClientes,
-  getCliente,
-} = require('../controllers/cliente.controller');
+  registerCustomer,
+  getCustomers,
+  getCustomer,
+} = require('../controllers/customer.controller');
 
-router.post('/',   registrarCliente);
-router.get('/',    getClientes);
-router.get('/:id', getCliente);
+router.post('/',   registerCustomer);
+router.get('/',    getCustomers);
+router.get('/:id', getCustomer);
 
 module.exports = router;

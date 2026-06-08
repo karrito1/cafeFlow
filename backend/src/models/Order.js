@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
-const pagoSchema = new Schema({
-  pedidoId:   { type: Schema.Types.ObjectId, ref: 'Pedido', required: true },
+const paymentSchema = new Schema({
+  pedidoId:   { type: Schema.Types.ObjectId, ref: 'Order', required: true },
   metodoPago: { type: String, enum: ['efectivo', 'tarjeta', 'transferencia', 'mixto'], required: true },
   monto:      { type: Number, required: true },
   cambio:     { type: Number, default: 0 },
@@ -9,4 +9,4 @@ const pagoSchema = new Schema({
   fechaPago:  { type: Date, default: Date.now },
 });
 
-module.exports = model('Pago', pagoSchema);
+module.exports = model('Payment', paymentSchema);

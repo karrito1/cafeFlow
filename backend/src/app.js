@@ -9,12 +9,12 @@ app.use(express.json());
 
 // Rutas
 app.use('/api/auth',      require('./routes/auth.routes'));
-app.use('/api/usuarios',  require('./routes/user.routes'));
-app.use('/api/productos', require('./routes/product.routes'));
-app.use('/api/mesas',     require('./routes/table.routes'));
-app.use('/api/pedidos',   require('./routes/order.routes'));
-app.use('/api/pagos',     require('./routes/payment.routes'));
-app.use('/api/clientes',  require('./routes/customer.routes'));
+app.use('/api/users',  require('./routes/user.routes'));
+app.use('/api/products', require('./routes/product.routes'));
+app.use('/api/tables',     require('./routes/table.routes'));
+app.use('/api/orders',   require('./routes/order.routes'));
+app.use('/api/payments',     require('./routes/payment.routes'));
+app.use('/api/customers',  require('./routes/customer.routes'));
 
 // Health check
 app.get('/api/health', (req, res) => {
