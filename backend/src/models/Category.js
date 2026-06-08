@@ -8,3 +8,4 @@ const categoriaSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = model('Categoria', categoriaSchema);
+
