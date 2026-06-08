@@ -16,7 +16,7 @@ app.use("/api/orders", require("./routes/order.routes"));
 app.use("/api/payments", require("./routes/payment.routes"));
 app.use("/api/customers", require("./routes/customer.routes"));
 app.use("/api/categories", require("./routes/category.routes"));
-// app.use("/api/rewards", require("./routes/reward.routes"));
+app.use("/api/rewards", require("./routes/reward.routes"));
 
 // Health check
 app.get("/api/health", (req, res) => {
