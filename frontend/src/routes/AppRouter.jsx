@@ -1,0 +1,72 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AppLayout from '../components/layout/AppLayout';
+import ProtectedRoute from './ProtectedRoute';
+import LoginPage from '../pages/auth/LoginPage';
+import RegisterPage from '../pages/auth/RegisterPage';
+import DashboardPage from '../pages/dashboard/DashboardPage';
+import MenuPage from '../pages/menu/MenuPage';
+import PromotionsPage from '../pages/menu/PromotionsPage';
+import ProductListPage from '../pages/products/ProductListPage';
+import ProductFormPage from '../pages/products/ProductFormPage';
+import CategoryListPage from '../pages/categories/CategoryListPage';
+import CategoryFormPage from '../pages/categories/CategoryFormPage';
+import OrderListPage from '../pages/orders/OrderListPage';
+import OrderDetailPage from '../pages/orders/OrderDetailPage';
+import CreateOrderPage from '../pages/orders/CreateOrderPage';
+import TableListPage from '../pages/tables/TableListPage';
+import TableDetailPage from '../pages/tables/TableDetailPage';
+import PaymentPage from '../pages/payments/PaymentPage';
+import CustomerListPage from '../pages/customers/CustomerListPage';
+import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
+import RewardListPage from '../pages/rewards/RewardListPage';
+import RedeemRewardPage from '../pages/rewards/RedeemRewardPage';
+import UserListPage from '../pages/users/UserListPage';
+import UserFormPage from '../pages/users/UserFormPage';
+import SalesReportPage from '../pages/reports/SalesReportPage';
+import InventoryReportPage from '../pages/reports/InventoryReportPage';
+import NotFoundPage from '../pages/NotFoundPage';
+
+function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/promotions" element={<PromotionsPage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/products" element={<ProductListPage />} />
+            <Route path="/products/new" element={<ProductFormPage />} />
+            <Route path="/products/:id/edit" element={<ProductFormPage />} />
+            <Route path="/categories" element={<CategoryListPage />} />
+            <Route path="/categories/new" element={<CategoryFormPage />} />
+            <Route path="/categories/:id/edit" element={<CategoryFormPage />} />
+            <Route path="/orders" element={<OrderListPage />} />
+            <Route path="/orders/new" element={<CreateOrderPage />} />
+            <Route path="/orders/:id" element={<OrderDetailPage />} />
+            <Route path="/tables" element={<TableListPage />} />
+            <Route path="/tables/:id" element={<TableDetailPage />} />
+            <Route path="/payments" element={<PaymentPage />} />
+            <Route path="/customers" element={<CustomerListPage />} />
+            <Route path="/customers/:id" element={<CustomerDetailPage />} />
+            <Route path="/rewards" element={<RewardListPage />} />
+            <Route path="/rewards/redeem" element={<RedeemRewardPage />} />
+            <Route path="/users" element={<UserListPage />} />
+            <Route path="/users/new" element={<UserFormPage />} />
+            <Route path="/users/:id/edit" element={<UserFormPage />} />
+            <Route path="/reports/sales" element={<SalesReportPage />} />
+            <Route path="/reports/inventory" element={<InventoryReportPage />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default AppRouter;
