@@ -3,15 +3,15 @@ const Product = require('../models/Product');
 // Create product
 const createProduct = async (req, res) => {
   try {
-    const { name, description, price, image, categoryId, featured, stock } = req.body;
+    const { nombre, descripcion, precio, imagen, categoriaId, destacado, stock } = req.body;
 
     const product = await Product.create({
-      name,
-      description,
-      price,
-      image,
-      categoryId,
-      featured,
+      nombre,
+      descripcion,
+      precio,
+      imagen,
+      categoriaId,
+      destacado,
       stock,
     });
 
@@ -24,11 +24,11 @@ const createProduct = async (req, res) => {
 // Get all products
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({ active: true })
-      .populate('categoryId', 'name');
+    const products = await Product.find({ activo: true })
+      .populate('categoriaId', 'nombre');
     res.json(products);
   } catch (error) {
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: 'Server error', error: error.message });
   }
 };
 
@@ -36,11 +36,11 @@ const getProducts = async (req, res) => {
 const getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
-      .populate('categoryId', 'name');
+      .populate('categoriaId', 'nombre');
     if (!product) return res.status(404).json({ msg: 'Product not found' });
     res.json(product);
   } catch (error) {
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: 'Server error', error: error.message });
   }
 };
 
@@ -55,7 +55,7 @@ const updateProduct = async (req, res) => {
     if (!product) return res.status(404).json({ msg: 'Product not found' });
     res.json({ msg: 'Product updated successfully', product });
   } catch (error) {
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: 'Server error', error: error.message });
   }
 };
 
@@ -64,13 +64,13 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      { active: false },
+      { activo: false },
       { new: true }
     );
     if (!product) return res.status(404).json({ msg: 'Product not found' });
     res.json({ msg: 'Product disabled successfully', product });
   } catch (error) {
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: 'Server error', error: error.message });
   }
 };
 
