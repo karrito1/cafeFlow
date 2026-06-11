@@ -3,16 +3,10 @@ const Table = require("../models/Table");
 // Create Table
 const createTable = async (req, res) => {
   try {
-    const {
-      numeroMesa,
-      nombre,
-      capacidad,
-      estado,
-      meseroAsignado,
-      horaApertura,
-    } = req.body;
+    const { tableNumber, name, capacity, status, assignedWaiter, openedAt } =
+      req.body;
 
-    const exists = await Table.findOne({ numeroMesa });
+    const exists = await Table.findOne({ tableNumber });
 
     if (exists) {
       return res.status(400).json({
@@ -22,12 +16,12 @@ const createTable = async (req, res) => {
     }
 
     const table = await Table.create({
-      numeroMesa,
-      nombre,
-      capacidad,
-      estado,
-      meseroAsignado,
-      horaApertura,
+      tableNumber,
+      name,
+      capacity,
+      status,
+      assignedWaiter,
+      openedAt,
     });
 
     res.status(201).json({
@@ -48,8 +42,10 @@ const createTable = async (req, res) => {
 // Get Tables
 const getTables = async (req, res) => {
   try {
-    const tables = await Table.find()
-      .populate("meseroAsignado", "nombre email rol");
+    const tables = await Table.find().populate(
+      "assignedWaiter",
+      "name email role",
+    );
 
     res.status(200).json({
       ok: true,
@@ -70,8 +66,10 @@ const getTableById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const table = await Table.findById(id)
-      .populate("meseroAsignado", "nombre email rol");
+    const table = await Table.findById(id).populate(
+      "assignedWaiter",
+      "name email role",
+    );
 
     if (!table) {
       return res.status(404).json({
@@ -108,13 +106,9 @@ const updateTable = async (req, res) => {
       });
     }
 
-    const updatedTable = await Table.findByIdAndUpdate(
-      id,
-      req.body,
-      {
-        new: true,
-      }
-    ).populate("meseroAsignado", "nombre email rol");
+    const updatedTable = await Table.findByIdAndUpdate(id, req.body, {
+      new: true,
+    }).populate("assignedWaiter", "name email role");
 
     res.status(200).json({
       ok: true,

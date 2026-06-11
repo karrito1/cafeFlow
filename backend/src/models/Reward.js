@@ -1,12 +1,15 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
-const rewardSchema = new Schema({
-  nombre:           { type: String, required: true },
-  descripcion:      { type: String },
-  puntosNecesarios: { type: Number, required: true },
-  tipo:             { type: String, enum: ['descuento', 'producto'], required: true },
-  valor:            { type: Number, required: true },
-  activa:           { type: Boolean, default: true },
-}, { timestamps: true });
+const rewardSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    description: { type: String },
+    pointsRequired: { type: Number, required: true },
+    type: { type: String, enum: ["discount", "product"], required: true },
+    value: { type: Number, required: true },
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true },
+);
 
-module.exports = model('Reward', rewardSchema);
+module.exports = model("Reward", rewardSchema);

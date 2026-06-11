@@ -2,33 +2,33 @@ const { Schema, model } = require("mongoose");
 
 const orderSchema = new Schema(
   {
-    mesaId: { type: Schema.Types.ObjectId, ref: "Table", required: true },
-    clienteId: { type: Schema.Types.ObjectId, ref: "User", default: null },
-    meseroId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    productos: [
+    tableId: { type: Schema.Types.ObjectId, ref: "Table", required: true },
+    customerId: { type: Schema.Types.ObjectId, ref: "Customer", default: null },
+    waiterId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    products: [
       {
-        productoId: { type: Schema.Types.ObjectId, ref: "Product" },
-        nombre: String, // snapshot del nombre al momento del pedido
-        cantidad: { type: Number, default: 1 },
-        precio: Number, // precio unitario al momento
-        personalizacion: {
-          tamano: { type: String, enum: ["S", "M", "L"] },
-          leche: {
+        productId: { type: Schema.Types.ObjectId, ref: "Product" },
+        name: { type: String },
+        quantity: { type: Number, default: 1 },
+        price: { type: Number },
+        customization: {
+          size: { type: String, enum: ["S", "M", "L"] },
+          milk: {
             type: String,
-            enum: ["entera", "deslactosada", "vegetal", "ninguna"],
+            enum: ["whole", "lactose-free", "plant-based", "none"],
           },
-          temperatura: { type: String, enum: ["caliente", "frio"] },
+          temperature: { type: String, enum: ["hot", "cold"] },
         },
-        observacion: String,
+        note: { type: String },
       },
     ],
     subtotal: { type: Number, required: true },
-    impuestos: { type: Number, required: true },
+    taxes: { type: Number, required: true },
     total: { type: Number, required: true },
-    estado: {
+    status: {
       type: String,
-      enum: ["activo", "confirmado", "pagado", "cancelado"],
-      default: "activo",
+      enum: ["active", "confirmed", "paid", "cancelled"],
+      default: "active",
     },
   },
   { timestamps: true },

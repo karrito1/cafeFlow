@@ -3,9 +3,9 @@ const Category = require("../models/Category");
 // Create Category
 const createCategory = async (req, res) => {
   try {
-    const { nombre, descripcion, orden, activa } = req.body;
+    const { name, description, order, active } = req.body;
 
-    const exists = await Category.findOne({ nombre });
+    const exists = await Category.findOne({ name });
 
     if (exists) {
       return res.status(400).json({
@@ -15,10 +15,10 @@ const createCategory = async (req, res) => {
     }
 
     const category = await Category.create({
-      nombre,
-      descripcion,
-      orden,
-      activa,
+      name,
+      description,
+      order,
+      active,
     });
 
     res.status(201).json({
@@ -39,7 +39,7 @@ const createCategory = async (req, res) => {
 // Get Categories
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find().sort({ orden: 1 });
+    const categories = await Category.find().sort({ order: 1 });
 
     res.status(200).json({
       ok: true,
@@ -149,6 +149,9 @@ const deleteCategory = async (req, res) => {
     });
   }
 };
+
+module.exports = { createCategory, getCategories, getCategoryById, updateCategory, deleteCategory };
+;
 
 module.exports = {
   createCategory,

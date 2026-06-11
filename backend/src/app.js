@@ -7,7 +7,7 @@ const app = express();
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
-// Rutas
+// Routes
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/users", require("./routes/user.routes"));
 app.use("/api/products", require("./routes/product.routes"));
@@ -20,7 +20,7 @@ app.use("/api/rewards", require("./routes/reward.routes"));
 
 // Health check
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", mensaje: "CaféFlow API funcionando" });
+  res.json({ status: "ok", message: "CaféFlow API running" });
 });
 
 module.exports = app;

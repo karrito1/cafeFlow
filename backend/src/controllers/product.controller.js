@@ -1,61 +1,64 @@
-const Product = require('../models/Product');
+const Product = require("../models/Product");
 
 // Create product
 const createProduct = async (req, res) => {
   try {
-    const { nombre, descripcion, precio, imagen, categoriaId, destacado, stock } = req.body;
+    const { name, description, price, image, categoryId, featured, stock } =
+      req.body;
 
     const product = await Product.create({
-      nombre,
-      descripcion,
-      precio,
-      imagen,
-      categoriaId,
-      destacado,
+      name,
+      description,
+      price,
+      image,
+      categoryId,
+      featured,
       stock,
     });
 
-    res.status(201).json({ msg: 'Product created successfully', product });
+    res.status(201).json({ msg: "Product created successfully", product });
   } catch (error) {
-    res.status(500).json({ msg: 'Server error', error: error.message });
+    res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
 
 // Get all products
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({ activo: true })
-      .populate('categoriaId', 'nombre');
+    const products = await Product.find({ active: true }).populate(
+      "categoryId",
+      "name",
+    );
     res.json(products);
   } catch (error) {
-    res.status(500).json({ msg: 'Server error', error: error.message });
+    res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
 
 // Get product by ID
 const getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
-      .populate('categoriaId', 'nombre');
-    if (!product) return res.status(404).json({ msg: 'Product not found' });
+    const product = await Product.findById(req.params.id).populate(
+      "categoryId",
+      "name",
+    );
+    if (!product) return res.status(404).json({ msg: "Product not found" });
     res.json(product);
   } catch (error) {
-    res.status(500).json({ msg: 'Server error', error: error.message });
+    res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
 
 // Update product
 const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!product) return res.status(404).json({ msg: 'Product not found' });
-    res.json({ msg: 'Product updated successfully', product });
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!product) return res.status(404).json({ msg: "Product not found" });
+    res.json({ msg: "Product updated successfully", product });
   } catch (error) {
-    res.status(500).json({ msg: 'Server error', error: error.message });
+    res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
 
@@ -64,14 +67,20 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      { activo: false },
-      { new: true }
+      { active: false },
+      { new: true },
     );
-    if (!product) return res.status(404).json({ msg: 'Product not found' });
-    res.json({ msg: 'Product disabled successfully', product });
+    if (!product) return res.status(404).json({ msg: "Product not found" });
+    res.json({ msg: "Product disabled successfully", product });
   } catch (error) {
-    res.status(500).json({ msg: 'Server error', error: error.message });
+    res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
 
-module.exports = { createProduct, getProducts, getProduct, updateProduct, deleteProduct };
+module.exports = {
+  createProduct,
+  getProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+};

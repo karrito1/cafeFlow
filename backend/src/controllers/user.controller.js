@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 // Create User
 const createUser = async (req, res) => {
   try {
-    const { nombre, email, password, rol, codigoAcceso, estado } = req.body;
+    const { name, email, password, role, accessCode, active } = req.body;
 
     // Check if email exists
     const exists = await User.findOne({ email });
@@ -21,12 +21,12 @@ const createUser = async (req, res) => {
 
     // Create user
     const createdUser = await User.create({
-      nombre,
+      name,
       email,
       password: hash,
-      rol,
-      codigoAcceso,
-      estado,
+      role,
+      accessCode,
+      active,
     });
 
     res.status(201).json({
@@ -34,11 +34,11 @@ const createUser = async (req, res) => {
       msg: "User created successfully",
       user: {
         id: createdUser._id,
-        nombre: createdUser.nombre,
+        name: createdUser.name,
         email: createdUser.email,
-        rol: createdUser.rol,
-        codigoAcceso: createdUser.codigoAcceso,
-        estado: createdUser.estado,
+        role: createdUser.role,
+        accessCode: createdUser.accessCode,
+        active: createdUser.active,
       },
     });
   } catch (error) {
@@ -54,7 +54,7 @@ const createUser = async (req, res) => {
 // Get all users
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password,codigoAcceso");
+    const users = await User.find().select("-password -accessCode");
 
     res.status(200).json({
       ok: true,
@@ -75,7 +75,7 @@ const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).select("-password -codigoAcceso");
+    const user = await User.findById(id).select("-password -accessCode");
 
     if (!user) {
       return res.status(404).json({
@@ -121,7 +121,7 @@ const updateUser = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(id, data, {
       new: true,
-    }).select("-password -codigoAcceso");
+    }).select("-password -accessCode");
 
     res.status(200).json({
       ok: true,
