@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const { verifyToken, onlyRole } = require("../middlewares/auth");
 const {
   createCategory,
   getCategories,
@@ -11,8 +11,9 @@ const {
 
 router.get("/", getCategories);
 router.get("/:id", getCategoryById);
-router.post("/", createCategory);
-router.put("/:id", updateCategory);
-router.delete("/:id", deleteCategory);
+
+router.post("/", verifyToken, onlyRole("admin"), createCategory);
+router.put("/:id", verifyToken, onlyRole("admin"), updateCategory);
+router.delete("/:id", verifyToken, onlyRole("admin"), deleteCategory);
 
 module.exports = router;

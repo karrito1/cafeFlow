@@ -1,17 +1,20 @@
 const router = require('express').Router();
-const{
-    createProduct,
-    getProducts,
-    getProduct,
-    updateProduct,
-    deleteProduct
-}=require('../controllers/product.controller');
+const { verifyToken, onlyRole } = require('../middlewares/auth');
+const {
+  createProduct,
+  getProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+} = require('../controllers/product.controller');
 
-router.post('/', createProduct);
+// Public routes - anyone can view products
 router.get('/', getProducts);
 router.get('/:id', getProduct);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
 
+// Protected routes - only admin
+router.post('/',    verifyToken, onlyRole('admin'), createProduct);
+router.put('/:id',  verifyToken, onlyRole('admin'), updateProduct);
+router.delete('/:id', verifyToken, onlyRole('admin'), deleteProduct);
 
 module.exports = router;
