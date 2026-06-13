@@ -35,6 +35,9 @@ function AppRouter() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
 
+        <Route path="/tables" element={<TableListPage />} />
+        <Route path="/tables/:id" element={<TableDetailPage />} />
+
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/" element={<DashboardPage />} />
@@ -48,8 +51,6 @@ function AppRouter() {
             <Route path="/orders" element={<OrderListPage />} />
             <Route path="/orders/new" element={<CreateOrderPage />} />
             <Route path="/orders/:id" element={<OrderDetailPage />} />
-            <Route path="/tables" element={<TableListPage />} />
-            <Route path="/tables/:id" element={<TableDetailPage />} />
             <Route path="/payments" element={<PaymentPage />} />
             <Route path="/customers" element={<CustomerListPage />} />
             <Route path="/customers/:id" element={<CustomerDetailPage />} />
@@ -59,7 +60,10 @@ function AppRouter() {
             <Route path="/users/new" element={<UserFormPage />} />
             <Route path="/users/:id/edit" element={<UserFormPage />} />
             <Route path="/reports/sales" element={<SalesReportPage />} />
-            <Route path="/reports/inventory" element={<InventoryReportPage />} />
+            <Route
+              path="/reports/inventory"
+              element={<InventoryReportPage />}
+            />
           </Route>
         </Route>
 
