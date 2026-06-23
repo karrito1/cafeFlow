@@ -37,6 +37,6 @@ const seed = async () => {
 };
 
 seed().catch((err) => {
-  console.error('❌ Error:', err);
+  console.error(' Error:', err);
   process.exit(1);
 });

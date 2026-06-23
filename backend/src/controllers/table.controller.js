@@ -27,7 +27,7 @@ const createTable = async (req, res) => {
     res.status(201).json({
       ok: true,
       msg: "Table created successfully",
-      table,
+      data: table,
     });
   } catch (error) {
     console.error(error);
@@ -49,7 +49,8 @@ const getTables = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      tables,
+      msg: "Tables fetched successfully",
+      data: tables,
     });
   } catch (error) {
     console.error(error);
@@ -80,7 +81,8 @@ const getTableById = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      table,
+      msg: "Table fetched successfully",
+      data: table,
     });
   } catch (error) {
     console.error(error);
@@ -113,7 +115,7 @@ const updateTable = async (req, res) => {
     res.status(200).json({
       ok: true,
       msg: "Table updated successfully",
-      table: updatedTable,
+      data: updatedTable,
     });
   } catch (error) {
     console.error(error);

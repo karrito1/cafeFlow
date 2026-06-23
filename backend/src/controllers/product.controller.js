@@ -1,86 +1,57 @@
 const Product = require("../models/Product");
 
-// Create product
 const createProduct = async (req, res) => {
   try {
-    const { name, description, price, image, categoryId, featured, stock } =
-      req.body;
-
-    const product = await Product.create({
-      name,
-      description,
-      price,
-      image,
-      categoryId,
-      featured,
-      stock,
-    });
-
-    res.status(201).json({ msg: "Product created successfully", product });
+    const { name, description, price, image, categoryId, featured, stock } = req.body;
+    const product = await Product.create({ name, description, price, image, categoryId, featured, stock });
+    res.status(201).json({ ok: true, msg: "Product created successfully", data: product });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
-// Get all products
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({ active: true }).populate(
-      "categoryId",
-      "name",
-    );
-    res.json(products);
+    const products = await Product.find({ active: true }).populate("categoryId", "name");
+    res.json({ ok: true, msg: "Products fetched successfully", data: products });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
-// Get product by ID
 const getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate(
-      "categoryId",
-      "name",
-    );
-    if (!product) return res.status(404).json({ msg: "Product not found" });
-    res.json(product);
+    const product = await Product.findById(req.params.id).populate("categoryId", "name");
+    if (!product) return res.status(404).json({ ok: false, msg: "Product not found" });
+    res.json({ ok: true, msg: "Product fetched successfully", data: product });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
-// Update product
 const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!product) return res.status(404).json({ msg: "Product not found" });
-    res.json({ msg: "Product updated successfully", product });
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!product) return res.status(404).json({ ok: false, msg: "Product not found" });
+    res.json({ ok: true, msg: "Product updated successfully", data: product });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
-// Delete product (soft delete)
 const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { active: false },
-      { new: true },
-    );
-    if (!product) return res.status(404).json({ msg: "Product not found" });
-    res.json({ msg: "Product disabled successfully", product });
+    const product = await Product.findByIdAndUpdate(req.params.id, { active: false }, { new: true });
+    if (!product) return res.status(404).json({ ok: false, msg: "Product not found" });
+    res.json({ ok: true, msg: "Product disabled successfully", data: product });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
-module.exports = {
-  createProduct,
-  getProducts,
-  getProduct,
-  updateProduct,
-  deleteProduct,
-};
+module.exports = { createProduct, getProducts, getProduct, updateProduct, deleteProduct };

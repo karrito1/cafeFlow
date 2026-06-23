@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { verifyToken, onlyRole } = require("../middlewares/auth");
 
 const {
   getRewards,
@@ -11,8 +12,8 @@ const {
 
 router.get("/", getRewards);
 router.get("/:id", getRewardById);
-router.post("/", createReward);
-router.put("/:id", updateReward);
-router.delete("/:id", deleteReward);
+router.post("/", verifyToken, onlyRole("admin"), createReward);
+router.put("/:id", verifyToken, onlyRole("admin"), updateReward);
+router.delete("/:id", verifyToken, onlyRole("admin"), deleteReward);
 
 module.exports = router;

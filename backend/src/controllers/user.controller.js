@@ -32,7 +32,7 @@ const createUser = async (req, res) => {
     res.status(201).json({
       ok: true,
       msg: "User created successfully",
-      user: {
+      data: {
         id: createdUser._id,
         name: createdUser.name,
         email: createdUser.email,
@@ -58,7 +58,8 @@ const getUsers = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      users,
+      msg: "Users fetched successfully",
+      data: users,
     });
   } catch (error) {
     console.error(error);
@@ -86,7 +87,8 @@ const getUserById = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      user,
+      msg: "User fetched successfully",
+      data: user,
     });
   } catch (error) {
     console.error(error);
@@ -111,8 +113,6 @@ const updateUser = async (req, res) => {
         msg: "User not found",
       });
     }
-    console.log("User controller loaded");
-
     const data = { ...req.body };
 
     if (data.password) {
@@ -126,7 +126,7 @@ const updateUser = async (req, res) => {
     res.status(200).json({
       ok: true,
       msg: "User updated successfully",
-      user: updatedUser,
+      data: updatedUser,
     });
   } catch (error) {
     console.error(error);

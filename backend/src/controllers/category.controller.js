@@ -24,7 +24,7 @@ const createCategory = async (req, res) => {
     res.status(201).json({
       ok: true,
       msg: "Category created successfully",
-      category,
+      data: category,
     });
   } catch (error) {
     console.error(error);
@@ -43,7 +43,8 @@ const getCategories = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      categories,
+      msg: "Categories fetched successfully",
+      data: categories,
     });
   } catch (error) {
     console.error(error);
@@ -71,7 +72,8 @@ const getCategoryById = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      category,
+      msg: "Category fetched successfully",
+      data: category,
     });
   } catch (error) {
     console.error(error);
@@ -108,7 +110,7 @@ const updateCategory = async (req, res) => {
     res.status(200).json({
       ok: true,
       msg: "Category updated successfully",
-      category: updatedCategory,
+      data: updatedCategory,
     });
   } catch (error) {
     console.error(error);
@@ -151,12 +153,3 @@ const deleteCategory = async (req, res) => {
 };
 
 module.exports = { createCategory, getCategories, getCategoryById, updateCategory, deleteCategory };
-;
-
-module.exports = {
-  createCategory,
-  getCategories,
-  getCategoryById,
-  updateCategory,
-  deleteCategory,
-};
