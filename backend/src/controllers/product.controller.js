@@ -54,4 +54,17 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, getProducts, getProduct, updateProduct, deleteProduct };
+const uploadImage = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ ok: false, msg: "Product not found" });
+    product.image = req.file.path;
+    await product.save();
+    res.json({ ok: true, msg: "Image uploaded successfully", data: product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
+  }
+};
+
+module.exports = { createProduct, getProducts, getProduct, updateProduct, deleteProduct, uploadImage };

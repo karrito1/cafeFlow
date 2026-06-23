@@ -447,3 +447,15 @@ Content-Type: application/json
 ### DELETE /api/rewards/:id - Desactivar reward (🔴 sin protección)
 DELETE {{baseUrl}}/rewards/{{rewardId}}
 ### Esperado: 200 { msg: "Reward deactivated" }
+## iamgen
+### PUT /api/products/:id/image - Subir imagen
+PUT {{baseUrl}}/products/{{productId}}/image
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="image"; filename="11111.png"
+Content-Type: image/png
+
+< C:\Users\ADSO\Pictures\11111.png
+--boundary123--
