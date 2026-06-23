@@ -4,7 +4,11 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:3000"],
+  }),
+);
 app.use(express.json());
 
 // Routes
