@@ -1,24 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TABLE_STATUS } from '../../utils/constants';
-
-const mockMesas = [
-  { _id: '1', numero: 1, capacidad: 2, estado: TABLE_STATUS.AVAILABLE, ubicacion: 'Ventana' },
-  { _id: '2', numero: 2, capacidad: 4, estado: TABLE_STATUS.OCCUPIED, ubicacion: 'Centro' },
-  { _id: '3', numero: 3, capacidad: 6, estado: TABLE_STATUS.RESERVED, ubicacion: 'Terraza' },
-  { _id: '4', numero: 4, capacidad: 2, estado: TABLE_STATUS.AVAILABLE, ubicacion: 'Barra' },
-  { _id: '5', numero: 5, capacidad: 4, estado: TABLE_STATUS.OCCUPIED, ubicacion: 'Interior' },
-  { _id: '6', numero: 6, capacidad: 8, estado: TABLE_STATUS.AVAILABLE, ubicacion: 'VIP' },
-  { _id: '7', numero: 7, capacidad: 2, estado: TABLE_STATUS.RESERVED, ubicacion: 'Ventana' },
-  { _id: '8', numero: 8, capacidad: 4, estado: TABLE_STATUS.OCCUPIED, ubicacion: 'Terraza' },
-  { _id: '9', numero: 9, capacidad: 4, estado: TABLE_STATUS.AVAILABLE, ubicacion: 'Centro' },
-  { _id: '10', numero: 10, capacidad: 2, estado: TABLE_STATUS.AVAILABLE, ubicacion: 'Barra' },
-  { _id: '11', numero: 11, capacidad: 6, estado: TABLE_STATUS.OCCUPIED, ubicacion: 'Interior' },
-  { _id: '12', numero: 12, capacidad: 3, estado: TABLE_STATUS.AVAILABLE, ubicacion: 'Ventana' },
-];
+import { getTables, createTable, updateTable, deleteTable } from '../../api/tableApi';
+import { useAuth } from '../../context/AuthContext';
 
 const statusStyle = {
-  [TABLE_STATUS.AVAILABLE]: {
+  [TABLE_STATUS.FREE]: {
     label: 'Disponible',
     badge: 'badge-soft badge-success',
     border: 'border-success',
@@ -28,39 +15,46 @@ const statusStyle = {
     badge: 'badge-soft badge-error',
     border: 'border-error',
   },
-  [TABLE_STATUS.RESERVED]: {
-    label: 'Reservada',
+  [TABLE_STATUS.PENDING_PAYMENT]: {
+    label: 'Pendiente pago',
     badge: 'badge-soft badge-warning',
     border: 'border-warning',
   },
 };
 
 function NewTableModal({ isOpen, onClose, onCreated }) {
-  const [form, setForm] = useState({ numero: '', capacidad: '2', ubicacion: '' });
+  const [form, setForm] = useState({ tableNumber: '', capacity: '4', name: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!form.numero) {
+    if (!form.tableNumber) {
       setError('El número de mesa es obligatorio');
       return;
     }
-    if (mockMesas.some((m) => m.numero === Number(form.numero))) {
-      setError('Ese número de mesa ya existe');
-      return;
+    setLoading(true);
+    try {
+      const res = await createTable({
+        tableNumber: Number(form.tableNumber),
+        capacity: Number(form.capacity) || 4,
+        name: form.name,
+      });
+      if (res.ok) {
+        onCreated(res.data);
+        setForm({ tableNumber: '', capacity: '4', name: '' });
+        onClose();
+      } else {
+        setError(res.msg || 'Error al crear mesa');
+      }
+    } catch {
+      setError('Error al conectar con el servidor');
+    } finally {
+      setLoading(false);
     }
-    onCreated({
-      _id: String(Date.now()),
-      numero: Number(form.numero),
-      capacidad: Number(form.capacidad) || 2,
-      estado: TABLE_STATUS.AVAILABLE,
-      ubicacion: form.ubicacion,
-    });
-    setForm({ numero: '', capacidad: '2', ubicacion: '' });
-    onClose();
   };
 
   return (
@@ -84,8 +78,8 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
                 type="number"
                 className="input input-bordered w-full text-base-content"
                 placeholder="Ej: 13"
-                value={form.numero}
-                onChange={(e) => setForm({ ...form, numero: e.target.value })}
+                value={form.tableNumber}
+                onChange={(e) => setForm({ ...form, tableNumber: e.target.value })}
                 autoFocus
               />
             </div>
@@ -95,8 +89,8 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
               </label>
               <select
                 className="select select-bordered w-full text-base-content"
-                value={form.capacidad}
-                onChange={(e) => setForm({ ...form, capacidad: e.target.value })}
+                value={form.capacity}
+                onChange={(e) => setForm({ ...form, capacity: e.target.value })}
               >
                 {[1, 2, 3, 4, 5, 6, 8, 10, 12].map((n) => (
                   <option key={n} value={n}>{n} {n === 1 ? 'persona' : 'personas'}</option>
@@ -111,21 +105,20 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
                 type="text"
                 className="input input-bordered w-full text-base-content"
                 placeholder="Ej: Terraza, Interior, Ventana..."
-                value={form.ubicacion}
-                onChange={(e) => setForm({ ...form, ubicacion: e.target.value })}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
             {error && (
               <div role="alert" className="alert alert-error py-2.5 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                </svg>
                 <span>{error}</span>
               </div>
             )}
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" className="btn btn-ghost" onClick={onClose}>Cancelar</button>
-              <button type="submit" className="btn btn-primary">Crear Mesa</button>
+              <button type="submit" className="btn btn-primary" disabled={loading}>
+                {loading ? 'Creando...' : 'Crear Mesa'}
+              </button>
             </div>
           </form>
         </div>
@@ -134,13 +127,14 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
   );
 }
 
-function QuickStatusMenu({ mesaId, currentStatus, onStatusChange }) {
+function QuickStatusMenu({ mesaId, currentStatus, onStatusChange, isAdmin }) {
   const [open, setOpen] = useState(false);
+  if (!isAdmin) return null;
 
   const options = [
-    { value: TABLE_STATUS.AVAILABLE, label: 'Disponible' },
+    { value: TABLE_STATUS.FREE, label: 'Disponible' },
     { value: TABLE_STATUS.OCCUPIED, label: 'Ocupada' },
-    { value: TABLE_STATUS.RESERVED, label: 'Reservada' },
+    { value: TABLE_STATUS.PENDING_PAYMENT, label: 'Pendiente pago' },
   ];
 
   return (
@@ -156,7 +150,7 @@ function QuickStatusMenu({ mesaId, currentStatus, onStatusChange }) {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); setOpen(false); }} />
-          <div className="absolute right-0 z-20 mt-1 w-40 rounded-lg bg-base-100 shadow-lg ring-1 ring-black/5">
+          <div className="absolute right-0 z-20 mt-1 w-44 rounded-lg bg-base-100 shadow-lg ring-1 ring-black/5">
             {options
               .filter((o) => o.value !== currentStatus)
               .map((opt) => (
@@ -179,9 +173,9 @@ function QuickStatusMenu({ mesaId, currentStatus, onStatusChange }) {
   );
 }
 
-function TableCard({ mesa, onStatusChange }) {
+function TableCard({ mesa, onStatusChange, isAdmin }) {
   const navigate = useNavigate();
-  const style = statusStyle[mesa.estado] || statusStyle.available;
+  const style = statusStyle[mesa.status] || statusStyle[TABLE_STATUS.FREE];
 
   return (
     <div
@@ -190,21 +184,21 @@ function TableCard({ mesa, onStatusChange }) {
     >
       <div className="card-body items-center text-center p-4">
         <div className="absolute right-1 top-1" onClick={(e) => e.stopPropagation()}>
-          <QuickStatusMenu mesaId={mesa._id} currentStatus={mesa.estado} onStatusChange={onStatusChange} />
+          <QuickStatusMenu mesaId={mesa._id} currentStatus={mesa.status} onStatusChange={onStatusChange} isAdmin={isAdmin} />
         </div>
 
         <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-base-200 text-lg font-bold text-base-content mb-1">
-          {mesa.numero}
+          {mesa.tableNumber}
         </div>
 
         <span className="text-xs font-semibold uppercase tracking-wider text-base-content/40">Mesa</span>
 
-        <span className="text-sm text-base-content">{mesa.capacidad} {mesa.capacidad === 1 ? 'persona' : 'personas'}</span>
+        <span className="text-sm text-base-content">{mesa.capacity} {mesa.capacity === 1 ? 'persona' : 'personas'}</span>
 
         <span className={`badge ${style.badge} text-xs`}>{style.label}</span>
 
-        {mesa.ubicacion && (
-          <span className="text-xs text-base-content/40">{mesa.ubicacion}</span>
+        {mesa.name && (
+          <span className="text-xs text-base-content/40">{mesa.name}</span>
         )}
       </div>
     </div>
@@ -223,28 +217,77 @@ function StatCard({ label, value, colorClass }) {
 }
 
 function TableListPage() {
-  const [mesas, setMesas] = useState(mockMesas);
+  const [mesas, setMesas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const { user } = useAuth();
 
-  const handleStatusChange = (id, newStatus) => {
-    setMesas((prev) =>
-      prev.map((m) => (m._id === id ? { ...m, estado: newStatus } : m))
-    );
+  const fetchTables = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getTables();
+      if (res.ok) {
+        setMesas(res.data);
+      } else {
+        setError(res.msg || 'Error al cargar mesas');
+      }
+    } catch {
+      setError('Error al conectar con el servidor');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTables();
+  }, [fetchTables]);
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await updateTable(id, { status: newStatus });
+      if (res.ok) {
+        setMesas((prev) =>
+          prev.map((m) => (m._id === id ? { ...m, status: newStatus } : m))
+        );
+      }
+    } catch {
+      // silent
+    }
   };
 
   const addMesa = (nueva) => {
     setMesas((prev) => [...prev, nueva]);
   };
 
-  const counts = {
-    total: mesas.length,
-    available: mesas.filter((m) => m.estado === TABLE_STATUS.AVAILABLE).length,
-    occupied: mesas.filter((m) => m.estado === TABLE_STATUS.OCCUPIED).length,
-    reserved: mesas.filter((m) => m.estado === TABLE_STATUS.RESERVED).length,
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteTable(id);
+      if (res.ok) {
+        setMesas((prev) => prev.filter((m) => m._id !== id));
+      }
+    } catch {
+      // silent
+    }
   };
 
+  const counts = {
+    total: mesas.length,
+    free: mesas.filter((m) => m.status === TABLE_STATUS.FREE).length,
+    occupied: mesas.filter((m) => m.status === TABLE_STATUS.OCCUPIED).length,
+    pendingPayment: mesas.filter((m) => m.status === TABLE_STATUS.PENDING_PAYMENT).length,
+  };
+
+  if (loading) {
+    return (
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+    );
+  }
+
   return (
-    <div data-theme="cafe" className="min-h-screen bg-base-200 p-4 md:p-6 lg:p-8">
+    <div className="p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -253,22 +296,30 @@ function TableListPage() {
               {counts.total} mesa{counts.total !== 1 ? 's' : ''} en el salón
             </p>
           </div>
-          <button className="btn btn-primary shadow-sm" onClick={() => setShowModal(true)}>
-            + Nueva Mesa
-          </button>
+          {user?.role === 'admin' && (
+            <button className="btn btn-primary shadow-sm" onClick={() => setShowModal(true)}>
+              + Nueva Mesa
+            </button>
+          )}
         </div>
+
+        {error && (
+          <div role="alert" className="alert alert-error">
+            <span>{error}</span>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatCard label="Total" value={counts.total} colorClass="text-base-content" />
-          <StatCard label="Disponibles" value={counts.available} colorClass="text-success" />
+          <StatCard label="Disponibles" value={counts.free} colorClass="text-success" />
           <StatCard label="Ocupadas" value={counts.occupied} colorClass="text-error" />
-          <StatCard label="Reservadas" value={counts.reserved} colorClass="text-warning" />
+          <StatCard label="Pendientes pago" value={counts.pendingPayment} colorClass="text-warning" />
         </div>
 
         {mesas.length > 0 ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {mesas.map((mesa) => (
-              <TableCard key={mesa._id} mesa={mesa} onStatusChange={handleStatusChange} />
+              <TableCard key={mesa._id} mesa={mesa} onStatusChange={handleStatusChange} isAdmin={user?.role === 'admin'} />
             ))}
           </div>
         ) : (
@@ -277,9 +328,11 @@ function TableListPage() {
               <div className="text-5xl mb-4 opacity-30">🪑</div>
               <h3 className="text-lg font-semibold text-base-content">No hay mesas registradas</h3>
               <p className="text-sm text-base-content/40">Crea tu primera mesa para empezar</p>
-              <button className="btn btn-primary mt-4" onClick={() => setShowModal(true)}>
-                + Crear Mesa
-              </button>
+              {user?.role === 'admin' && (
+                <button className="btn btn-primary mt-4" onClick={() => setShowModal(true)}>
+                  + Crear Mesa
+                </button>
+              )}
             </div>
           </div>
         )}

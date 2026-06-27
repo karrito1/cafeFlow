@@ -13,9 +13,9 @@ export const ORDER_STATUS = {
 };
 
 export const TABLE_STATUS = {
-  AVAILABLE: 'available',
+  FREE: 'free',
   OCCUPIED: 'occupied',
-  RESERVED: 'reserved',
+  PENDING_PAYMENT: 'pendingPayment',
 };
 
 export const PAYMENT_METHODS = {
