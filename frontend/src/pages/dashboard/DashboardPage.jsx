@@ -6,12 +6,17 @@ import { getOrders } from '../../api/orderApi';
 import { getTables } from '../../api/tableApi';
 import { getCustomers } from '../../api/customerApi';
 import { formatCurrency } from '../../utils/formatters';
+import {
+  Coffee, ClipboardList, Sofa, User, LayoutDashboard,
+} from 'lucide-react';
+
+const iconMap = { Coffee, ClipboardList, Sofa, LayoutDashboard };
 
 const quickLinks = [
-  { label: 'Nuevo Pedido', path: '/orders/new', icon: '📋', color: 'btn-primary' },
-  { label: 'Mesas', path: '/tables', icon: '🪑', color: 'btn-soft btn-primary' },
-  { label: 'Productos', path: '/products', icon: '☕', color: 'btn-soft btn-primary' },
-  { label: 'Reportes', path: '/reports/sales', icon: '📊', color: 'btn-soft btn-primary' },
+  { label: 'Nuevo Pedido', path: '/orders/new', icon: 'ClipboardList', color: 'btn-primary' },
+  { label: 'Mesas', path: '/tables', icon: 'Sofa', color: 'btn-soft btn-primary' },
+  { label: 'Productos', path: '/products', icon: 'Coffee', color: 'btn-soft btn-primary' },
+  { label: 'Reportes', path: '/reports/sales', icon: 'LayoutDashboard', color: 'btn-soft btn-primary' },
 ];
 
 function StatCard({ label, value, icon, loading, colorClass }) {
@@ -27,7 +32,7 @@ function StatCard({ label, value, icon, loading, colorClass }) {
               <p className={`text-2xl font-bold mt-1 ${colorClass || 'text-base-content'}`}>{value}</p>
             )}
           </div>
-          <span className="text-3xl opacity-40">{icon}</span>
+          {icon}
         </div>
       </div>
     </div>
@@ -95,23 +100,26 @@ function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <StatCard label="Productos" value={stats.products} icon="☕" loading={loading} colorClass="text-primary" />
-          <StatCard label="Pedidos" value={stats.orders} icon="📋" loading={loading} colorClass="text-primary" />
-          <StatCard label="Mesas" value={stats.tables} icon="🪑" loading={loading} colorClass="text-primary" />
-          <StatCard label="Clientes" value={stats.customers} icon="👤" loading={loading} colorClass="text-primary" />
+          <StatCard label="Productos" value={stats.products} loading={loading} colorClass="text-primary" icon={<Coffee size={32} className="opacity-40" />} />
+          <StatCard label="Pedidos" value={stats.orders} loading={loading} colorClass="text-primary" icon={<ClipboardList size={32} className="opacity-40" />} />
+          <StatCard label="Mesas" value={stats.tables} loading={loading} colorClass="text-primary" icon={<Sofa size={32} className="opacity-40" />} />
+          <StatCard label="Clientes" value={stats.customers} loading={loading} colorClass="text-primary" icon={<User size={32} className="opacity-40" />} />
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {quickLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`btn ${link.color} h-auto flex-col gap-1 py-4 shadow-sm border border-base-200`}
-            >
-              <span className="text-2xl">{link.icon}</span>
-              <span className="text-xs font-medium">{link.label}</span>
-            </Link>
-          ))}
+          {quickLinks.map((link) => {
+            const Icon = iconMap[link.icon];
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`btn ${link.color} h-auto flex-col gap-1 py-4 shadow-sm border border-base-200`}
+              >
+                <Icon size={24} />
+                <span className="text-xs font-medium">{link.label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="card bg-base-100 shadow-sm border border-base-200">
@@ -161,7 +169,7 @@ function DashboardPage() {
               </div>
             ) : (
               <div className="py-8 text-center">
-                <div className="text-3xl mb-2 opacity-30">📋</div>
+                <ClipboardList size={40} className="mx-auto mb-2 opacity-30" />
                 <p className="text-sm text-base-content/50">No hay pedidos aún</p>
                 <Link to="/orders/new" className="btn btn-primary btn-sm mt-3">
                   Crear Primer Pedido

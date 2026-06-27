@@ -1,29 +1,36 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import {
+  LayoutDashboard, ClipboardList, Sofa, Coffee, FileText, CreditCard,
+} from 'lucide-react';
+
+const iconMap = {
+  LayoutDashboard, ClipboardList, Sofa, Coffee, FileText, CreditCard,
+};
 
 const roleNav = {
   admin: [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/products', label: 'Productos', icon: '☕' },
+    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/products', label: 'Productos', icon: 'Coffee' },
   ],
   barista: [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/menu', label: 'Menú', icon: '📄' },
+    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/menu', label: 'Menú', icon: 'FileText' },
   ],
   cashier: [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/payments', label: 'Pagos', icon: '💳' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
+    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/payments', label: 'Pagos', icon: 'CreditCard' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
   ],
   waiter: [
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/menu', label: 'Menú', icon: '📄' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/menu', label: 'Menú', icon: 'FileText' },
   ],
 };
 
@@ -37,6 +44,7 @@ function BottomNav() {
       <div className="flex items-center justify-around h-16 px-2">
         {links.map((link) => {
           const active = location.pathname === link.to || location.pathname.startsWith(link.to + '/');
+          const Icon = iconMap[link.icon];
           return (
             <Link
               key={link.to}
@@ -47,7 +55,7 @@ function BottomNav() {
                   : 'text-base-content/40 hover:text-base-content/60'
               }`}
             >
-              <span className="text-xl leading-none">{link.icon}</span>
+              <Icon size={20} />
               <span className="text-[10px] font-medium leading-tight">{link.label}</span>
               {active && <span className="w-4 h-0.5 bg-primary rounded-full mt-0.5" />}
             </Link>

@@ -1,40 +1,49 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import {
+  LayoutDashboard, Coffee, FolderOpen, ClipboardList, Sofa,
+  CreditCard, User, Gift, Users, FileText, TrendingUp, Package,
+} from 'lucide-react';
+
+const iconMap = {
+  LayoutDashboard, Coffee, FolderOpen, ClipboardList, Sofa,
+  CreditCard, User, Gift, Users, FileText, TrendingUp, Package,
+};
 
 const roleLinks = {
   admin: [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/products', label: 'Productos', icon: '☕' },
-    { to: '/categories', label: 'Categorías', icon: '📂' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/payments', label: 'Pagos', icon: '💳' },
-    { to: '/customers', label: 'Clientes', icon: '👤' },
-    { to: '/rewards', label: 'Recompensas', icon: '🎁' },
-    { to: '/users', label: 'Usuarios', icon: '👥' },
-    { to: '/menu', label: 'Menú digital', icon: '📄' },
-    { to: '/reports/sales', label: 'Ventas', icon: '📈' },
-    { to: '/reports/inventory', label: 'Inventario', icon: '📦' },
+    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+    { to: '/products', label: 'Productos', icon: 'Coffee' },
+    { to: '/categories', label: 'Categorías', icon: 'FolderOpen' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/payments', label: 'Pagos', icon: 'CreditCard' },
+    { to: '/customers', label: 'Clientes', icon: 'User' },
+    { to: '/rewards', label: 'Recompensas', icon: 'Gift' },
+    { to: '/users', label: 'Usuarios', icon: 'Users' },
+    { to: '/menu', label: 'Menú digital', icon: 'FileText' },
+    { to: '/reports/sales', label: 'Ventas', icon: 'TrendingUp' },
+    { to: '/reports/inventory', label: 'Inventario', icon: 'Package' },
   ],
   barista: [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/menu', label: 'Menú digital', icon: '📄' },
+    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/menu', label: 'Menú digital', icon: 'FileText' },
   ],
   cashier: [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/payments', label: 'Pagos', icon: '💳' },
-    { to: '/customers', label: 'Clientes', icon: '👤' },
-    { to: '/reports/sales', label: 'Ventas', icon: '📈' },
-    { to: '/menu', label: 'Menú digital', icon: '📄' },
+    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/payments', label: 'Pagos', icon: 'CreditCard' },
+    { to: '/customers', label: 'Clientes', icon: 'User' },
+    { to: '/reports/sales', label: 'Ventas', icon: 'TrendingUp' },
+    { to: '/menu', label: 'Menú digital', icon: 'FileText' },
   ],
   waiter: [
-    { to: '/orders', label: 'Pedidos', icon: '📋' },
-    { to: '/tables', label: 'Mesas', icon: '🪑' },
-    { to: '/menu', label: 'Menú digital', icon: '📄' },
+    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
+    { to: '/menu', label: 'Menú digital', icon: 'FileText' },
   ],
 };
 
@@ -48,6 +57,7 @@ function Sidebar() {
       <ul className="space-y-1">
         {links.map((link) => {
           const active = location.pathname === link.to || location.pathname.startsWith(link.to + '/');
+          const Icon = iconMap[link.icon];
           return (
             <li key={link.to}>
               <Link
@@ -58,7 +68,7 @@ function Sidebar() {
                     : 'text-base-content/70 hover:bg-base-200 hover:text-base-content'
                 }`}
               >
-                <span className="text-base">{link.icon}</span>
+                <Icon size={18} />
                 {link.label}
               </Link>
             </li>

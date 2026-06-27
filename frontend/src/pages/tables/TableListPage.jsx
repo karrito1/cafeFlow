@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { TABLE_STATUS } from '../../utils/constants';
 import { getTables, createTable, updateTable, deleteTable } from '../../api/tableApi';
 import { useAuth } from '../../context/AuthContext';
+import { Sofa } from 'lucide-react';
 
 const statusStyle = {
   [TABLE_STATUS.FREE]: {
@@ -325,7 +326,7 @@ function TableListPage() {
         ) : (
           <div className="card bg-base-100 shadow-sm">
             <div className="card-body items-center py-16 text-center">
-              <div className="text-5xl mb-4 opacity-30">🪑</div>
+              <Sofa size={48} className="mb-4 opacity-30 mx-auto" />
               <h3 className="text-lg font-semibold text-base-content">No hay mesas registradas</h3>
               <p className="text-sm text-base-content/40">Crea tu primera mesa para empezar</p>
               {user?.role === 'admin' && (

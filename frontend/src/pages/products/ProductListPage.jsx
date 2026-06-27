@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
 import { formatCurrency } from '../../utils/formatters';
+import { X, Coffee, Trash2 } from 'lucide-react';
 
 function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
   const [form, setForm] = useState({
@@ -82,7 +83,7 @@ function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
         <div className="card-body px-6 py-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-base-content">{isEdit ? 'Editar Producto' : 'Nuevo Producto'}</h2>
-            <button className="btn btn-ghost btn-sm btn-square" onClick={onClose}>✕</button>
+            <button className="btn btn-ghost btn-sm btn-square" onClick={onClose}><X size={18} /></button>
           </div>
 
           {loading ? (
@@ -241,7 +242,7 @@ function ProductListPage() {
         {filtered.length === 0 ? (
           <div className="card bg-base-100 shadow-sm">
             <div className="card-body items-center py-16 text-center">
-              <div className="text-5xl mb-4 opacity-30">☕</div>
+              <Coffee size={48} className="mb-4 opacity-30 mx-auto" />
               <h3 className="text-lg font-semibold text-base-content">
                 {products.length === 0 ? 'No hay productos' : 'Sin resultados'}
               </h3>
@@ -261,7 +262,7 @@ function ProductListPage() {
                   {p.image ? (
                     <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-5xl opacity-30">☕</span>
+                    <Coffee size={48} className="opacity-30" />
                   )}
                 </figure>
                 <div className="card-body p-4">
@@ -299,7 +300,7 @@ function ProductListPage() {
         {deleting && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
             <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-4 text-center p-8" onClick={(e) => e.stopPropagation()}>
-              <div className="text-4xl mb-4">🗑️</div>
+              <Trash2 size={40} className="mx-auto mb-4 text-error" />
               <h3 className="text-lg font-bold text-base-content">Eliminar Producto</h3>
               <p className="text-sm text-base-content/60 mt-2">¿Eliminar "{deleting.name}"?</p>
               <div className="flex justify-center gap-3 mt-6">

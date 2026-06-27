@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { TABLE_STATUS } from '../../utils/constants';
 import { getTable, updateTable, deleteTable } from '../../api/tableApi';
 import { useAuth } from '../../context/AuthContext';
+import { Search, Coffee, UtensilsCrossed, Trash2 } from 'lucide-react';
 
 const statusStyle = {
   [TABLE_STATUS.FREE]: { label: 'Disponible', badge: 'badge-soft badge-success' },
@@ -78,7 +79,7 @@ function TableDetailPage() {
       <div className="flex items-center justify-center min-h-[50vh] p-4">
         <div className="card bg-base-100 w-full max-w-md shadow-2xl">
           <div className="card-body items-center py-16 text-center">
-            <div className="text-5xl mb-4 opacity-30">🔍</div>
+            <Search size={48} className="mb-4 opacity-30 mx-auto" />
             <h2 className="text-xl font-bold text-base-content/60">Mesa no encontrada</h2>
             <p className="text-sm text-base-content/40 mt-1">{error || 'La mesa que buscas no existe.'}</p>
             <button className="btn btn-primary mt-4" onClick={() => navigate('/tables')}>
@@ -173,12 +174,12 @@ function TableDetailPage() {
             </div>
             {mesa.status === TABLE_STATUS.OCCUPIED ? (
               <div className="py-8 text-center">
-                <div className="text-3xl mb-2 opacity-30">☕</div>
+                <Coffee size={32} className="mx-auto mb-2 opacity-30" />
                 <p className="text-sm text-base-content/50">Pedido activo - consulta la sección de pedidos</p>
               </div>
             ) : (
               <div className="py-8 text-center">
-                <div className="text-3xl mb-2 opacity-30">🍽️</div>
+                <UtensilsCrossed size={32} className="mx-auto mb-2 opacity-30" />
                 <p className="text-sm text-base-content/50">No hay pedido activo en esta mesa</p>
                 <button className="btn btn-primary btn-sm mt-3">Crear Pedido</button>
               </div>
@@ -190,7 +191,7 @@ function TableDetailPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowConfirm(false)}>
             <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
               <div className="card-body px-8 py-8 text-center">
-                <div className="text-4xl mb-4">🗑️</div>
+                <Trash2 size={40} className="mx-auto mb-4 text-error" />
                 <h3 className="text-lg font-bold text-base-content">Eliminar Mesa</h3>
                 <p className="text-sm text-base-content/60 mt-2">¿Estás seguro de eliminar la Mesa {mesa.tableNumber}?</p>
                 <div className="flex justify-center gap-3 mt-6">

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categoryApi';
+import { FolderOpen, Trash2 } from 'lucide-react';
 
 function CategoryModal({ isOpen, onClose, onSave, category }) {
   const [form, setForm] = useState({ name: '', description: '', order: '0' });
@@ -137,7 +138,7 @@ function CategoryListPage() {
         {categories.length === 0 ? (
           <div className="card bg-base-100 shadow-sm">
             <div className="card-body items-center py-16 text-center">
-              <div className="text-5xl mb-4 opacity-30">📂</div>
+              <FolderOpen size={48} className="mb-4 opacity-30 mx-auto" />
               <h3 className="text-lg font-semibold text-base-content">No hay categorías</h3>
               <p className="text-sm text-base-content/40">Crea tu primera categoría para organizar los productos</p>
               <button className="btn btn-primary mt-4" onClick={() => { setEditing(null); setModalOpen(true); }}>
@@ -185,7 +186,7 @@ function CategoryListPage() {
         {deleting && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
             <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-4 text-center p-8" onClick={(e) => e.stopPropagation()}>
-              <div className="text-4xl mb-4">🗑️</div>
+              <Trash2 size={40} className="mx-auto mb-4 text-error" />
               <h3 className="text-lg font-bold text-base-content">Eliminar Categoría</h3>
               <p className="text-sm text-base-content/60 mt-2">¿Eliminar "{deleting.name}"?</p>
               <div className="flex justify-center gap-3 mt-6">
