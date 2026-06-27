@@ -94,8 +94,7 @@ function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
                 <input className="input input-bordered w-full" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ej: Cappuccino" autoFocus />
               </div>
               <div className="form-control">
-                <label className="label"><span className="label-text font-medium">Descripción</span></label>
-                <input className="input input-bordered w-full" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Ej: Espresso con leche vaporizada y espuma" />
+                <input className="input input-bordered w-full" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descripción — Ej: Espresso con leche vaporizada y espuma" />
               </div>
               <div className="form-control">
                 <label className="label"><span className="label-text font-medium">Categoría *</span></label>

@@ -52,8 +52,7 @@ function CategoryModal({ isOpen, onClose, onSave, category }) {
               <input className="input input-bordered" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoFocus />
             </div>
             <div className="form-control">
-              <label className="label"><span className="label-text font-medium">Descripción</span></label>
-              <input className="input input-bordered" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              <input className="input input-bordered" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descripción (opcional)" />
             </div>
             <div className="form-control">
               <label className="label"><span className="label-text font-medium">Orden</span></label>
