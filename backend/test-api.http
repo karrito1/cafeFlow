@@ -1,0 +1,461 @@
+### ============================================================
+### CAFÉFLOW API - Tests de Endpoints
+### Variables que puedes sobreescribir
+### ============================================================
+@baseUrl = http://localhost:4000/api
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMmQ2ZDk0MWM2NGI0ZmVjODAwMDFjNiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjIyMDczMSwiZXhwIjoxNzgyMjQ5NTMxfQ.dGkCgOweChgvpqpcqD731H3wyh1mlARS8q2WJB3xk3Q
+@userId = 6a2d6d941c64b4fec80001c6
+@productId = 6a3a869141e948093eed2def
+@categoryId = 6a3a855241e948093eed2dee
+@tableId = 6a3a86e341e948093eed2df0
+@orderId = 6a3a888641e948093eed2df1
+@paymentId = 6a3a88d341e948093eed2df3
+@customerId = 6a3a88f041e948093eed2df4
+@rewardId = 6a3a890b41e948093eed2df5
+
+### ============================================================
+### HEALTH CHECK
+### ============================================================
+
+### GET /api/health - Verificar servidor
+GET {{baseUrl}}/health
+### Esperado: 200 { status: "ok", message: "CaféFlow API running" }
+
+### ============================================================
+### AUTH
+### ============================================================
+
+### POST /api/auth/login - Iniciar sesión como admin
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@cafeflow.com",
+  "password": "admin123"
+}
+### Esperado: 200 { token, user: { id, name, email, role } }
+
+### POST /api/auth/login - Login como barista
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "barista@cafeflow.com",
+  "password": "barista123"
+}
+### Esperado: 200 { token, user: { role: "barista" } }
+
+### POST /api/auth/login - Login como cajero
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "cajero@cafeflow.com",
+  "password": "cajero123"
+}
+### Esperado: 200 { token, user: { role: "cashier" } }
+
+### POST /api/auth/login - Credenciales inválidas
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "noexiste@test.com",
+  "password": "wrong"
+}
+### Esperado: 401 { msg: "Invalid credentials" }
+
+### POST /api/auth/register - Registrar nuevo usuario
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Nuevo Cajero",
+  "email": "nuevocajero@test.com",
+  "password": "password123",
+  "role": "cashier"
+}
+### Esperado: 201 { token, user: { name, email, role } }
+
+### ============================================================
+### USERS (CRUD) - 🔴 SIN PROTECCIÓN
+### ============================================================
+
+### GET /api/users - Listar todos los usuarios
+GET {{baseUrl}}/users
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, users: [...] }
+
+### GET /api/users/:id - Obtener usuario por ID
+GET {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, user: {...} }
+
+### POST /api/users - Crear usuario (admin)
+POST {{baseUrl}}/users
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Barista Nuevo",
+  "email": "barista2@cafeflow.com",
+  "password": "barista123",
+  "role": "barista",
+  "accessCode": "5678",
+  "active": true
+}
+### Esperado: 201 { ok: true, msg: "User created successfully", user: {...} }
+
+### PUT /api/users/:id - Actualizar usuario
+PUT {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Nombre Actualizado",
+  "role": "admin"
+}
+### Esperado: 200 { ok: true, msg: "User updated successfully", user: {...} }
+
+### DELETE /api/users/:id - Eliminar usuario
+DELETE {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, msg: "User deleted successfully" }
+
+### ============================================================
+### CATEGORIES
+### ============================================================
+
+### GET /api/categories - Listar categorías (público)
+GET {{baseUrl}}/categories
+### Esperado: 200 { ok: true, categories: [...] }
+
+### GET /api/categories/:id - Obtener categoría (público)
+GET {{baseUrl}}/categories/{{categoryId}}
+### Esperado: 200 { ok: true, category: {...} }
+
+### POST /api/categories - Crear categoría (solo admin)
+POST {{baseUrl}}/categories
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Bebidas Calientes",
+  "description": "Cafés, tés y chocolate caliente",
+  "order": 1,
+  "active": true
+}
+### Esperado: 201 { ok: true, msg: "Category created successfully", category: {...} }
+
+### POST /api/categories - Crear categoría duplicada
+POST {{baseUrl}}/categories
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Bebidas Calientes"
+}
+### Esperado: 400 { ok: false, msg: "Category already exists" }
+
+### PUT /api/categories/:id - Actualizar categoría (solo admin)
+PUT {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "description": "Descripción actualizada"
+}
+### Esperado: 200 { ok: true, msg: "Category updated successfully", category: {...} }
+
+### DELETE /api/categories/:id - Eliminar categoría (solo admin)
+DELETE {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, msg: "Category deleted successfully" }
+
+### ============================================================
+### PRODUCTS
+### ============================================================
+
+### GET /api/products - Listar productos activos (público)
+GET {{baseUrl}}/products
+### Esperado: 200 [ { product con categoryId populado }, ... ]
+
+### GET /api/products/:id - Obtener producto (público)
+GET {{baseUrl}}/products/{{productId}}
+### Esperado: 200 { product con categoryId populado }
+
+### POST /api/products - Crear producto (solo admin)
+POST {{baseUrl}}/products
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Latte Vainilla",
+  "description": "Espresso con leche y jarabe de vainilla",
+  "price": {
+    "S": 4500,
+    "M": 5500,
+    "L": 6500
+  },
+  "image": "https://ejemplo.com/latte.jpg",
+  "categoryId": "{{categoryId}}",
+  "featured": true,
+  "stock": 50
+}
+### Esperado: 201 { msg: "Product created successfully", product: {...} }
+
+### POST /api/products - Sin token (debería fallar)
+POST {{baseUrl}}/products
+Content-Type: application/json
+
+{
+  "name": "Producto Sin Token",
+  "price": { "M": 5000 },
+  "categoryId": "{{categoryId}}"
+}
+### Esperado: 401 { msg: "Token required" }
+
+### PUT /api/products/:id - Actualizar producto (solo admin)
+PUT {{baseUrl}}/products/{{productId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "price": { "S": 5000, "M": 6000, "L": 7000 },
+  "featured": false
+}
+### Esperado: 200 { msg: "Product updated successfully", product: {...} }
+
+### DELETE /api/products/:id - Desactivar producto (solo admin)
+DELETE {{baseUrl}}/products/{{productId}}
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { msg: "Product disabled successfully", product: { active: false } }
+
+### ============================================================
+### TABLES
+### ============================================================
+
+### POST /api/tables - Crear mesa (solo admin)
+POST {{baseUrl}}/tables
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "tableNumber": 1,
+  "name": "Mesa 1",
+  "capacity": 4,
+  "status": "free"
+}
+### Esperado: 201 { ok: true, msg: "Table created successfully", table: {...} }
+
+### POST /api/tables - Mesa duplicada
+POST {{baseUrl}}/tables
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "tableNumber": 1,
+  "name": "Mesa 1 Duplicada",
+  "capacity": 4
+}
+### Esperado: 400 { ok: false, msg: "Table number already exists" }
+
+### GET /api/tables - Listar mesas (admin, barista) 🔴 BUG: rol mal escrito
+GET {{baseUrl}}/tables
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, tables: [...] }
+
+### GET /api/tables/:id - Obtener mesa
+GET {{baseUrl}}/tables/{{tableId}}
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, table: {...} }
+
+### PUT /api/tables/:id - Actualizar mesa (solo admin)
+PUT {{baseUrl}}/tables/{{tableId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "status": "occupied",
+  "capacity": 6
+}
+### Esperado: 200 { ok: true, msg: "Table updated successfully", table: {...} }
+
+### DELETE /api/tables/:id - Eliminar mesa (solo admin)
+DELETE {{baseUrl}}/tables/{{tableId}}
+Authorization: Bearer {{authToken}}
+### Esperado: 200 { ok: true, msg: "Table deleted successfully" }
+
+### ============================================================
+### CUSTOMERS
+### ============================================================
+
+### POST /api/customers - Registrar cliente (público)
+POST {{baseUrl}}/customers
+Content-Type: application/json
+
+{
+  "name": "Carlos Rodríguez",
+  "email": "carlos@email.com",
+  "phone": "3001112233",
+  "password": "cliente123"
+}
+### Esperado: 201 { msg: "Customer registered successfully", customer: { id, name, email, points, level } }
+
+### POST /api/customers - Email duplicado
+POST {{baseUrl}}/customers
+Content-Type: application/json
+
+{
+  "name": "Otro Carlos",
+  "email": "carlos@email.com",
+  "password": "cliente123"
+}
+### Esperado: 400 { msg: "Email already registered" }
+
+### GET /api/customers - Listar clientes activos (🔴 sin protección)
+GET {{baseUrl}}/customers
+### Esperado: 200 [ { customers sin password }, ... ]
+
+### GET /api/customers/:id - Obtener cliente (🔴 sin protección)
+GET {{baseUrl}}/customers/{{customerId}}
+### Esperado: 200 { customer sin password }
+
+### ============================================================
+### ORDERS
+### ============================================================
+
+### POST /api/orders - Crear orden
+POST {{baseUrl}}/orders
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+
+{
+  "tableId": "{{tableId}}",
+  "waiterId": "{{userId}}",
+  "products": [
+    {
+      "productId": "{{productId}}",
+      "name": "Latte Vainilla",
+      "quantity": 2,
+      "price": 5500,
+      "customization": {
+        "size": "M",
+        "milk": "whole",
+        "temperature": "hot"
+      },
+      "note": "Sin azúcar"
+    }
+  ],
+  "subtotal": 11000,
+  "taxes": 1760,
+  "total": 12760
+}
+### Esperado: 201 { order }
+
+### GET /api/orders - Listar órdenes (🔴 sin protección)
+GET {{baseUrl}}/orders
+### Esperado: 200 [ { orders populadas }, ... ]
+
+### GET /api/orders/:id - Obtener orden (🔴 sin protección)
+GET {{baseUrl}}/orders/{{orderId}}
+### Esperado: 200 { order populada }
+
+### PUT /api/orders/:id - Actualizar orden (🔴 sin protección)
+PUT {{baseUrl}}/orders/{{orderId}}
+Content-Type: application/json
+
+{
+  "status": "confirmed",
+  "products": [
+    {
+      "productId": "{{productId}}",
+      "name": "Latte Vainilla",
+      "quantity": 3,
+      "price": 5500
+    }
+  ],
+  "subtotal": 16500,
+  "taxes": 2640,
+  "total": 19140
+}
+### Esperado: 200 { order actualizada }
+
+### ============================================================
+### PAYMENTS
+### ============================================================
+
+### POST /api/payments - Registrar pago (🔴 sin protección)
+POST {{baseUrl}}/payments
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "orderId": "{{orderId}}",
+  "paymentMethod": "cash",
+  "amount": 15000,
+  "change": 2240
+}
+### Esperado: 201 { payment }
+
+### GET /api/payments - Listar pagos (🔴 sin protección)
+GET {{baseUrl}}/payments
+### Esperado: 200 [ { payments populados }, ... ]
+
+### GET /api/payments/:id - Obtener pago (🔴 sin protección)
+GET {{baseUrl}}/payments/{{paymentId}}
+### Esperado: 200 { payment populado }
+
+### ============================================================
+### REWARDS
+### ============================================================
+
+### GET /api/rewards - Listar rewards activos (🔴 sin protección)
+GET {{baseUrl}}/rewards
+### Esperado: 200 [ { rewards activos }, ... ]
+
+### GET /api/rewards/:id - Obtener reward (🔴 sin protección)
+GET {{baseUrl}}/rewards/{{rewardId}}
+### Esperado: 200 { reward }
+
+### POST /api/rewards - Crear reward (🔴 sin protección)
+POST {{baseUrl}}/rewards
+Content-Type: application/json
+
+{
+  "name": "Café Gratis",
+  "description": "Canjea por un café americano",
+  "pointsRequired": 100,
+  "type": "product",
+  "value": 1,
+  "active": true
+}
+### Esperado: 201 { reward }
+
+### PUT /api/rewards/:id - Actualizar reward (🔴 sin protección)
+PUT {{baseUrl}}/rewards/{{rewardId}}
+Content-Type: application/json
+
+{
+  "pointsRequired": 150,
+  "description": "Descripción actualizada"
+}
+### Esperado: 200 { reward actualizado }
+
+### DELETE /api/rewards/:id - Desactivar reward (🔴 sin protección)
+DELETE {{baseUrl}}/rewards/{{rewardId}}
+### Esperado: 200 { msg: "Reward deactivated" }
+## iamgen
+### PUT /api/products/:id/image - Subir imagen
+PUT {{baseUrl}}/products/{{productId}}/image
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="image"; filename="11111.png"
+Content-Type: image/png
+
+< C:\Users\ADSO\Pictures\11111.png
+--boundary123--
