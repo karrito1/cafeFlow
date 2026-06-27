@@ -52,4 +52,28 @@ const deleteReward = async (req, res) => {
   }
 };
 
-module.exports = { getRewards, getRewardById, createReward, updateReward, deleteReward };
+const claimReward = async (req, res) => {
+  try {
+    const { customerId, rewardId } = req.body;
+    if (!customerId || !rewardId) {
+      return res.status(400).json({ ok: false, msg: "customerId and rewardId are required" });
+    }
+    const Customer = require("../models/Customer");
+    const customer = await Customer.findById(customerId);
+    if (!customer) return res.status(404).json({ ok: false, msg: "Customer not found" });
+    const reward = await Reward.findById(rewardId);
+    if (!reward) return res.status(404).json({ ok: false, msg: "Reward not found" });
+    if (!reward.active) return res.status(400).json({ ok: false, msg: "Reward is not active" });
+    if (customer.points < reward.pointsRequired) {
+      return res.status(400).json({ ok: false, msg: "Insufficient points" });
+    }
+    customer.points -= reward.pointsRequired;
+    await customer.save();
+    res.json({ ok: true, msg: "Reward claimed successfully", data: { customer, reward } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
+  }
+};
+
+module.exports = { getRewards, getRewardById, createReward, updateReward, deleteReward, claimReward };
