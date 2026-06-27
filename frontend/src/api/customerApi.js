@@ -1,11 +1,9 @@
+import { get, post } from './client';
+
 const API_URL = '/api/customers';
 
-export const getCustomers = async () => {
-  const res = await fetch(API_URL);
-  return res.json();
-};
+export const getCustomers = () => get(API_URL);
 
-export const getCustomer = async (id) => {
-  const res = await fetch(`${API_URL}/${id}`);
-  return res.json();
-};
+export const getCustomer = (id) => get(`${API_URL}/${id}`);
+
+export const registerCustomer = (data) => post(API_URL, data);
