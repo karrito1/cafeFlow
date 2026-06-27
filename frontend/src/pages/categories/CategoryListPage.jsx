@@ -53,7 +53,7 @@ function CategoryModal({ isOpen, onClose, onSave, category }) {
             </div>
             <div className="form-control">
               <label className="label"><span className="label-text font-medium">Descripción</span></label>
-              <textarea className="textarea textarea-bordered" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              <input className="input input-bordered" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
             <div className="form-control">
               <label className="label"><span className="label-text font-medium">Orden</span></label>
