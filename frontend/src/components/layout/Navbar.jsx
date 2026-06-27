@@ -23,7 +23,7 @@ function Navbar() {
       <div className="flex-1 flex items-center gap-2">
         <span className="text-xl font-bold text-primary">CafeFlow</span>
         {isWaiter && (
-          <div className="flex gap-1 ml-4">
+          <div className="hidden lg:flex gap-1 ml-4">
             {waiterLinks.map((link) => {
               const active = location.pathname === link.to || location.pathname.startsWith(link.to + '/');
               return (
