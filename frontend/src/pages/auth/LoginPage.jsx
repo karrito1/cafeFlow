@@ -16,12 +16,12 @@ function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const data = await loginApi({ email, password });
-      if (data.user) {
-        login(data.user);
+      const res = await loginApi({ email, password });
+      if (res.ok && res.data) {
+        login(res.data.user, res.data.token);
         navigate("/dashboard");
       } else {
-        setError(data.message || "Credenciales inválidas");
+        setError(res.msg || "Credenciales inválidas");
       }
     } catch {
       setError("Error al conectar con el servidor");
