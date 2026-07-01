@@ -1,29 +1,11 @@
+import { get, post, put, del } from './client';
+
 const API_URL = '/api/users';
 
-export const getUsers = async () => {
-  const res = await fetch(API_URL);
-  return res.json();
-};
+export const getUsers = () => get(API_URL);
 
-export const createUser = async (data) => {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  return res.json();
-};
+export const createUser = (data) => post(API_URL, data);
 
-export const updateUser = async (id, data) => {
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  return res.json();
-};
+export const updateUser = (id, data) => put(`${API_URL}/${id}`, data);
 
-export const deleteUser = async (id) => {
-  const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-  return res.json();
-};
+export const deleteUser = (id) => del(`${API_URL}/${id}`);

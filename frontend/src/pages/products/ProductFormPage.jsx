@@ -1,9 +1,7 @@
+import { Navigate } from 'react-router-dom';
+
 function ProductFormPage() {
-  return (
-    <div>
-      <h1>Product Form</h1>
-    </div>
-  );
+  return <Navigate to="/products" replace />;
 }
 
 export default ProductFormPage;

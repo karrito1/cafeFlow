@@ -29,6 +29,12 @@ const seed = async () => {
       password: await bcrypt.hash('cajero123', 12),
       role:     'cashier',
     },
+    {
+      name:     'Mesero 1',
+      email:    'mesero@cafeflow.com',
+      password: await bcrypt.hash('mesero123', 12),
+      role:     'waiter',
+    },
   ]);
 
   console.log(' Users created');

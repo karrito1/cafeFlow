@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AppLayout from '../components/layout/AppLayout';
 import ProtectedRoute from './ProtectedRoute';
+import RoleRoute from './RoleRoute';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import DashboardPage from '../pages/dashboard/DashboardPage';
@@ -37,29 +38,34 @@ function AppRouter() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/products" element={<ProductListPage />} />
-            <Route path="/products/new" element={<ProductFormPage />} />
-            <Route path="/products/:id/edit" element={<ProductFormPage />} />
-            <Route path="/categories" element={<CategoryListPage />} />
-            <Route path="/categories/new" element={<CategoryFormPage />} />
-            <Route path="/categories/:id/edit" element={<CategoryFormPage />} />
+            {/* Acceso para todos los roles autenticados */}
+            <Route path="/tables" element={<TableListPage />} />
+            <Route path="/tables/:id" element={<TableDetailPage />} />
             <Route path="/orders" element={<OrderListPage />} />
             <Route path="/orders/new" element={<CreateOrderPage />} />
             <Route path="/orders/:id" element={<OrderDetailPage />} />
-            <Route path="/tables" element={<TableListPage />} />
-            <Route path="/tables/:id" element={<TableDetailPage />} />
-            <Route path="/payments" element={<PaymentPage />} />
-            <Route path="/customers" element={<CustomerListPage />} />
-            <Route path="/customers/:id" element={<CustomerDetailPage />} />
-            <Route path="/rewards" element={<RewardListPage />} />
-            <Route path="/rewards/redeem" element={<RedeemRewardPage />} />
-            <Route path="/users" element={<UserListPage />} />
-            <Route path="/users/new" element={<UserFormPage />} />
-            <Route path="/users/:id/edit" element={<UserFormPage />} />
-            <Route path="/reports/sales" element={<SalesReportPage />} />
-            <Route path="/reports/inventory" element={<InventoryReportPage />} />
+
+            {/* Acceso solo admin / barista / cashier */}
+            <Route element={<RoleRoute allowedRoles={['admin', 'barista', 'cashier']} />}>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/products" element={<ProductListPage />} />
+              <Route path="/products/new" element={<ProductFormPage />} />
+              <Route path="/products/:id/edit" element={<ProductFormPage />} />
+              <Route path="/categories" element={<CategoryListPage />} />
+              <Route path="/categories/new" element={<CategoryFormPage />} />
+              <Route path="/categories/:id/edit" element={<CategoryFormPage />} />
+              <Route path="/payments" element={<PaymentPage />} />
+              <Route path="/customers" element={<CustomerListPage />} />
+              <Route path="/customers/:id" element={<CustomerDetailPage />} />
+              <Route path="/rewards" element={<RewardListPage />} />
+              <Route path="/rewards/redeem" element={<RedeemRewardPage />} />
+              <Route path="/users" element={<UserListPage />} />
+              <Route path="/users/new" element={<UserFormPage />} />
+              <Route path="/users/:id/edit" element={<UserFormPage />} />
+              <Route path="/reports/sales" element={<SalesReportPage />} />
+              <Route path="/reports/inventory" element={<InventoryReportPage />} />
+            </Route>
           </Route>
         </Route>
 

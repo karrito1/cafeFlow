@@ -9,9 +9,9 @@ const {
   updateOrder
 } = require('../controllers/order.controller');
 
-router.post('/',    verifyToken, onlyRole('admin'), validateCreateOrder, handleValidationErrors, createOrder);
-router.get('/',     verifyToken, onlyRole('admin'), getOrders);
-router.get('/:id',  verifyToken, onlyRole('admin'), getOrderById);
-router.put('/:id',  verifyToken, onlyRole('admin'), updateOrder);
+router.post('/',    verifyToken, onlyRole('admin', 'barista', 'cashier', 'waiter'), validateCreateOrder, handleValidationErrors, createOrder);
+router.get('/',     verifyToken, onlyRole('admin', 'barista', 'cashier', 'waiter'), getOrders);
+router.get('/:id',  verifyToken, onlyRole('admin', 'barista', 'cashier', 'waiter'), getOrderById);
+router.put('/:id',  verifyToken, onlyRole('admin', 'barista', 'cashier', 'waiter'), updateOrder);
 
 module.exports = router;

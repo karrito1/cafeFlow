@@ -1,34 +1,13 @@
+import { get, post, put, del } from './client';
+
 const API_URL = '/api/products';
 
-export const getProducts = async () => {
-  const res = await fetch(API_URL);
-  return res.json();
-};
+export const getProducts = () => get(API_URL);
 
-export const getProduct = async (id) => {
-  const res = await fetch(`${API_URL}/${id}`);
-  return res.json();
-};
+export const getProduct = (id) => get(`${API_URL}/${id}`);
 
-export const createProduct = async (data) => {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  return res.json();
-};
+export const createProduct = (data) => post(API_URL, data);
 
-export const updateProduct = async (id, data) => {
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  return res.json();
-};
+export const updateProduct = (id, data) => put(`${API_URL}/${id}`, data);
 
-export const deleteProduct = async (id) => {
-  const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-  return res.json();
-};
+export const deleteProduct = (id) => del(`${API_URL}/${id}`);

@@ -1,9 +1,7 @@
+import { Navigate } from 'react-router-dom';
+
 function CategoryFormPage() {
-  return (
-    <div>
-      <h1>Category Form</h1>
-    </div>
-  );
+  return <Navigate to="/categories" replace />;
 }
 
 export default CategoryFormPage;
