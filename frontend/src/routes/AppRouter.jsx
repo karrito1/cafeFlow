@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import AppLayout from '../components/layout/AppLayout';
 import ProtectedRoute from './ProtectedRoute';
 import RoleRoute from './RoleRoute';
@@ -27,9 +29,14 @@ import SalesReportPage from '../pages/reports/SalesReportPage';
 import InventoryReportPage from '../pages/reports/InventoryReportPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
+const LandingPage = lazy(() => import('../pages/landing/LandingPage'));
+const LandingHeader = lazy(() => import('../components/landing/Header'));
+const LandingFooter = lazy(() => import('../components/landing/Footer'));
+
 function AppRouter() {
   return (
     <BrowserRouter>
+      <HelmetProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -47,7 +54,6 @@ function AppRouter() {
 
             {/* Acceso solo admin / barista / cashier */}
             <Route element={<RoleRoute allowedRoles={['admin', 'barista', 'cashier']} />}>
-              <Route path="/" element={<DashboardPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/products" element={<ProductListPage />} />
               <Route path="/products/new" element={<ProductFormPage />} />
@@ -69,8 +75,24 @@ function AppRouter() {
           </Route>
         </Route>
 
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={null}>
+              <div className="landing-theme flex flex-col min-h-screen">
+                <LandingHeader />
+                <main className="flex-grow">
+                  <LandingPage />
+                </main>
+                <LandingFooter />
+              </div>
+            </Suspense>
+          }
+        />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </HelmetProvider>
     </BrowserRouter>
   );
 }
