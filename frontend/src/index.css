@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui";
 
@@ -13,6 +15,24 @@
   --color-coffee-800: #3E2723;
   --color-coffee-900: #2C1A12;
   --color-cream: #FFF8E1;
+
+  --color-landing-bg: hsl(45 100% 97%);
+  --color-landing-fg: hsl(20 30% 20%);
+  --color-landing-muted: hsl(0 0% 95%);
+  --color-landing-muted-fg: hsl(0 0% 40%);
+  --color-landing-card: hsl(45 50% 98%);
+  --color-landing-card-fg: hsl(20 30% 20%);
+  --color-landing-border: hsl(30 20% 80%);
+  --color-landing-primary: hsl(25 40% 35%);
+  --color-landing-primary-fg: hsl(45 100% 97%);
+  --color-landing-secondary: hsl(40 30% 85%);
+  --color-landing-secondary-fg: hsl(20 30% 20%);
+  --color-landing-accent: hsl(45 70% 55%);
+  --color-landing-accent-fg: hsl(20 30% 20%);
+  --color-landing-destructive: hsl(0 84% 60%);
+  --color-landing-destructive-fg: hsl(0 0% 98%);
+  --color-landing-input: hsl(30 20% 80%);
+  --color-landing-ring: hsl(25 40% 35%);
 }
 
 [data-theme="cafe"] {
@@ -36,5 +56,20 @@
 
 body {
   margin: 0;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+.landing-theme {
+  color: var(--color-landing-fg);
+  font-family: "DM Sans", system-ui, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-landing-bg);
+}
+
+.landing-theme h1,
+.landing-theme h2,
+.landing-theme h3,
+.landing-theme h4,
+.landing-theme h5,
+.landing-theme h6 {
+  font-family: "Playfair Display", serif;
+  text-wrap: balance;
 }
