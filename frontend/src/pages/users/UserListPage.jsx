@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getUsers, deleteUser } from "../../api/userApi";
+import { useAuth } from "../../context/AuthContext";
 import { Users, Plus, Trash2 } from "lucide-react";
 
 function UserListPage() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,7 +54,7 @@ function UserListPage() {
                   <div key={i} className="skeleton h-12 w-full"></div>
                 ))}
               </div>
-            ) : users.length > 0 ? (
+            ) : users.filter((u) => u._id !== currentUser?.id).length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="table">
                   <thead>
@@ -65,7 +67,7 @@ function UserListPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user) => (
+                    {users.filter((u) => u._id !== currentUser?.id).map((user) => (
                       <tr key={user._id} className="hover:bg-base-200">
                         <td className="font-medium text-base-content">{user.name}</td>
                         <td className="text-base-content/70">{user.email}</td>
