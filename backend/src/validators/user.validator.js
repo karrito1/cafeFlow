@@ -1,10 +1,10 @@
 const { body } = require("express-validator");
 
 const validateCreateUser = [
-  body("name").notEmpty().withMessage("Name is required"),
-  body("email").isEmail().withMessage("Valid email is required"),
-  body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
-  body("role").isIn(["admin", "barista", "cashier"]).withMessage("Role must be admin, barista, or cashier"),
+  body("name").notEmpty().withMessage("El nombre es obligatorio"),
+  body("email").isEmail().withMessage("El correo no es válido"),
+  body("password").isLength({ min: 6 }).withMessage("La contraseña debe tener al menos 6 caracteres"),
+  body("role").isIn(["admin", "barista", "cashier"]).withMessage("El rol debe ser admin, barista o cajero"),
 ];
 
 module.exports = { validateCreateUser };

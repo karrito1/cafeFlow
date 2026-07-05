@@ -12,6 +12,8 @@ const userSchema = new Schema(
     },
     accessCode: { type: String },
     active: { type: Boolean, default: true },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
   },
   { timestamps: true },
 );

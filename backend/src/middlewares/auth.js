@@ -23,7 +23,7 @@ const verifyToken = (req, res, next) => {
   // 3. Si no hay token, no se puede continuar.
   //    Respondemos 401 (No autorizado) y NO llamamos a next(),
   //    por lo tanto la petición se detiene aquí.
-  if (!token) return res.status(401).json({ msg: 'Token required' });
+  if (!token) return res.status(401).json({ msg: 'Token requerido' });
 
   try {
     // 4. Verificar el token:
@@ -46,7 +46,7 @@ const verifyToken = (req, res, next) => {
     // 7. Si jwt.verify lanza un error (firma inválida, token
     //    modificado, o expirado), caemos aquí.
     //    Respondemos 401 y la petición se detiene.
-    res.status(401).json({ msg: 'Invalid or expired token' });
+    res.status(401).json({ msg: 'Token inválido o expirado' });
   }
 };
 
@@ -75,7 +75,7 @@ const onlyRole = (...roles) => (req, res, next) => {
     //    Diferencia con 401:
     //    - 401 = "no sé quién eres / no estás logueado"
     //    - 403 = "sé quién eres, pero no tienes permiso"
-    return res.status(403).json({ msg: 'Access denied for this role' });
+    return res.status(403).json({ msg: 'Acceso denegado para este rol' });
   }
 
   // 3. Si el rol es válido, continuamos.
