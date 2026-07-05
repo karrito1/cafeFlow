@@ -84,12 +84,12 @@ function LoginPage() {
             </div>
 
             <label className="label mb-4">
-              <a
-                href="#"
+              <Link
+                to="/forgot-password"
                 className="label-text-alt text-base-content/50 hover:text-primary link link-hover text-sm"
               >
                 ¿Olvidaste tu contraseña?
-              </a>
+              </Link>
             </label>
 
             {error && (

@@ -6,6 +6,8 @@ import ProtectedRoute from './ProtectedRoute';
 import RoleRoute from './RoleRoute';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import DashboardPage from '../pages/dashboard/DashboardPage';
 import MenuPage from '../pages/menu/MenuPage';
 import PromotionsPage from '../pages/menu/PromotionsPage';
@@ -40,6 +42,8 @@ function AppRouter() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
 
