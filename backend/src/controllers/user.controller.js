@@ -12,7 +12,7 @@ const createUser = async (req, res) => {
     if (exists) {
       return res.status(400).json({
         ok: false,
-        msg: "Email already registered",
+        msg: "El correo ya está registrado",
       });
     }
 

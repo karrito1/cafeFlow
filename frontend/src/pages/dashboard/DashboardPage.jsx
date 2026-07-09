@@ -142,6 +142,7 @@ function DashboardPage() {
                   <thead>
                     <tr className="text-base-content/60 text-xs">
                       <th>Mesa</th>
+                      <th>Mesero</th>
                       <th>Total</th>
                       <th>Estado</th>
                       <th>Hora</th>
@@ -153,6 +154,7 @@ function DashboardPage() {
                         <td className="text-sm font-medium text-base-content">
                           Mesa {order.tableId?.tableNumber || '—'}
                         </td>
+                        <td className="text-sm text-base-content/70">{order.waiterId?.name || '—'}</td>
                         <td className="text-sm text-base-content">{formatCurrency(order.total)}</td>
                         <td>
                           <span className={`badge ${statusBadge[order.status] || 'badge-soft'} text-xs`}>

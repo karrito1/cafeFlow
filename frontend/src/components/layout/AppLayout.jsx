@@ -25,7 +25,7 @@ function AppLayout() {
     <div className="min-h-screen flex flex-col bg-base-200 pb-16 lg:pb-0" data-theme="cafe">
       <Navbar />
       <div className="flex flex-1">
-        <Sidebar />
+        {!isWaiter && <Sidebar />}
         <main className="flex-1">
           <Outlet />
         </main>

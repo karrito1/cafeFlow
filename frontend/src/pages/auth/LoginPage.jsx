@@ -19,7 +19,8 @@ function LoginPage() {
       const res = await loginApi({ email, password });
       if (res.ok && res.data) {
         login(res.data.user, res.data.token);
-        navigate("/dashboard");
+        const route = res.data.user.role === "waiter" ? "/tables" : "/dashboard";
+        navigate(route);
       } else {
         setError(res.msg || "Credenciales inválidas");
       }
@@ -84,12 +85,12 @@ function LoginPage() {
             </div>
 
             <label className="label mb-4">
-              <a
-                href="#"
+              <Link
+                to="/forgot-password"
                 className="label-text-alt text-base-content/50 hover:text-primary link link-hover text-sm"
               >
                 ¿Olvidaste tu contraseña?
-              </a>
+              </Link>
             </label>
 
             {error && (

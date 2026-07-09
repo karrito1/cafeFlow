@@ -5,10 +5,9 @@ export const ROLES = {
 };
 
 export const ORDER_STATUS = {
-  PENDING: 'pending',
-  IN_PROGRESS: 'in_progress',
-  READY: 'ready',
-  DELIVERED: 'delivered',
+  ACTIVE: 'active',
+  CONFIRMED: 'confirmed',
+  PAID: 'paid',
   CANCELLED: 'cancelled',
 };
 

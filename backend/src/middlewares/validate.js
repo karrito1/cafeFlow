@@ -5,7 +5,7 @@ const handleValidationErrors = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       ok: false,
-      msg: "Validation error",
+      msg: "Error de validación",
       errors: errors.array().map((e) => ({ field: e.path, message: e.msg })),
     });
   }

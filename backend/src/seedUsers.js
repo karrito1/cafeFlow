@@ -2,9 +2,13 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const conectarDB = require('./config/db');
 const User = require('./models/User');
+const Order = require('./models/Order');
 
 const seed = async () => {
   await conectarDB();
+
+  await Order.deleteMany();
+  console.log(' Orders deleted');
 
   await User.deleteMany();
   console.log(' Users deleted');
@@ -15,19 +19,6 @@ const seed = async () => {
       email:    'admin@cafeflow.com',
       password: await bcrypt.hash('admin123', 12),
       role:     'admin',
-    },
-    {
-      name:       'Barista 1',
-      email:      'barista@cafeflow.com',
-      password:   await bcrypt.hash('barista123', 12),
-      role:       'barista',
-      accessCode: '1234',
-    },
-    {
-      name:     'Cajero 1',
-      email:    'cajero@cafeflow.com',
-      password: await bcrypt.hash('cajero123', 12),
-      role:     'cashier',
     },
     {
       name:     'Mesero 1',

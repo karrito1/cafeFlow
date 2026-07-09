@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TABLE_STATUS } from '../../utils/constants';
 import { getTable, updateTable, deleteTable } from '../../api/tableApi';
+import { getOrders } from '../../api/orderApi';
 import { useAuth } from '../../context/AuthContext';
-import { Search, Coffee, UtensilsCrossed, Trash2 } from 'lucide-react';
+import { formatCurrency } from '../../utils/formatters';
+import { Search, Coffee, UtensilsCrossed, Trash2, Eye } from 'lucide-react';
 
 const statusStyle = {
   [TABLE_STATUS.FREE]: { label: 'Disponible', badge: 'badge-soft badge-success' },
@@ -16,20 +18,30 @@ function TableDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [mesa, setMesa] = useState(null);
+  const [activeOrder, setActiveOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const fetchTable = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await getTable(id);
-        if (res.ok) {
-          setMesa(res.data);
+        const [tableRes, ordersRes] = await Promise.all([
+          getTable(id),
+          getOrders(),
+        ]);
+        if (tableRes.ok) {
+          setMesa(tableRes.data);
         } else {
-          setError(res.msg || 'Mesa no encontrada');
+          setError(tableRes.msg || 'Mesa no encontrada');
+        }
+        if (ordersRes.ok) {
+          const order = ordersRes.data.find(
+            (o) => o.tableId?._id === id && (o.status === 'active' || o.status === 'confirmed')
+          );
+          setActiveOrder(order || null);
         }
       } catch {
         setError('Error al conectar con el servidor');
@@ -37,7 +49,7 @@ function TableDetailPage() {
         setLoading(false);
       }
     };
-    fetchTable();
+    fetchData();
   }, [id]);
 
   const changeStatus = async (newStatus) => {
@@ -152,8 +164,7 @@ function TableDetailPage() {
           <div className="card-body px-8 py-8">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">Acciones</h3>
             <div className="flex flex-wrap gap-3">
-              <button className="btn btn-primary">Nuevo Pedido</button>
-              <button className="btn btn-outline">Ver Historial</button>
+              <button className="btn btn-primary" onClick={() => navigate(`/orders/new?tableId=${id}`)}>Nuevo Pedido</button>
               {user?.role === 'admin' && (
                 <button className="btn btn-ghost text-error hover:bg-error/10 hover:text-error" onClick={() => setShowConfirm(true)}>Eliminar Mesa</button>
               )}
@@ -165,23 +176,54 @@ function TableDetailPage() {
           <div className="card-body px-8 py-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-base-content/40">Pedido Actual</h3>
-              {mesa.status === TABLE_STATUS.OCCUPIED && (
+              {activeOrder && (
                 <span className="badge badge-soft badge-error gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-error" />
                   En curso
                 </span>
               )}
             </div>
-            {mesa.status === TABLE_STATUS.OCCUPIED ? (
-              <div className="py-8 text-center">
-                <Coffee size={32} className="mx-auto mb-2 opacity-30" />
-                <p className="text-sm text-base-content/50">Pedido activo - consulta la sección de pedidos</p>
+            {activeOrder ? (
+              <div className="space-y-4">
+                <div className="bg-base-200/30 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-semibold text-base-content">
+                      #{activeOrder._id.slice(-6).toUpperCase()}
+                    </span>
+                    <span className="text-sm font-bold text-primary">
+                      {formatCurrency(activeOrder.total)}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {activeOrder.products?.slice(0, 3).map((p, i) => (
+                      <div key={i} className="flex items-center justify-between text-sm">
+                        <span className="text-base-content/70">
+                          x{p.quantity} {p.name}
+                        </span>
+                        <span className="text-base-content/50 text-xs">
+                          {formatCurrency(p.price * p.quantity)}
+                        </span>
+                      </div>
+                    ))}
+                    {(activeOrder.products?.length || 0) > 3 && (
+                      <p className="text-xs text-base-content/40 text-center pt-1">
+                        +{activeOrder.products.length - 3} productos más
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    className="btn btn-primary btn-sm w-full mt-3"
+                    onClick={() => navigate(`/orders/${activeOrder._id}`)}
+                  >
+                    <Eye size={14} /> Ver Pedido
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="py-8 text-center">
                 <UtensilsCrossed size={32} className="mx-auto mb-2 opacity-30" />
                 <p className="text-sm text-base-content/50">No hay pedido activo en esta mesa</p>
-                <button className="btn btn-primary btn-sm mt-3">Crear Pedido</button>
+                <button className="btn btn-primary btn-sm mt-3" onClick={() => navigate(`/orders/new?tableId=${id}`)}>Crear Pedido</button>
               </div>
             )}
           </div>
