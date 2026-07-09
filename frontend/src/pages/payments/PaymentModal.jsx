@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getOrders } from "../../api/orderApi";
 import { createPayment } from "../../api/paymentApi";
 
@@ -11,6 +11,27 @@ function PaymentModal({ open, onClose }) {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [amountReceived, setAmountReceived] = useState("");
   const [change, setChange] = useState(0);
+
+  // Toast (reemplaza alert())
+  const [toast, setToast] = useState(null); // { type: "success" | "error", message: string }
+  const toastTimeoutRef = useRef(null);
+
+  const showToast = (message, type = "success") => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+
+    setToast({ type, message });
+
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 3000);
+  };
+
+  // Limpiar timeout al desmontar el modal
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
 
   // Formatear moneda
   const formatCurrency = (value) => {
@@ -61,14 +82,14 @@ function PaymentModal({ open, onClose }) {
   // Guardar pago
   const handleSave = async () => {
     if (!selectedOrder) {
-      alert("Seleccione un pedido.");
+      showToast("Seleccione un pedido.", "error");
       return;
     }
 
     const total = Number(orderSelected?.total || 0);
 
     if (paymentMethod === "cash" && Number(amountReceived) < total) {
-      alert("El valor recibido es menor al total.");
+      showToast("El valor recibido es menor al total.", "error");
       return;
     }
 
@@ -81,7 +102,7 @@ function PaymentModal({ open, onClose }) {
       });
 
       if (response.ok) {
-        alert("Pago registrado correctamente.");
+        showToast("Pago registrado correctamente.", "success");
 
         setSelectedOrder("");
         setOrderSelected(null);
@@ -89,13 +110,16 @@ function PaymentModal({ open, onClose }) {
         setAmountReceived("");
         setChange(0);
 
-        onClose();
+        // Dar tiempo a que se vea el toast antes de cerrar el modal
+        setTimeout(() => {
+          onClose();
+        }, 1200);
       } else {
-        alert(response.msg);
+        showToast(response.msg, "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error al registrar el pago.");
+      showToast("Error al registrar el pago.", "error");
     }
   };
 
@@ -224,6 +248,21 @@ function PaymentModal({ open, onClose }) {
           </button>
         </div>
       </div>
+
+      {/* Toast (reemplaza alert()) */}
+      {toast && (
+        <div className="toast toast-top toast-end z-[100]">
+          <div
+            className={`alert border-0 text-white shadow-lg ${
+              toast.type === "error"
+                ? "bg-[#B45309]" // ámbar oscuro para errores
+                : "bg-[#3F2D20]" // marrón oscuro (mismo tono que "Nuevo Pago") para éxito
+            }`}
+          >
+            <span>{toast.message}</span>
+          </div>
+        </div>
+      )}
     </dialog>
   );
 }
