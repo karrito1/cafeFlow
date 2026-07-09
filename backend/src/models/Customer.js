@@ -7,6 +7,7 @@ const customerSchema = new Schema(
     phone: { type: String },
     password: { type: String, required: true },
     points: { type: Number, default: 0 },
+    lifetimePoints: { type: Number, default: 0 },
     level: {
       type: String,
       enum: ["bronze", "silver", "gold"],

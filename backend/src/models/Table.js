@@ -11,6 +11,7 @@ const tableSchema = new Schema(
       default: "free",
     },
     assignedWaiter: { type: Schema.Types.ObjectId, ref: "User", default: null },
+    currentCustomer: { type: Schema.Types.ObjectId, ref: "Customer", default: null },
     openedAt: { type: Date, default: null },
   },
   { timestamps: true },

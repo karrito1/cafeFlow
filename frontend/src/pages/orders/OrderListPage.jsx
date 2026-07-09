@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getOrders } from '../../api/orderApi';
+import { useAuth } from '../../context/AuthContext';
 import { ORDER_STATUS } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import { ClipboardList, Search } from 'lucide-react';
+import { ClipboardList, Search, User, Filter } from 'lucide-react';
 
 const statusConfig = {
   [ORDER_STATUS.ACTIVE]: { label: 'Activo', badge: 'badge-soft badge-info' },
@@ -14,10 +15,12 @@ const statusConfig = {
 
 function OrderListPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [myOrdersOnly, setMyOrdersOnly] = useState(user?.role === 'waiter');
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
@@ -31,7 +34,15 @@ function OrderListPage() {
 
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
+  const myOrdersCount = useMemo(() =>
+    orders.filter((o) => o.waiterId?._id === user?.id || o.waiterId === user?.id).length,
+  [orders, user]);
+
   const filtered = orders.filter((o) => {
+    if (myOrdersOnly) {
+      const isMine = o.waiterId?._id === user?.id || o.waiterId === user?.id;
+      if (!isMine) return false;
+    }
     const tableMatch = o.tableId?.tableNumber?.toString().includes(search) ||
       (o.tableId?.name || '').toLowerCase().includes(search.toLowerCase());
     const waiterMatch = (o.waiterId?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -51,12 +62,24 @@ function OrderListPage() {
   return (
     <div className="p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-base-content">Pedidos</h1>
-          <p className="text-sm text-base-content/60">{orders.length} pedidos</p>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-base-content">Pedidos</h1>
+            <p className="text-sm text-base-content/60">{orders.length} pedidos</p>
+          </div>
+          {user && (
+            <div className="flex items-center gap-2 bg-base-100 border border-base-200 rounded-xl px-4 py-2 shadow-sm">
+              <User size={16} className="text-primary" />
+              <span className="text-sm font-medium text-base-content">{user.name}</span>
+              <span className="badge badge-soft badge-primary text-xs">{user.role === 'waiter' ? 'Mesero' : user.role}</span>
+              {user.role !== 'admin' && (
+                <span className="text-xs text-base-content/40 ml-1">· {myOrdersCount} pedidos</span>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input
             className="input input-bordered w-full sm:max-w-xs"
             placeholder="Buscar por mesa o mesero…"
@@ -73,6 +96,18 @@ function OrderListPage() {
               <option key={key} value={key}>{config.label}</option>
             ))}
           </select>
+          <label className="flex items-center gap-2 cursor-pointer ml-auto">
+            <input
+              type="checkbox"
+              className="toggle toggle-primary toggle-sm"
+              checked={myOrdersOnly}
+              onChange={() => setMyOrdersOnly((prev) => !prev)}
+            />
+            <span className="text-sm text-base-content/70 flex items-center gap-1">
+              <Filter size={14} />
+              Mis pedidos
+            </span>
+          </label>
         </div>
 
         {filtered.length === 0 ? (
@@ -80,10 +115,10 @@ function OrderListPage() {
             <div className="card-body items-center py-16 text-center">
               <ClipboardList size={48} className="mb-4 opacity-30 mx-auto" />
               <h3 className="text-lg font-semibold text-base-content">
-                {orders.length === 0 ? 'No hay pedidos' : 'Sin resultados'}
+                {myOrdersOnly && orders.length > 0 ? 'No tienes pedidos' : orders.length === 0 ? 'No hay pedidos' : 'Sin resultados'}
               </h3>
               <p className="text-sm text-base-content/40">
-                {orders.length === 0 ? 'Crea tu primer pedido' : 'Intenta con otros filtros'}
+                {orders.length === 0 ? 'Crea tu primer pedido' : myOrdersOnly ? 'Desactiva el filtro "Mis pedidos" para ver todos' : 'Intenta con otros filtros'}
               </p>
               {orders.length === 0 && (
                 <p className="text-sm text-base-content/40 mt-2">Crea un pedido desde la sección de mesas</p>

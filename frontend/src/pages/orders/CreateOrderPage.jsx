@@ -116,7 +116,16 @@ function CreateOrderPage() {
     setCart((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const currentTable = tables.find(t => t._id === selectedTable);
+  const customer = currentTable?.currentCustomer;
+  
+  let discountPercent = 0;
+  if (customer?.level === 'gold') discountPercent = 0.10;
+  else if (customer?.level === 'silver') discountPercent = 0.05;
+
+  const rawSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discountValue = rawSubtotal * discountPercent;
+  const subtotal = rawSubtotal - discountValue;
   const taxes = subtotal * 0.19;
   const total = subtotal + taxes;
 
@@ -138,7 +147,9 @@ function CreateOrderPage() {
       tableId: selectedTable,
       waiterId: user.id,
       products: productsData,
-      subtotal: Math.round(subtotal),
+      customerId: customer?._id || null,
+      subtotal: Math.round(rawSubtotal),
+      discount: Math.round(discountValue),
       taxes: Math.round(taxes),
       total: Math.round(total),
     };
@@ -410,8 +421,14 @@ function CreateOrderPage() {
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between text-base-content/60">
                         <span>Subtotal</span>
-                        <span>{formatCurrency(subtotal)}</span>
+                        <span>{formatCurrency(rawSubtotal)}</span>
                       </div>
+                      {discountValue > 0 && (
+                        <div className="flex justify-between text-success font-medium">
+                          <span>Descuento Fidelidad ({customer.level === 'gold' ? '10%' : '5%'})</span>
+                          <span>-{formatCurrency(discountValue)}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-base-content/60">
                         <span>IVA 19%</span>
                         <span>{formatCurrency(taxes)}</span>

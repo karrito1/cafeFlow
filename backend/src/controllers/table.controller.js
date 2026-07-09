@@ -3,7 +3,7 @@ const Table = require("../models/Table");
 // Create Table
 const createTable = async (req, res) => {
   try {
-    const { tableNumber, name, capacity, status, assignedWaiter, openedAt } =
+    const { tableNumber, name, capacity, status, assignedWaiter, openedAt, currentCustomer } =
       req.body;
 
     const exists = await Table.findOne({ tableNumber });
@@ -22,12 +22,17 @@ const createTable = async (req, res) => {
       status,
       assignedWaiter,
       openedAt,
+      currentCustomer: currentCustomer || null,
     });
+
+    const populated = await Table.findById(table._id)
+      .populate("assignedWaiter", "name email role")
+      .populate("currentCustomer", "name email phone level points");
 
     res.status(201).json({
       ok: true,
       msg: "Table created successfully",
-      data: table,
+      data: populated,
     });
   } catch (error) {
     console.error(error);
@@ -42,10 +47,9 @@ const createTable = async (req, res) => {
 // Get Tables
 const getTables = async (req, res) => {
   try {
-    const tables = await Table.find().populate(
-      "assignedWaiter",
-      "name email role",
-    );
+    const tables = await Table.find()
+      .populate("assignedWaiter", "name email role")
+      .populate("currentCustomer", "name email phone level points");
 
     res.status(200).json({
       ok: true,
@@ -67,10 +71,9 @@ const getTableById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const table = await Table.findById(id).populate(
-      "assignedWaiter",
-      "name email role",
-    );
+    const table = await Table.findById(id)
+      .populate("assignedWaiter", "name email role")
+      .populate("currentCustomer", "name email phone level points");
 
     if (!table) {
       return res.status(404).json({
@@ -110,7 +113,9 @@ const updateTable = async (req, res) => {
 
     const updatedTable = await Table.findByIdAndUpdate(id, req.body, {
       new: true,
-    }).populate("assignedWaiter", "name email role");
+    })
+      .populate("assignedWaiter", "name email role")
+      .populate("currentCustomer", "name email phone level points");
 
     res.status(200).json({
       ok: true,

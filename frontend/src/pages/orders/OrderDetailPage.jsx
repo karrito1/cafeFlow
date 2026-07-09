@@ -162,6 +162,12 @@ function OrderDetailPage() {
                 <span>Subtotal</span>
                 <span>{formatCurrency(order.subtotal)}</span>
               </div>
+              {(order.discount || 0) > 0 && (
+                <div className="flex justify-between text-success font-medium">
+                  <span>Descuento Fidelidad</span>
+                  <span>-{formatCurrency(order.discount)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-base-content/60">
                 <span>IVA 19%</span>
                 <span>{formatCurrency(order.taxes)}</span>
