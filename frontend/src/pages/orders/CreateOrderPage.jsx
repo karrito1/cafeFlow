@@ -361,7 +361,7 @@ function CreateOrderPage() {
                 <div className="flex items-center gap-2 mb-4">
                   <ShoppingCart size={18} className="text-primary" />
                   <h2 className="text-lg font-bold text-base-content">Pedido</h2>
-                  <span className="badge badge-soft badge-primary ml-auto">{cart.length} items</span>
+                  <span className="badge badge-soft badge-primary ml-auto">{cart.length} productos</span>
                 </div>
 
                 {cart.length === 0 ? (

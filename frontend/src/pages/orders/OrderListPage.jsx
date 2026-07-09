@@ -113,7 +113,7 @@ function OrderListPage() {
                         {order.tableId?.name || `Mesa ${order.tableId?.tableNumber || '—'}`}
                       </td>
                       <td className="text-sm text-base-content/70">{order.waiterId?.name || '—'}</td>
-                      <td className="text-sm">{order.products?.length || 0} items</td>
+                      <td className="text-sm">{order.products?.length || 0} productos</td>
                       <td className="font-semibold">{formatCurrency(order.total)}</td>
                       <td>
                         <span className={`badge ${config.badge} text-xs`}>{config.label}</span>
