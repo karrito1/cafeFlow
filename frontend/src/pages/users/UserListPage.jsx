@@ -105,8 +105,7 @@ function UserModal({ isOpen, onClose, onSave, user }) {
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
               >
                 <option value="admin">Admin</option>
-                <option value="barista">Barista</option>
-                <option value="cashier">Cajero</option>
+                <option value="waiter">Mesero</option>
               </select>
             </div>
             {error && <div className="alert alert-error py-2 text-sm">{error}</div>}
@@ -249,12 +248,10 @@ function UserListPage() {
                           className={`badge ${
                             user.role === "admin"
                               ? "badge-soft badge-warning"
-                              : user.role === "barista"
-                                ? "badge-soft badge-info"
-                                : "badge-soft badge-neutral"
+                              : "badge-soft badge-neutral"
                           }`}
                         >
-                          {user.role}
+                          {user.role === "admin" ? "Admin" : "Mesero"}
                         </span>
                       </td>
                       <td>

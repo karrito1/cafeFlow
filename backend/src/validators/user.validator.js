@@ -4,7 +4,7 @@ const validateCreateUser = [
   body("name").notEmpty().withMessage("El nombre es obligatorio"),
   body("email").isEmail().withMessage("El correo no es válido"),
   body("password").isLength({ min: 6 }).withMessage("La contraseña debe tener al menos 6 caracteres"),
-  body("role").isIn(["admin", "barista", "cashier"]).withMessage("El rol debe ser admin, barista o cajero"),
+  body("role").isIn(["admin", "waiter"]).withMessage("El rol debe ser admin o mesero"),
 ];
 
 module.exports = { validateCreateUser };

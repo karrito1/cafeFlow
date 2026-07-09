@@ -15,18 +15,7 @@ const roleNav = {
     { to: '/tables', label: 'Mesas', icon: 'Sofa' },
     { to: '/products', label: 'Productos', icon: 'Coffee' },
   ],
-  barista: [
-    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
-    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
-    { to: '/menu', label: 'Menú', icon: 'FileText' },
-  ],
-  cashier: [
-    { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-    { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
-    { to: '/payments', label: 'Pagos', icon: 'CreditCard' },
-    { to: '/tables', label: 'Mesas', icon: 'Sofa' },
-  ],
+
   waiter: [
     { to: '/tables', label: 'Mesas', icon: 'Sofa' },
     { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },

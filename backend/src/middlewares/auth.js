@@ -59,14 +59,14 @@ const verifyToken = (req, res, next) => {
 // Es una función que RECIBE roles permitidos y DEVUELVE
 // el middleware real. Por eso se usa así:
 //   onlyRole('admin')              → solo admin
-//   onlyRole('admin', 'barista')   → admin O barista
+//   onlyRole('admin', 'waiter')    → admin O mesero
 //
 // Siempre debe ir DESPUÉS de verifyToken, porque necesita
 // que req.user ya exista.
 // ============================================================
 const onlyRole = (...roles) => (req, res, next) => {
   // ...roles es un "rest parameter": junta todos los argumentos
-  // en un array. onlyRole('admin','barista') → roles = ['admin','barista']
+  // en un array. onlyRole('admin','waiter') → roles = ['admin','waiter']
 
   // 1. Revisamos si el rol del usuario logueado (req.user.role)
   //    está incluido en la lista de roles permitidos.

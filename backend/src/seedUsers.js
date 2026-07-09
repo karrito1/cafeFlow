@@ -17,19 +17,6 @@ const seed = async () => {
       role:     'admin',
     },
     {
-      name:       'Barista 1',
-      email:      'barista@cafeflow.com',
-      password:   await bcrypt.hash('barista123', 12),
-      role:       'barista',
-      accessCode: '1234',
-    },
-    {
-      name:     'Cajero 1',
-      email:    'cajero@cafeflow.com',
-      password: await bcrypt.hash('cajero123', 12),
-      role:     'cashier',
-    },
-    {
       name:     'Mesero 1',
       email:    'mesero@cafeflow.com',
       password: await bcrypt.hash('mesero123', 12),

@@ -40,7 +40,7 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || "cashier",
+      role: role || "waiter",
       active: true,
     });
     const token = jwt.sign(

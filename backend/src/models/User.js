@@ -7,8 +7,8 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["admin", "barista", "cashier", "waiter"],
-      default: "barista",
+      enum: ["admin", "waiter"],
+      default: "waiter",
     },
     accessCode: { type: String },
     active: { type: Boolean, default: true },
