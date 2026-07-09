@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Coffee, Search, X, ArrowLeft } from 'lucide-react';
+import { Coffee, Search, X } from 'lucide-react';
 import { getProducts } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
 import { formatCurrency } from '../../utils/formatters';
-import { useAuth } from '../../context/AuthContext';
 
 const SIZES = ['S', 'M', 'L'];
 
@@ -15,10 +13,6 @@ function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
-  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,15 +60,6 @@ function MenuPage() {
             <h1 className="text-2xl font-bold text-base-content">Menú Digital</h1>
             <p className="text-sm text-base-content/60">Explora nuestra selección de cafés y bebidas</p>
           </div>
-          {isAdmin && (
-            <button
-              className="btn btn-outline btn-sm gap-2 self-start"
-              onClick={() => navigate('/dashboard')}
-            >
-              <ArrowLeft size={16} />
-              Volver al Dashboard
-            </button>
-          )}
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row max-w-xl">
