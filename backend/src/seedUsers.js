@@ -2,9 +2,13 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const conectarDB = require('./config/db');
 const User = require('./models/User');
+const Order = require('./models/Order');
 
 const seed = async () => {
   await conectarDB();
+
+  await Order.deleteMany();
+  console.log(' Orders deleted');
 
   await User.deleteMany();
   console.log(' Users deleted');
