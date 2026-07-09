@@ -43,20 +43,20 @@ function AppRouter() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/menu" element={<MenuPage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             {/* Acceso para todos los roles autenticados */}
+            <Route path="/menu" element={<MenuPage />} />
             <Route path="/tables" element={<TableListPage />} />
             <Route path="/tables/:id" element={<TableDetailPage />} />
             <Route path="/orders" element={<OrderListPage />} />
             <Route path="/orders/new" element={<CreateOrderPage />} />
             <Route path="/orders/:id" element={<OrderDetailPage />} />
 
-            {/* Acceso solo admin / barista / cashier */}
-            <Route element={<RoleRoute allowedRoles={['admin', 'barista', 'cashier']} />}>
+            {/* Acceso solo admin */}
+            <Route element={<RoleRoute allowedRoles={['admin']} />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/products" element={<ProductListPage />} />
               <Route path="/products/new" element={<ProductFormPage />} />
