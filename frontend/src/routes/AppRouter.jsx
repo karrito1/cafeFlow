@@ -28,7 +28,6 @@ import RedeemRewardPage from '../pages/rewards/RedeemRewardPage';
 import UserListPage from '../pages/users/UserListPage';
 import UserFormPage from '../pages/users/UserFormPage';
 import SalesReportPage from '../pages/reports/SalesReportPage';
-import InventoryReportPage from '../pages/reports/InventoryReportPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 const LandingPage = lazy(() => import('../pages/landing/LandingPage'));
@@ -74,7 +73,6 @@ function AppRouter() {
               <Route path="/users/new" element={<UserFormPage />} />
               <Route path="/users/:id/edit" element={<UserFormPage />} />
               <Route path="/reports/sales" element={<SalesReportPage />} />
-              <Route path="/reports/inventory" element={<InventoryReportPage />} />
             </Route>
           </Route>
         </Route>
