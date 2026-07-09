@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TABLE_STATUS } from '../../utils/constants';
 import { getTables, createTable, updateTable, deleteTable } from '../../api/tableApi';
+import { getCustomers } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
-import { Sofa } from 'lucide-react';
+import { Sofa, User } from 'lucide-react';
 
 const statusStyle = {
   [TABLE_STATUS.FREE]: {
@@ -24,9 +25,27 @@ const statusStyle = {
 };
 
 function NewTableModal({ isOpen, onClose, onCreated }) {
-  const [form, setForm] = useState({ tableNumber: '', capacity: '4', name: '' });
+  const [form, setForm] = useState({ tableNumber: '', capacity: '4', name: '', currentCustomer: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const [loadingCustomers, setLoadingCustomers] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const fetchCustomers = async () => {
+      setLoadingCustomers(true);
+      try {
+        const res = await getCustomers();
+        if (res.ok) setCustomers(res.data);
+      } catch {
+        // silent
+      } finally {
+        setLoadingCustomers(false);
+      }
+    };
+    fetchCustomers();
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -39,14 +58,16 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
     }
     setLoading(true);
     try {
-      const res = await createTable({
+      const payload = {
         tableNumber: Number(form.tableNumber),
         capacity: Number(form.capacity) || 4,
         name: form.name,
-      });
+        currentCustomer: form.currentCustomer || null,
+      };
+      const res = await createTable(payload);
       if (res.ok) {
         onCreated(res.data);
-        setForm({ tableNumber: '', capacity: '4', name: '' });
+        setForm({ tableNumber: '', capacity: '4', name: '', currentCustomer: '' });
         onClose();
       } else {
         setError(res.msg || 'Error al crear mesa');
@@ -110,6 +131,37 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
+
+            {/* Customer selector */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-base-content/80 font-medium flex items-center gap-1.5">
+                  <User size={14} />
+                  Cliente asignado
+                </span>
+                <span className="label-text-alt text-base-content/40">Opcional</span>
+              </label>
+              {loadingCustomers ? (
+                <div className="flex items-center gap-2 text-sm text-base-content/40 py-2">
+                  <span className="loading loading-spinner loading-xs" />
+                  Cargando clientes...
+                </div>
+              ) : (
+                <select
+                  className="select select-bordered w-full text-base-content"
+                  value={form.currentCustomer}
+                  onChange={(e) => setForm({ ...form, currentCustomer: e.target.value })}
+                >
+                  <option value="">— Sin cliente asignado —</option>
+                  {customers.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name} ({c.email})
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
             {error && (
               <div role="alert" className="alert alert-error py-2.5 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">
                 <span>{error}</span>
@@ -200,6 +252,15 @@ function TableCard({ mesa, onStatusChange, isAdmin }) {
 
         {mesa.name && (
           <span className="text-xs text-base-content/40">{mesa.name}</span>
+        )}
+
+        {mesa.currentCustomer && (
+          <div className="flex items-center gap-1 mt-1">
+            <User size={11} className="text-primary/60" />
+            <span className="text-[10px] text-primary/70 font-medium truncate max-w-[80px]">
+              {mesa.currentCustomer.name}
+            </span>
+          </div>
         )}
       </div>
     </div>

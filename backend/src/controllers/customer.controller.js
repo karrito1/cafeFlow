@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const Customer = require("../models/Customer");
+const Table = require("../models/Table");
 
 const registerCustomer = async (req, res) => {
   try {
@@ -15,6 +16,7 @@ const registerCustomer = async (req, res) => {
         id: customer._id,
         name: customer.name,
         email: customer.email,
+        phone: customer.phone,
         points: customer.points,
         level: customer.level,
       },
@@ -27,8 +29,28 @@ const registerCustomer = async (req, res) => {
 
 const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find({ active: true }).select("-password");
-    res.json({ ok: true, msg: "Customers fetched successfully", data: customers });
+    const customers = await Customer.find({ active: true }).select("-password").lean();
+
+    // For each customer, find if they have an assigned table
+    const customerIds = customers.map((c) => c._id);
+    const tables = await Table.find({ currentCustomer: { $in: customerIds } })
+      .select("tableNumber name currentCustomer")
+      .lean();
+
+    // Build a map: customerId -> table
+    const tableMap = {};
+    tables.forEach((t) => {
+      if (t.currentCustomer) {
+        tableMap[t.currentCustomer.toString()] = t;
+      }
+    });
+
+    const result = customers.map((c) => ({
+      ...c,
+      assignedTable: tableMap[c._id.toString()] || null,
+    }));
+
+    res.json({ ok: true, msg: "Customers fetched successfully", data: result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ ok: false, msg: "Internal server error" });
@@ -37,13 +59,41 @@ const getCustomers = async (req, res) => {
 
 const getCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id).select("-password");
+    const customer = await Customer.findById(req.params.id).select("-password").lean();
     if (!customer) return res.status(404).json({ ok: false, msg: "Customer not found" });
-    res.json({ ok: true, msg: "Customer fetched successfully", data: customer });
+
+    const table = await Table.findOne({ currentCustomer: customer._id })
+      .select("tableNumber name")
+      .lean();
+
+    res.json({
+      ok: true,
+      msg: "Customer fetched successfully",
+      data: { ...customer, assignedTable: table || null },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
-module.exports = { registerCustomer, getCustomers, getCustomer };
+const deleteCustomer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const customer = await Customer.findById(id);
+    if (!customer) return res.status(404).json({ ok: false, msg: "Customer not found" });
+
+    // Remove from any table that has this customer assigned
+    await Table.updateMany({ currentCustomer: id }, { $set: { currentCustomer: null } });
+
+    // Soft delete: mark as inactive
+    await Customer.findByIdAndUpdate(id, { active: false });
+
+    res.json({ ok: true, msg: "Customer deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal server error" });
+  }
+};
+
+module.exports = { registerCustomer, getCustomers, getCustomer, deleteCustomer };

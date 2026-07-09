@@ -21,10 +21,38 @@ const getPaymentById = async (req, res) => {
   }
 };
 
+const Order = require("../models/Order");
+const Customer = require("../models/Customer");
+
 const createPayment = async (req, res) => {
   try {
     const { orderId, paymentMethod, amount, change } = req.body;
     const payment = await Payment.create({ orderId, paymentMethod, amount, change });
+
+    // Loyalty System logic: Award points
+    const order = await Order.findById(orderId);
+    if (order && order.customerId) {
+      const customer = await Customer.findById(order.customerId);
+      if (customer) {
+        // 500 COP = 1 Point
+        const earnedPoints = Math.floor(order.total / 500);
+        
+        customer.points = (customer.points || 0) + earnedPoints;
+        customer.lifetimePoints = (customer.lifetimePoints || 0) + earnedPoints;
+
+        // Evaluate Tier progression based on lifetime points
+        if (customer.lifetimePoints >= 2000) {
+          customer.level = "gold";
+        } else if (customer.lifetimePoints >= 500) {
+          customer.level = "silver";
+        } else {
+          customer.level = "bronze";
+        }
+
+        await customer.save();
+      }
+    }
+
     res.status(201).json({ ok: true, msg: "Payment created successfully", data: payment });
   } catch (error) {
     console.error(error);

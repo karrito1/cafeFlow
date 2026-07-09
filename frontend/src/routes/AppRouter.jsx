@@ -43,12 +43,12 @@ function AppRouter() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/menu" element={<MenuPage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             {/* Acceso para todos los roles autenticados */}
+            <Route path="/menu" element={<MenuPage />} />
             <Route path="/tables" element={<TableListPage />} />
             <Route path="/tables/:id" element={<TableDetailPage />} />
             <Route path="/orders" element={<OrderListPage />} />

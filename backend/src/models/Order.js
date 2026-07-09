@@ -23,6 +23,7 @@ const orderSchema = new Schema(
       },
     ],
     subtotal: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
     taxes: { type: Number, required: true },
     total: { type: Number, required: true },
     status: {
