@@ -19,7 +19,8 @@ function LoginPage() {
       const res = await loginApi({ email, password });
       if (res.ok && res.data) {
         login(res.data.user, res.data.token);
-        navigate("/dashboard");
+        const route = res.data.user.role === "waiter" ? "/tables" : "/dashboard";
+        navigate(route);
       } else {
         setError(res.msg || "Credenciales inválidas");
       }
