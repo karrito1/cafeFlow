@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getTables } from '../../api/tableApi';
 import { getProducts } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
+import { getCustomers } from '../../api/customerApi';
 import { createOrder } from '../../api/orderApi';
 import { useAuth } from '../../context/AuthContext';
 import { formatCurrency } from '../../utils/formatters';
@@ -26,11 +27,13 @@ function CreateOrderPage() {
   const { user } = useAuth();
 
   const [tables, setTables] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState('');
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
   const [cart, setCart] = useState([]);
@@ -41,14 +44,16 @@ function CreateOrderPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [tRes, pRes, cRes] = await Promise.all([
+        const [tRes, pRes, cRes, cuRes] = await Promise.all([
           getTables(),
           getProducts(),
           getCategories(),
+          getCustomers(),
         ]);
         if (tRes.ok) setTables(tRes.data);
         if (pRes.ok) setProducts(pRes.data);
         if (cRes.ok) setCategories(cRes.data);
+        if (cuRes.ok) setCustomers(cuRes.data);
       } finally {
         setLoading(false);
       }
@@ -117,11 +122,25 @@ function CreateOrderPage() {
   };
 
   const currentTable = tables.find(t => t._id === selectedTable);
-  const customer = currentTable?.currentCustomer;
-  
+  const selectedCustomerData = customers.find((c) => c._id === selectedCustomer) || currentTable?.currentCustomer || null;
+
+  useEffect(() => {
+    if (!selectedTable) {
+      setSelectedCustomer('');
+      return;
+    }
+
+    const tableCustomerId = currentTable?.currentCustomer?._id || currentTable?.currentCustomer || '';
+    if (tableCustomerId) {
+      setSelectedCustomer(tableCustomerId);
+    } else {
+      setSelectedCustomer('');
+    }
+  }, [selectedTable, currentTable?.currentCustomer]);
+
   let discountPercent = 0;
-  if (customer?.level === 'gold') discountPercent = 0.10;
-  else if (customer?.level === 'silver') discountPercent = 0.05;
+  if (selectedCustomerData?.level === 'gold') discountPercent = 0.10;
+  else if (selectedCustomerData?.level === 'silver') discountPercent = 0.05;
 
   const rawSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountValue = rawSubtotal * discountPercent;
@@ -147,7 +166,7 @@ function CreateOrderPage() {
       tableId: selectedTable,
       waiterId: user.id,
       products: productsData,
-      customerId: customer?._id || null,
+      customerId: selectedCustomer || null,
       subtotal: Math.round(rawSubtotal),
       discount: Math.round(discountValue),
       taxes: Math.round(taxes),
@@ -210,6 +229,26 @@ function CreateOrderPage() {
                         {t.name || `Mesa ${t.tableNumber}`} ({t.status === 'free' ? 'Disponible' : 'Ocupada'})
                       </option>
                     ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="card bg-base-100 shadow-sm border border-base-200">
+              <div className="card-body p-4">
+                <label className="label">
+                  <span className="label-text font-medium">Cliente</span>
+                </label>
+                <select
+                  className="select select-bordered w-full"
+                  value={selectedCustomer}
+                  onChange={(e) => setSelectedCustomer(e.target.value)}
+                >
+                  <option value="">Sin cliente</option>
+                  {customers.map((customer) => (
+                    <option key={customer._id} value={customer._id}>
+                      {customer.name} {customer.email ? `- ${customer.email}` : ''}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -425,7 +464,7 @@ function CreateOrderPage() {
                       </div>
                       {discountValue > 0 && (
                         <div className="flex justify-between text-success font-medium">
-                          <span>Descuento Fidelidad ({customer.level === 'gold' ? '10%' : '5%'})</span>
+                          <span>Descuento Fidelidad ({selectedCustomerData?.level === 'gold' ? '10%' : '5%'})</span>
                           <span>-{formatCurrency(discountValue)}</span>
                         </div>
                       )}
