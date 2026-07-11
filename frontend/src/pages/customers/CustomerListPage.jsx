@@ -131,7 +131,7 @@ function NewCustomerModal({ isOpen, onClose, onCreated }) {
             </div>
 
             {apiError && (
-              <div role="alert" className="alert alert-error py-2 text-sm">
+              <div role="alert" className="bg-red-500 text-white rounded-lg py-2 text-sm">
                 <span>{apiError}</span>
               </div>
             )}
@@ -258,7 +258,7 @@ function CustomerListPage() {
         </div>
 
         {error && (
-          <div role="alert" className="alert alert-error">
+          <div role="alert" className="bg-red-500 text-white rounded-lg">
             <span>{error}</span>
           </div>
         )}

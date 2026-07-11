@@ -131,7 +131,7 @@ function LoginPage() {
             {error && (
               <div
                 role="alert"
-                className="alert alert-error mb-4 py-2.5 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg"
+                className="bg-red-500 text-white rounded-lg mb-4 py-2.5 text-sm"
               >
                 <svg
                   className="w-4 h-4 shrink-0"

@@ -164,7 +164,7 @@ function NewTableModal({ isOpen, onClose, onCreated }) {
             </div>
 
             {error && (
-              <div role="alert" className="alert alert-error py-2.5 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">
+              <div role="alert" className="bg-red-500 text-white rounded-lg py-2.5 text-sm">
                 <span>{error}</span>
               </div>
             )}
@@ -374,7 +374,7 @@ function TableListPage() {
         </div>
 
         {error && (
-          <div role="alert" className="alert alert-error">
+          <div role="alert" className="bg-red-500 text-white rounded-lg">
             <span>{error}</span>
           </div>
         )}

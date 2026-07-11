@@ -109,7 +109,7 @@ function UserModal({ isOpen, onClose, onSave, user }) {
                 <option value="waiter">Mesero</option>
               </select>
             </div>
-            {error && <div className="alert alert-error py-2 text-sm">{error}</div>}
+            {error && <div className="bg-red-500 text-white rounded-lg py-2 text-sm">{error}</div>}
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" className="btn btn-ghost" onClick={onClose}>
                 Cancelar

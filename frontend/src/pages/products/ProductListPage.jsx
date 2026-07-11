@@ -135,7 +135,7 @@ function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
                   </div>
                 </div>
               </div>
-              {error && <div className="alert alert-error py-2 text-sm">{error}</div>}
+              {error && <div className="bg-red-500 text-white rounded-lg py-2 text-sm">{error}</div>}
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" className="btn btn-ghost" onClick={onClose}>Cancelar</button>
                 <button type="submit" className="btn btn-primary" disabled={saving}>

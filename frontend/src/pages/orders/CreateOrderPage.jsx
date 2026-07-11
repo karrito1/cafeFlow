@@ -508,7 +508,7 @@ function CreateOrderPage() {
                   </>
                 )}
 
-                {error && <div className="alert alert-error py-2 text-sm mt-4">{error}</div>}
+                {error && <div className="bg-red-500 text-white rounded-lg py-2 text-sm mt-4">{error}</div>}
 
                 <button
                   className="btn btn-primary w-full mt-4"
