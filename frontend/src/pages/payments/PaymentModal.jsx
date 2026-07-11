@@ -102,7 +102,7 @@ function PaymentModal({ open, onClose }) {
       });
 
       if (response.ok) {
-        showToast("Pago registrado correctamente.", "success");
+        showToast(response.msg || "Pago registrado correctamente.", "success");
 
         setSelectedOrder("");
         setOrderSelected(null);

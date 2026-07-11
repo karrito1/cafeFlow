@@ -29,14 +29,21 @@ const createPayment = async (req, res) => {
     const { orderId, paymentMethod, amount, change } = req.body;
     const payment = await Payment.create({ orderId, paymentMethod, amount, change });
 
-    // Loyalty System logic: Award points
+    // Mark order as paid
     const order = await Order.findById(orderId);
+    if (order) {
+      order.status = "paid";
+      await order.save();
+    }
+
+    // Loyalty System logic: Award points
+    let earnedPoints = 0;
     if (order && order.customerId) {
       const customer = await Customer.findById(order.customerId);
       if (customer) {
         // 500 COP = 1 Point
-        const earnedPoints = Math.floor(order.total / 500);
-        
+        earnedPoints = Math.floor(order.total / 500);
+
         customer.points = (customer.points || 0) + earnedPoints;
         customer.lifetimePoints = (customer.lifetimePoints || 0) + earnedPoints;
 
@@ -53,7 +60,13 @@ const createPayment = async (req, res) => {
       }
     }
 
-    res.status(201).json({ ok: true, msg: "Pago creado correctamente", data: payment });
+    res.status(201).json({
+      ok: true,
+      msg: earnedPoints > 0
+        ? `Pago registrado. ${earnedPoints} punto(s) agregado(s)`
+        : "Pago registrado correctamente",
+      data: { ...payment.toObject(), earnedPoints },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ ok: false, msg: "Error interno del servidor" });
