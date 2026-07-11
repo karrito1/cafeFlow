@@ -54,6 +54,37 @@
   --color-error: #BF360C;
 }
 
+/* ─── Sonner toast coffee theme ─── */
+[data-sonner-toaster] {
+  --normal-bg: #FFF8E1 !important;
+  --normal-border: #D7CCC8 !important;
+  --normal-text: #3E2723 !important;
+
+  --success-bg: #FFF8E1 !important;
+  --success-border: #6F4E37 !important;
+  --success-text: #3E2723 !important;
+
+  --error-bg: #FFF8E1 !important;
+  --error-border: #BF360C !important;
+  --error-text: #3E2723 !important;
+
+  --warning-bg: #FFF8E1 !important;
+  --warning-border: #FFAB91 !important;
+  --warning-text: #3E2723 !important;
+
+  --info-bg: #FFF8E1 !important;
+  --info-border: #5D4037 !important;
+  --info-text: #3E2723 !important;
+}
+
+[data-sonner-toaster] button[aria-label="close"] {
+  color: #8D6E63 !important;
+}
+
+[data-sonner-toaster] button[aria-label="close"]:hover {
+  background: #EFEBE9 !important;
+}
+
 body {
   margin: 0;
 }

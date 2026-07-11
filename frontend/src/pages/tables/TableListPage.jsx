@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { TABLE_STATUS } from '../../utils/constants';
 import { getTables, createTable, updateTable, deleteTable } from '../../api/tableApi';
 import { getCustomers } from '../../api/customerApi';
@@ -312,14 +313,18 @@ function TableListPage() {
         setMesas((prev) =>
           prev.map((m) => (m._id === id ? { ...m, status: newStatus } : m))
         );
+        toast.success('Estado actualizado');
+      } else {
+        toast.error(res.msg || 'Error al actualizar estado');
       }
     } catch {
-      // silent
+      toast.error('Error al conectar con el servidor');
     }
   };
 
   const addMesa = (nueva) => {
     setMesas((prev) => [...prev, nueva]);
+    toast.success('Mesa creada');
   };
 
   const handleDelete = async (id) => {
@@ -327,9 +332,12 @@ function TableListPage() {
       const res = await deleteTable(id);
       if (res.ok) {
         setMesas((prev) => prev.filter((m) => m._id !== id));
+        toast.success('Mesa eliminada');
+      } else {
+        toast.error(res.msg || 'Error al eliminar mesa');
       }
     } catch {
-      // silent
+      toast.error('Error al conectar con el servidor');
     }
   };
 

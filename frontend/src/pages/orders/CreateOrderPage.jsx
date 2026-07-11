@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import { getTables } from '../../api/tableApi';
 import { getProducts } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
@@ -138,9 +139,15 @@ function CreateOrderPage() {
     }
   }, [selectedTable, currentTable?.currentCustomer]);
 
-  let discountPercent = 0;
-  if (selectedCustomerData?.level === 'gold') discountPercent = 0.10;
-  else if (selectedCustomerData?.level === 'silver') discountPercent = 0.05;
+  const getDiscountPercent = (customer) => {
+    const pts = customer?.lifetimePoints ?? 0;
+    if (pts >= 600) return 0.15;
+    if (pts >= 300) return 0.10;
+    if (pts >= 100) return 0.05;
+    return 0;
+  };
+
+  const discountPercent = getDiscountPercent(selectedCustomerData);
 
   const rawSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountValue = rawSubtotal * discountPercent;
@@ -177,12 +184,15 @@ function CreateOrderPage() {
     try {
       const res = await createOrder(payload);
       if (res.ok) {
+        toast.success('Pedido creado exitosamente');
         navigate(`/orders/${res.data._id}`);
       } else {
         setError(res.msg || 'Error al crear el pedido');
+        toast.error(res.msg || 'Error al crear el pedido');
       }
     } catch {
       setError('Error al conectar con el servidor');
+      toast.error('Error al conectar con el servidor');
     } finally {
       setSaving(false);
     }
@@ -246,10 +256,28 @@ function CreateOrderPage() {
                   <option value="">Sin cliente</option>
                   {customers.map((customer) => (
                     <option key={customer._id} value={customer._id}>
-                      {customer.name} {customer.email ? `- ${customer.email}` : ''}
+                      {customer.name} {customer.email ? `- ${customer.email}` : ''} ({customer.points ?? 0} pts)
                     </option>
                   ))}
                 </select>
+                {selectedCustomerData && (
+                  <div className="mt-3 space-y-1 text-xs text-base-content/60">
+                    <div className="flex justify-between">
+                      <span>Puntos acumulados</span>
+                      <span><strong className="text-primary">{selectedCustomerData.lifetimePoints ?? 0}</strong> pts</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Puntos disponibles</span>
+                      <span><strong className="text-base-content">{selectedCustomerData.points ?? 0}</strong> pts</span>
+                    </div>
+                    {discountPercent > 0 && (
+                      <div className="flex justify-between text-success font-medium pt-1 border-t border-base-200 mt-1">
+                        <span>Descuento por fidelidad</span>
+                        <span><strong>{(discountPercent * 100).toFixed(0)}%</strong></span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -464,7 +492,7 @@ function CreateOrderPage() {
                       </div>
                       {discountValue > 0 && (
                         <div className="flex justify-between text-success font-medium">
-                          <span>Descuento Fidelidad ({selectedCustomerData?.level === 'gold' ? '10%' : '5%'})</span>
+                          <span>Descuento Fidelidad ({(discountPercent * 100).toFixed(0)}%)</span>
                           <span>-{formatCurrency(discountValue)}</span>
                         </div>
                       )}

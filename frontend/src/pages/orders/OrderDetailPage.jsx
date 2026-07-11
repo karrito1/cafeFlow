@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { getOrder, updateOrder } from '../../api/orderApi';
 import { ORDER_STATUS } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -56,9 +57,12 @@ function OrderDetailPage() {
       const res = await updateOrder(id, { status: newStatus });
       if (res.ok) {
         setOrder((prev) => ({ ...prev, status: newStatus }));
+        toast.success(`Pedido marcado como ${statusConfig[newStatus]?.label || newStatus}`);
+      } else {
+        toast.error(res.msg || 'Error al actualizar estado');
       }
     } catch {
-      // silent
+      toast.error('Error al conectar con el servidor');
     } finally {
       setUpdating(false);
     }

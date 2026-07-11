@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categoryApi';
 import { FolderOpen, Trash2 } from 'lucide-react';
 
@@ -85,6 +86,9 @@ function CategoryListPage() {
     try {
       const res = await getCategories();
       if (res.ok) setCategories(res.data);
+      else toast.error(res.msg || 'Error al cargar categorías');
+    } catch {
+      toast.error('Error al conectar con el servidor');
     } finally {
       setLoading(false);
     }
@@ -101,15 +105,26 @@ function CategoryListPage() {
     if (category) {
       const res = await updateCategory(category._id, data);
       if (!res.ok) throw res;
+      toast.success('Categoría actualizada');
     } else {
       const res = await createCategory(data);
       if (!res.ok) throw res;
+      toast.success('Categoría creada');
     }
     await fetchData();
   };
 
   const handleDelete = async (id) => {
-    await deleteCategory(id);
+    try {
+      const res = await deleteCategory(id);
+      if (res.ok) {
+        toast.success('Categoría eliminada');
+      } else {
+        toast.error(res.msg || 'Error al eliminar categoría');
+      }
+    } catch {
+      toast.error('Error al conectar con el servidor');
+    }
     setDeleting(null);
     await fetchData();
   };

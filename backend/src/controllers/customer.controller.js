@@ -11,7 +11,7 @@ const registerCustomer = async (req, res) => {
     const customer = await Customer.create({ name, email, phone, password: hash });
     res.status(201).json({
       ok: true,
-      msg: "Customer registered successfully",
+      msg: "Cliente registrado correctamente",
       data: {
         id: customer._id,
         name: customer.name,
@@ -23,7 +23,7 @@ const registerCustomer = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 
@@ -50,17 +50,17 @@ const getCustomers = async (req, res) => {
       assignedTable: tableMap[c._id.toString()] || null,
     }));
 
-    res.json({ ok: true, msg: "Customers fetched successfully", data: result });
+    res.json({ ok: true, msg: "Clientes obtenidos correctamente", data: result });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 
 const getCustomer = async (req, res) => {
   try {
     const customer = await Customer.findById(req.params.id).select("-password").lean();
-    if (!customer) return res.status(404).json({ ok: false, msg: "Customer not found" });
+    if (!customer) return res.status(404).json({ ok: false, msg: "Cliente no encontrado" });
 
     const table = await Table.findOne({ currentCustomer: customer._id })
       .select("tableNumber name")
@@ -68,12 +68,12 @@ const getCustomer = async (req, res) => {
 
     res.json({
       ok: true,
-      msg: "Customer fetched successfully",
+      msg: "Cliente obtenido correctamente",
       data: { ...customer, assignedTable: table || null },
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 
@@ -81,7 +81,7 @@ const deleteCustomer = async (req, res) => {
   try {
     const { id } = req.params;
     const customer = await Customer.findById(id);
-    if (!customer) return res.status(404).json({ ok: false, msg: "Customer not found" });
+    if (!customer) return res.status(404).json({ ok: false, msg: "Cliente no encontrado" });
 
     // Remove from any table that has this customer assigned
     await Table.updateMany({ currentCustomer: id }, { $set: { currentCustomer: null } });
@@ -89,10 +89,10 @@ const deleteCustomer = async (req, res) => {
     // Soft delete: mark as inactive
     await Customer.findByIdAndUpdate(id, { active: false });
 
-    res.json({ ok: true, msg: "Customer deleted successfully" });
+    res.json({ ok: true, msg: "Cliente eliminado correctamente" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 

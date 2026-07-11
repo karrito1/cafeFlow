@@ -24,7 +24,7 @@ import PaymentPage from '../pages/payments/PaymentPage';
 import CustomerListPage from '../pages/customers/CustomerListPage';
 import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
 import RewardListPage from '../pages/rewards/RewardListPage';
-import RedeemRewardPage from '../pages/rewards/RedeemRewardPage';
+
 import UserListPage from '../pages/users/UserListPage';
 import UserFormPage from '../pages/users/UserFormPage';
 import SalesReportPage from '../pages/reports/SalesReportPage';
@@ -68,7 +68,6 @@ function AppRouter() {
               <Route path="/customers" element={<CustomerListPage />} />
               <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="/rewards" element={<RewardListPage />} />
-              <Route path="/rewards/redeem" element={<RedeemRewardPage />} />
               <Route path="/users" element={<UserListPage />} />
               <Route path="/users/new" element={<UserFormPage />} />
               <Route path="/users/:id/edit" element={<UserFormPage />} />

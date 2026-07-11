@@ -3,21 +3,21 @@ const Payment = require("../models/Payment");
 const getPayments = async (req, res) => {
   try {
     const payments = await Payment.find().populate("orderId", "total status");
-    res.json({ ok: true, msg: "Payments fetched successfully", data: payments });
+    res.json({ ok: true, msg: "Pagos obtenidos correctamente", data: payments });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 
 const getPaymentById = async (req, res) => {
   try {
     const payment = await Payment.findById(req.params.id).populate("orderId", "total status");
-    if (!payment) return res.status(404).json({ ok: false, msg: "Payment not found" });
-    res.json({ ok: true, msg: "Payment fetched successfully", data: payment });
+    if (!payment) return res.status(404).json({ ok: false, msg: "Pago no encontrado" });
+    res.json({ ok: true, msg: "Pago obtenido correctamente", data: payment });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 
@@ -53,10 +53,10 @@ const createPayment = async (req, res) => {
       }
     }
 
-    res.status(201).json({ ok: true, msg: "Payment created successfully", data: payment });
+    res.status(201).json({ ok: true, msg: "Pago creado correctamente", data: payment });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, msg: "Internal server error" });
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
   }
 };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
 import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi";
 import { useAuth } from "../../context/AuthContext";
 import { Users, Plus, Trash2 } from "lucide-react";
@@ -137,6 +138,9 @@ function UserListPage() {
     try {
       const res = await getUsers();
       if (res.ok) setUsers(res.data);
+      else toast.error(res.msg || 'Error al cargar usuarios');
+    } catch {
+      toast.error('Error al conectar con el servidor');
     } finally {
       setLoading(false);
     }
@@ -156,16 +160,27 @@ function UserListPage() {
       if (form.password) data.password = form.password;
       const res = await updateUser(user._id, data);
       if (!res.ok) throw res;
+      toast.success('Usuario actualizado');
     } else {
       data.password = form.password;
       const res = await createUser(data);
       if (!res.ok) throw res;
+      toast.success('Usuario creado');
     }
     await fetchData();
   };
 
   const handleDelete = async (id) => {
-    await deleteUser(id);
+    try {
+      const res = await deleteUser(id);
+      if (res.ok) {
+        toast.success('Usuario eliminado');
+      } else {
+        toast.error(res.msg || 'Error al eliminar usuario');
+      }
+    } catch {
+      toast.error('Error al conectar con el servidor');
+    }
     setDeleting(null);
     await fetchData();
   };

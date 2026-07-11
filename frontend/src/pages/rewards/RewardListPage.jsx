@@ -1,149 +1,57 @@
-import { useEffect, useState } from "react";
-import { Gift, Star, Coffee } from "lucide-react";
-import { getRewards, claimReward } from "../../api/rewardApi";
+import { Gift, Star, Award, Zap } from 'lucide-react';
 
-function RedeemRewardPage() {
-  const [rewards, setRewards] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [redeeming, setRedeeming] = useState(null);
+const TIERS = [
+  { min: 600, label: '15% de descuento', icon: Zap, desc: 'Clientes recurrentes con más de 600 pts históricos' },
+  { min: 300, label: '10% de descuento', icon: Award, desc: 'Clientes frecuentes con más de 300 pts históricos' },
+  { min: 100, label: '5% de descuento', icon: Star, desc: 'Clientes habituales con más de 100 pts históricos' },
+  { min: 0, label: 'Sin descuento', icon: Gift, desc: 'Menos de 100 pts históricos' },
+];
 
-  // Temporal: reemplazar por el cliente autenticado
-  const customerId = "ID_DEL_CLIENTE";
-
-  useEffect(() => {
-    loadRewards();
-  }, []);
-
-  const loadRewards = async () => {
-    try {
-      const response = await getRewards();
-
-      console.log("Respuesta API:", response);
-
-      setRewards(response.data || []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleClaim = async (rewardId) => {
-    try {
-      setRedeeming(rewardId);
-
-      await claimReward(customerId, rewardId);
-
-      alert("Recompensa canjeada correctamente");
-    } catch (error) {
-      alert(
-        error.response?.data?.msg || "No fue posible canjear la recompensa",
-      );
-    } finally {
-      setRedeeming(null);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-[70vh]">
-        <span className="loading loading-spinner loading-lg text-warning"></span>
-      </div>
-    );
-  }
-
+function RewardListPage() {
   return (
-    <div className="min-h-screen bg-base-200 p-8">
-      <div className="flex flex-col lg:flex-row justify-between items-center mb-10 gap-6">
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="max-w-3xl mx-auto space-y-6">
         <div>
-          <h1 className="text-4xl font-bold flex items-center gap-3">
-            <Gift className="text-warning" size={40} />
-            Recompensas
-          </h1>
-
-          <p className="text-base-content/70 mt-2">
-            Canjea tus puntos por bebidas y productos exclusivos.
+          <h1 className="text-2xl font-bold text-base-content">Programa de Fidelidad</h1>
+          <p className="text-sm text-base-content/60 mt-1">
+            Los clientes acumulan 1 punto por cada $500 COP en compras. Al alcanzar ciertos puntajes, obtienen descuentos automáticos.
           </p>
         </div>
 
-        <div className="stats shadow bg-base-100">
-          <div className="stat">
-            <div className="stat-figure text-warning">
-              <Star fill="currentColor" />
-            </div>
-
-            <div className="stat-title">Tus puntos</div>
-
-            <div className="stat-value text-warning">250</div>
-          </div>
-        </div>
-      </div>
-
-      {rewards.length === 0 ? (
-        <div className="hero bg-base-100 rounded-xl shadow-lg">
-          <div className="hero-content text-center">
-            <div>
-              <Gift size={80} className="mx-auto text-warning mb-4" />
-
-              <h2 className="text-3xl font-bold">
-                No hay recompensas disponibles
-              </h2>
-
-              <p className="text-base-content/70 mt-2">
-                El administrador aún no ha creado recompensas.
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {rewards.map((reward) => (
-            <div
-              key={reward._id}
-              className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300"
-            >
-              <figure className="bg-warning/10 py-10">
-                {reward.image ? (
-                  <img
-                    src={reward.image}
-                    alt={reward.name}
-                    className="w-28 h-28 object-contain"
-                  />
-                ) : (
-                  <Coffee size={70} className="text-warning" />
-                )}
-              </figure>
-
-              <div className="card-body">
-                <h2 className="card-title text-xl">{reward.name}</h2>
-
-                <p className="text-base-content/70">{reward.description}</p>
-
-                <div className="divider my-2"></div>
-
-                <div className="flex justify-between items-center">
-                  <span className="badge badge-warning badge-lg gap-2">
-                    <Star size={15} fill="currentColor" />
-                    {reward.pointsRequired} pts
-                  </span>
-
-                  <span className="text-success font-bold">Disponible</span>
+        <div className="grid gap-4">
+          {TIERS.map((tier) => (
+            <div key={tier.min} className="card bg-base-100 shadow-sm border border-base-200">
+              <div className="card-body p-5 flex flex-row items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <tier.icon size={24} className="text-primary" />
                 </div>
-
-                <div className="card-actions justify-end mt-6">
-                  <button
-                    className="btn btn-warning"
-                    disabled={redeeming === reward._id}
-                    onClick={() => handleClaim(reward._id)}
-                  >
-                    {redeeming === reward._id ? "Canjeando..." : "Canjear"}
-                  </button>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-base-content">{tier.label}</h3>
+                  <p className="text-sm text-base-content/50">{tier.desc}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-xs text-base-content/40">
+                    {tier.min > 0 ? `${tier.min}+ pts` : '—'}
+                  </span>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      )}
+
+        <div className="card bg-base-100 shadow-sm border border-base-200">
+          <div className="card-body p-5">
+            <h3 className="font-semibold text-base-content mb-2">¿Cómo funciona?</h3>
+            <ol className="text-sm text-base-content/60 space-y-2 list-decimal list-inside">
+              <li>El cliente acumula puntos automáticamente al pagar sus pedidos</li>
+              <li>Al llegar a 100 pts históricos, obtiene 5% de descuento en todos sus pedidos</li>
+              <li>Al llegar a 300 pts, el descuento sube a 10%</li>
+              <li>Al llegar a 600 pts, el descuento sube a 15%</li>
+              <li>El descuento se aplica automáticamente al seleccionar el cliente en un pedido</li>
+            </ol>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

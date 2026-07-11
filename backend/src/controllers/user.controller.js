@@ -31,7 +31,7 @@ const createUser = async (req, res) => {
 
     res.status(201).json({
       ok: true,
-      msg: "User created successfully",
+      msg: "Usuario creado correctamente",
       data: {
         id: createdUser._id,
         name: createdUser.name,
@@ -46,7 +46,7 @@ const createUser = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -58,7 +58,7 @@ const getUsers = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Users fetched successfully",
+      msg: "Usuarios obtenidos correctamente",
       data: users,
     });
   } catch (error) {
@@ -66,7 +66,7 @@ const getUsers = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -81,13 +81,13 @@ const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         ok: false,
-        msg: "User not found",
+        msg: "Usuario no encontrado",
       });
     }
 
     res.status(200).json({
       ok: true,
-      msg: "User fetched successfully",
+      msg: "Usuario obtenido correctamente",
       data: user,
     });
   } catch (error) {
@@ -95,7 +95,7 @@ const getUserById = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -110,7 +110,7 @@ const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         ok: false,
-        msg: "User not found",
+        msg: "Usuario no encontrado",
       });
     }
     const data = { ...req.body };
@@ -125,7 +125,7 @@ const updateUser = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "User updated successfully",
+      msg: "Usuario actualizado correctamente",
       data: updatedUser,
     });
   } catch (error) {
@@ -133,7 +133,7 @@ const updateUser = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -148,7 +148,7 @@ const deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         ok: false,
-        msg: "User not found",
+        msg: "Usuario no encontrado",
       });
     }
 
@@ -156,14 +156,14 @@ const deleteUser = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "User deleted successfully",
+      msg: "Usuario eliminado correctamente",
     });
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
