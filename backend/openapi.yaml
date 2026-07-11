@@ -1,0 +1,1276 @@
+openapi: 3.0.3
+info:
+  title: CaféFlow API
+  description: >
+    API REST para CaféFlow, sistema de gestión de cafetería (pedidos, mesas,
+    productos, pagos, clientes/fidelización y usuarios).
+    Todas las respuestas siguen el formato `{ ok, msg, data }`.
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api
+    description: Desarrollo local
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Products
+  - name: Categories
+  - name: Tables
+  - name: Orders
+  - name: Payments
+  - name: Customers
+  - name: Rewards
+  - name: Health
+
+security: []
+
+paths:
+  # ============ HEALTH ============
+  /health:
+    get:
+      tags: [Health]
+      summary: Estado del servicio
+      security: []
+      responses:
+        "200":
+          description: API funcionando
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  message: { type: string, example: "CaféFlow API running" }
+
+  # ============ AUTH ============
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Iniciar sesión (usuarios internos)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        "200":
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token: { type: string }
+                          user: { $ref: "#/components/schemas/UserPublic" }
+        "401":
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Registrar un nuevo usuario interno
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+                role: { type: string, enum: [admin, waiter], default: waiter }
+      responses:
+        "201":
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token: { type: string }
+                          user: { $ref: "#/components/schemas/UserPublic" }
+        "400":
+          description: El correo ya está registrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+
+  /auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Solicitar enlace de restablecimiento de contraseña
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        "200":
+          description: >
+            Siempre responde 200 (por seguridad no revela si el correo existe)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiResponse" }
+
+  /auth/reset-password/{token}:
+    post:
+      tags: [Auth]
+      summary: Restablecer contraseña usando el token enviado por correo
+      security: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password: { type: string, format: password, minLength: 6 }
+      responses:
+        "200":
+          description: Contraseña restablecida
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiResponse" }
+        "400":
+          description: Token inválido, expirado, o contraseña muy corta
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+
+  # ============ USERS ============
+  /users:
+    get:
+      tags: [Users]
+      summary: Listar usuarios internos (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/User" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [Users]
+      summary: Crear usuario interno (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UserInput" }
+      responses:
+        "201":
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/User" }
+        "400":
+          description: Error de validación o correo ya registrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /users/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Users]
+      summary: Obtener usuario por ID (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/User" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Users]
+      summary: Actualizar usuario (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UserInput" }
+      responses:
+        "200":
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/User" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Users]
+      summary: Eliminar usuario (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { $ref: "#/components/responses/SimpleOk" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ PRODUCTS ============
+  /products:
+    get:
+      tags: [Products]
+      summary: Listar productos activos (público)
+      security: []
+      responses:
+        "200":
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Product" }
+    post:
+      tags: [Products]
+      summary: Crear producto (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "201":
+          description: Producto creado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /products/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Products]
+      summary: Obtener producto por ID (público)
+      security: []
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Products]
+      summary: Actualizar producto (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "200":
+          description: Producto actualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Products]
+      summary: Desactivar producto - soft delete (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Producto desactivado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /products/{id}/image:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    put:
+      tags: [Products]
+      summary: Subir/actualizar imagen del producto (admin, Cloudinary)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: jpg, jpeg, png o webp. Máximo 2MB.
+      responses:
+        "200":
+          description: Imagen subida
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ CATEGORIES ============
+  /categories:
+    get:
+      tags: [Categories]
+      summary: Listar categorías (público, ordenadas por `order`)
+      security: []
+      responses:
+        "200":
+          description: Lista de categorías
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Category" }
+    post:
+      tags: [Categories]
+      summary: Crear categoría (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "201":
+          description: Categoría creada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Category" }
+        "400":
+          description: La categoría ya existe / error de validación
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+  /categories/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Categories]
+      summary: Obtener categoría por ID (público)
+      security: []
+      responses:
+        "200":
+          description: Categoría encontrada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Category" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Categories]
+      summary: Actualizar categoría (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "200":
+          description: Categoría actualizada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Category" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Categories]
+      summary: Eliminar categoría (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { $ref: "#/components/responses/SimpleOk" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ TABLES ============
+  /tables:
+    get:
+      tags: [Tables]
+      summary: Listar mesas (admin, waiter)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Lista de mesas
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Table" }
+    post:
+      tags: [Tables]
+      summary: Crear mesa (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TableInput" }
+      responses:
+        "201":
+          description: Mesa creada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Table" }
+        "400":
+          description: El número de mesa ya existe
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+  /tables/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Tables]
+      summary: Obtener mesa por ID (admin, waiter)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Mesa encontrada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Table" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Tables]
+      summary: Actualizar mesa (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TableInput" }
+      responses:
+        "200":
+          description: Mesa actualizada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Table" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Tables]
+      summary: Eliminar mesa (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { $ref: "#/components/responses/SimpleOk" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ ORDERS ============
+  /orders:
+    get:
+      tags: [Orders]
+      summary: Listar pedidos (admin, waiter)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Order" }
+    post:
+      tags: [Orders]
+      summary: Crear pedido (admin, waiter)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OrderInput" }
+      responses:
+        "201":
+          description: Pedido creado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Order" }
+        "400":
+          description: Error de validación
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+  /orders/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Orders]
+      summary: Obtener pedido por ID, con datos poblados (admin, waiter)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Pedido encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Order" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Orders]
+      summary: Actualizar pedido, p. ej. cambiar `status` (admin, waiter)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [active, confirmed, paid, cancelled]
+      responses:
+        "200":
+          description: Pedido actualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Order" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ PAYMENTS ============
+  /payments:
+    get:
+      tags: [Payments]
+      summary: Listar pagos (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Lista de pagos
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Payment" }
+    post:
+      tags: [Payments]
+      summary: >
+        Registrar pago (admin). Otorga puntos de fidelización al cliente
+        del pedido (1 punto por cada 500 COP del total) y recalcula su nivel
+        (bronze/silver/gold).
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentInput" }
+      responses:
+        "201":
+          description: Pago creado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Payment" }
+  /payments/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Payments]
+      summary: Obtener pago por ID (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Pago encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Payment" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ CUSTOMERS ============
+  /customers:
+    get:
+      tags: [Customers]
+      summary: Listar clientes activos, con mesa asignada si aplica (público)
+      security: []
+      responses:
+        "200":
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Customer" }
+    post:
+      tags: [Customers]
+      summary: Registrar cliente (programa de fidelización)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerInput" }
+      responses:
+        "201":
+          description: Cliente registrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Customer" }
+        "400":
+          description: El correo ya está registrado / error de validación
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+  /customers/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Customers]
+      summary: Obtener cliente por ID
+      security: []
+      responses:
+        "200":
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Customer" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Customers]
+      summary: Eliminar cliente (soft delete, libera la mesa asignada)
+      security: []
+      responses:
+        "200": { $ref: "#/components/responses/SimpleOk" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ============ REWARDS ============
+  /rewards:
+    get:
+      tags: [Rewards]
+      summary: Listar recompensas activas (público)
+      security: []
+      responses:
+        "200":
+          description: Lista de recompensas
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/Reward" }
+    post:
+      tags: [Rewards]
+      summary: Crear recompensa (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RewardInput" }
+      responses:
+        "201":
+          description: Recompensa creada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Reward" }
+  /rewards/claim:
+    post:
+      tags: [Rewards]
+      summary: Reclamar una recompensa (admin), descuenta puntos del cliente
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customerId, rewardId]
+              properties:
+                customerId: { type: string, example: 64f1c2b1a1b2c3d4e5f60001 }
+                rewardId: { type: string, example: 64f1c2b1a1b2c3d4e5f60002 }
+      responses:
+        "200":
+          description: Recompensa reclamada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          customer: { $ref: "#/components/schemas/Customer" }
+                          reward: { $ref: "#/components/schemas/Reward" }
+        "400":
+          description: Puntos insuficientes / recompensa inactiva / faltan datos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+        "404":
+          description: Cliente o recompensa no encontrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiError" }
+  /rewards/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    get:
+      tags: [Rewards]
+      summary: Obtener recompensa por ID (público)
+      security: []
+      responses:
+        "200":
+          description: Recompensa encontrada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Reward" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Rewards]
+      summary: Actualizar recompensa (admin)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RewardInput" }
+      responses:
+        "200":
+          description: Recompensa actualizada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Reward" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Rewards]
+      summary: Desactivar recompensa (admin)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { $ref: "#/components/responses/SimpleOk" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Token JWT obtenido en /auth/login o /auth/register.
+        Enviar como header: `Authorization: Bearer <token>`.
+        Payload del token: { id, role }. Expira según JWT_EXPIRES_IN.
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      description: ObjectId de MongoDB
+      schema: { type: string, example: 64f1c2b1a1b2c3d4e5f60001 }
+
+  responses:
+    Unauthorized:
+      description: Token faltante, inválido o expirado
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              msg: { type: string, example: "Token requerido" }
+    Forbidden:
+      description: El rol del usuario no tiene permiso para esta acción
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              msg: { type: string, example: "Acceso denegado para este rol" }
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ApiError" }
+    SimpleOk:
+      description: Operación exitosa
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ApiResponse" }
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        ok: { type: boolean, example: true }
+        msg: { type: string, example: "Operación exitosa" }
+        data: {}
+
+    ApiError:
+      type: object
+      properties:
+        ok: { type: boolean, example: false }
+        msg: { type: string, example: "Recurso no encontrado" }
+        errors:
+          type: array
+          description: Presente solo en errores 400 de validación (express-validator)
+          items:
+            type: object
+            properties:
+              field: { type: string, example: "email" }
+              message: { type: string, example: "El correo no es válido" }
+
+    # ---------- USER ----------
+    UserPublic:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, waiter] }
+
+    User:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, waiter], default: waiter }
+        accessCode: { type: string }
+        active: { type: boolean, default: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    UserInput:
+      type: object
+      required: [name, email, password, role]
+      properties:
+        name: { type: string }
+        email: { type: string, format: email }
+        password: { type: string, format: password, minLength: 6 }
+        role: { type: string, enum: [admin, waiter] }
+        accessCode: { type: string }
+        active: { type: boolean }
+
+    # ---------- CATEGORY ----------
+    Category:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        order: { type: integer, default: 0 }
+        active: { type: boolean, default: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    CategoryInput:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        order: { type: integer }
+        active: { type: boolean }
+
+    # ---------- PRODUCT ----------
+    Product:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        price:
+          type: object
+          properties:
+            S: { type: number }
+            M: { type: number }
+            L: { type: number }
+        image: { type: string, format: uri }
+        categoryId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/Category"
+        featured: { type: boolean, default: false }
+        stock: { type: integer, minimum: 0, default: 0 }
+        active: { type: boolean, default: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    ProductInput:
+      type: object
+      required: [name, description, categoryId]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        price:
+          type: object
+          required: [M]
+          properties:
+            S: { type: number }
+            M: { type: number, description: "Obligatorio (talla mediana)" }
+            L: { type: number }
+        image: { type: string }
+        categoryId: { type: string, description: ObjectId de Category }
+        featured: { type: boolean }
+        stock: { type: integer, minimum: 0 }
+
+    # ---------- TABLE ----------
+    Table:
+      type: object
+      properties:
+        _id: { type: string }
+        tableNumber: { type: integer }
+        name: { type: string }
+        capacity: { type: integer, default: 4 }
+        status:
+          type: string
+          enum: [free, occupied, pendingPayment]
+          default: free
+        assignedWaiter:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/UserPublic"
+        currentCustomer:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/Customer"
+        openedAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    TableInput:
+      type: object
+      required: [tableNumber]
+      properties:
+        tableNumber: { type: integer }
+        name: { type: string }
+        capacity: { type: integer }
+        status: { type: string, enum: [free, occupied, pendingPayment] }
+        assignedWaiter: { type: string, description: ObjectId de User }
+        currentCustomer: { type: string, description: ObjectId de Customer }
+        openedAt: { type: string, format: date-time }
+
+    # ---------- ORDER ----------
+    OrderProductCustomization:
+      type: object
+      properties:
+        size: { type: string, enum: [S, M, L] }
+        milk: { type: string, enum: [whole, lactose-free, plant-based, none] }
+        temperature: { type: string, enum: [hot, cold] }
+
+    OrderProduct:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId: { type: string, description: ObjectId de Product }
+        name: { type: string }
+        quantity: { type: integer, minimum: 1, default: 1 }
+        price: { type: number }
+        customization:
+          $ref: "#/components/schemas/OrderProductCustomization"
+        note: { type: string }
+
+    Order:
+      type: object
+      properties:
+        _id: { type: string }
+        tableId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/Table"
+        customerId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/Customer"
+          nullable: true
+        waiterId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/UserPublic"
+        products:
+          type: array
+          items: { $ref: "#/components/schemas/OrderProduct" }
+        subtotal: { type: number }
+        discount: { type: number, default: 0 }
+        taxes: { type: number }
+        total: { type: number }
+        status:
+          type: string
+          enum: [active, confirmed, paid, cancelled]
+          default: active
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    OrderInput:
+      type: object
+      required: [tableId, waiterId, products, subtotal, taxes, total]
+      properties:
+        tableId: { type: string, description: ObjectId de Table }
+        customerId:
+          { type: string, description: ObjectId de Customer (opcional) }
+        waiterId: { type: string, description: ObjectId de User }
+        products:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/OrderProduct" }
+        subtotal: { type: number }
+        discount: { type: number }
+        taxes: { type: number }
+        total: { type: number }
+        status: { type: string, enum: [active, confirmed, paid, cancelled] }
+
+    # ---------- PAYMENT ----------
+    Payment:
+      type: object
+      properties:
+        _id: { type: string }
+        orderId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/Order"
+        paymentMethod:
+          type: string
+          enum: [cash, card, transfer, mixed]
+        amount: { type: number }
+        change: { type: number, default: 0 }
+        status: { type: string, enum: [completed, failed], default: completed }
+        paymentDate: { type: string, format: date-time }
+
+    PaymentInput:
+      type: object
+      required: [orderId, paymentMethod, amount]
+      properties:
+        orderId: { type: string, description: ObjectId de Order }
+        paymentMethod: { type: string, enum: [cash, card, transfer, mixed] }
+        amount: { type: number }
+        change: { type: number }
+
+    # ---------- CUSTOMER ----------
+    Customer:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        phone: { type: string }
+        points: { type: integer, default: 0 }
+        lifetimePoints: { type: integer, default: 0 }
+        level:
+          type: string
+          enum: [bronze, silver, gold]
+          default: bronze
+        active: { type: boolean, default: true }
+        assignedTable:
+          type: object
+          nullable: true
+          description: Calculado en tiempo de respuesta (no está en el schema de Mongo)
+          properties:
+            tableNumber: { type: integer }
+            name: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    CustomerInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name: { type: string }
+        email: { type: string, format: email }
+        phone: { type: string }
+        password: { type: string, format: password, minLength: 6 }
+
+    # ---------- REWARD ----------
+    Reward:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        pointsRequired: { type: integer }
+        type: { type: string, enum: [discount, product] }
+        value: { type: number }
+        active: { type: boolean, default: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    RewardInput:
+      type: object
+      required: [name, pointsRequired, type, value]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        pointsRequired: { type: integer }
+        type: { type: string, enum: [discount, product] }
+        value: { type: number }
+        active: { type: boolean }

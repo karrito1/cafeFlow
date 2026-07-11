@@ -1,5 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("js-yaml");
+const fs = require("fs");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -26,5 +30,11 @@ app.use("/api/rewards", require("./routes/reward.routes"));
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "CaféFlow API running" });
 });
+
+// Documentación Swagger
+const swaggerDocument = YAML.load(
+  fs.readFileSync(path.join(__dirname, "../openapi.yaml"), "utf8")
+);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = app;

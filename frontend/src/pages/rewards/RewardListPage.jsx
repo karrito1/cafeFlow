@@ -56,4 +56,4 @@ function RewardListPage() {
   );
 }
 
-export default RewardListPage;
+export default RedeemRewardPage;
