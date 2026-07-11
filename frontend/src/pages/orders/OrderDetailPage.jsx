@@ -57,7 +57,11 @@ function OrderDetailPage() {
       const res = await updateOrder(id, { status: newStatus });
       if (res.ok) {
         setOrder((prev) => ({ ...prev, status: newStatus }));
-        toast.success(`Pedido marcado como ${statusConfig[newStatus]?.label || newStatus}`);
+        const pts = res.data?.earnedPoints || 0;
+        const msg = pts > 0
+          ? `Pedido pagado. +${pts} punto(s) agregado(s)`
+          : `Pedido marcado como ${statusConfig[newStatus]?.label || newStatus}`;
+        toast.success(msg);
       } else {
         toast.error(res.msg || 'Error al actualizar estado');
       }

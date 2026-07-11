@@ -68,9 +68,55 @@ const createOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { status: newStatus, ...rest } = req.body;
+    const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ ok: false, msg: "Pedido no encontrado" });
-    res.json({ ok: true, msg: "Pedido actualizado correctamente", data: order });
+
+    const wasAlreadyPaid = order.status === "paid";
+
+    Object.assign(order, rest);
+    if (newStatus) order.status = newStatus;
+    await order.save();
+
+    let earnedPoints = 0;
+
+    if (order.status === "paid" && !wasAlreadyPaid && order.customerId) {
+      const Payment = require("../models/Payment");
+      const existingPayment = await Payment.findOne({ orderId: order._id });
+      if (!existingPayment) {
+        await Payment.create({
+          orderId: order._id,
+          paymentMethod: "cash",
+          amount: order.total,
+          change: 0,
+          status: "completed",
+        });
+      }
+
+      const customer = await Customer.findById(order.customerId);
+      if (customer) {
+        earnedPoints = Math.floor(order.total / 500);
+        customer.points = (customer.points || 0) + earnedPoints;
+        customer.lifetimePoints = (customer.lifetimePoints || 0) + earnedPoints;
+
+        if (customer.lifetimePoints >= 2000) {
+          customer.level = "gold";
+        } else if (customer.lifetimePoints >= 500) {
+          customer.level = "silver";
+        } else {
+          customer.level = "bronze";
+        }
+        await customer.save();
+      }
+    }
+
+    res.json({
+      ok: true,
+      msg: earnedPoints > 0
+        ? `Pedido pagado. ${earnedPoints} punto(s) agregado(s)`
+        : "Pedido actualizado correctamente",
+      data: { ...order.toObject(), earnedPoints },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ ok: false, msg: "Error interno del servidor" });
