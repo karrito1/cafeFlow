@@ -42,7 +42,7 @@ function CategoryModal({ isOpen, onClose, onSave, category }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="card bg-base-100 w-full max-w-md shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
         <div className="card-body px-8 py-8">
           <h2 className="text-lg font-bold text-base-content mb-4">
@@ -199,7 +199,7 @@ function CategoryListPage() {
         />
 
         {deleting && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setDeleting(null)}>
             <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-4 text-center p-8" onClick={(e) => e.stopPropagation()}>
               <Trash2 size={40} className="mx-auto mb-4 text-error" />
               <h3 className="text-lg font-bold text-base-content">Eliminar Categoría</h3>

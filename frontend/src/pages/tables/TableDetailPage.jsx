@@ -237,7 +237,7 @@ function TableDetailPage() {
         </div>
 
         {showConfirm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowConfirm(false)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowConfirm(false)}>
             <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
               <div className="card-body px-8 py-8 text-center">
                 <Trash2 size={40} className="mx-auto mb-4 text-error" />
