@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { getMe } from "../../api/authApi";
 import { Trophy, Star, TrendingUp, Gift, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -39,7 +41,24 @@ const DISCOUNT_RULES = [
 ];
 
 function PointsPage() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFreshData = async () => {
+      try {
+        const res = await getMe();
+        if (res.ok) {
+          refreshUser(res.data);
+        }
+      } catch {
+        // silent — keep JWT data
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFreshData();
+  }, []);
 
   const lifetimePoints = user?.lifetimePoints ?? 0;
   const currentPoints = user?.points ?? 0;
@@ -53,6 +72,14 @@ function PointsPage() {
     config.nextAt !== null
       ? Math.min(100, (lifetimePoints / config.nextAt) * 100)
       : 100;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-6 lg:p-8">

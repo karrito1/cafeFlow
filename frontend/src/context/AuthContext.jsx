@@ -18,13 +18,21 @@ export function AuthProvider({ children }) {
     localStorage.setItem('user', JSON.stringify(data));
   };
 
+  const refreshUser = (freshData) => {
+    setUser((prev) => {
+      const updated = { ...prev, ...freshData, token: prev?.token };
+      localStorage.setItem('user', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

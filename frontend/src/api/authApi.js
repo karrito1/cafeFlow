@@ -1,4 +1,4 @@
-import { post } from './client';
+import { post, get } from './client';
 
 const API_URL = '/api/auth';
 
@@ -11,3 +11,5 @@ export const register = (userData) => post(`${API_URL}/register`, userData);
 export const forgotPassword = (email) => post(`${API_URL}/forgot-password`, { email });
 
 export const resetPassword = (token, password) => post(`${API_URL}/reset-password/${token}`, { password });
+
+export const getMe = () => get(`${API_URL}/me`);

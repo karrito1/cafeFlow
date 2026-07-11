@@ -150,4 +150,44 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { login, loginCustomer, register, forgotPassword, resetPassword };
+const getMe = async (req, res) => {
+  try {
+    if (req.user.role === "customer") {
+      const customer = await Customer.findById(req.user.id).select("-password").lean();
+      if (!customer || !customer.active) {
+        return res.status(404).json({ ok: false, msg: "Cliente no encontrado" });
+      }
+      return res.json({
+        ok: true,
+        data: {
+          id: customer._id,
+          name: customer.name,
+          email: customer.email,
+          role: "customer",
+          points: customer.points,
+          lifetimePoints: customer.lifetimePoints,
+          level: customer.level,
+        },
+      });
+    }
+
+    const user = await User.findById(req.user.id).select("-password").lean();
+    if (!user || !user.active) {
+      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
+    }
+    res.json({
+      ok: true,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
+  }
+};
+
+module.exports = { login, loginCustomer, register, forgotPassword, resetPassword, getMe };
