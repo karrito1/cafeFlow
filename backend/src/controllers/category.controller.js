@@ -10,7 +10,7 @@ const createCategory = async (req, res) => {
     if (exists) {
       return res.status(400).json({
         ok: false,
-        msg: "Category already exists",
+        msg: "La categoría ya existe",
       });
     }
 
@@ -23,7 +23,7 @@ const createCategory = async (req, res) => {
 
     res.status(201).json({
       ok: true,
-      msg: "Category created successfully",
+      msg: "Categoría creada correctamente",
       data: category,
     });
   } catch (error) {
@@ -31,7 +31,7 @@ const createCategory = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -43,7 +43,7 @@ const getCategories = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Categories fetched successfully",
+      msg: "Categorías obtenidas correctamente",
       data: categories,
     });
   } catch (error) {
@@ -51,7 +51,7 @@ const getCategories = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -66,13 +66,13 @@ const getCategoryById = async (req, res) => {
     if (!category) {
       return res.status(404).json({
         ok: false,
-        msg: "Category not found",
+        msg: "Categoría no encontrada",
       });
     }
 
     res.status(200).json({
       ok: true,
-      msg: "Category fetched successfully",
+      msg: "Categoría obtenida correctamente",
       data: category,
     });
   } catch (error) {
@@ -80,7 +80,7 @@ const getCategoryById = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -95,7 +95,7 @@ const updateCategory = async (req, res) => {
     if (!category) {
       return res.status(404).json({
         ok: false,
-        msg: "Category not found",
+        msg: "Categoría no encontrada",
       });
     }
 
@@ -109,7 +109,7 @@ const updateCategory = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Category updated successfully",
+      msg: "Categoría actualizada correctamente",
       data: updatedCategory,
     });
   } catch (error) {
@@ -117,7 +117,7 @@ const updateCategory = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -132,7 +132,7 @@ const deleteCategory = async (req, res) => {
     if (!category) {
       return res.status(404).json({
         ok: false,
-        msg: "Category not found",
+        msg: "Categoría no encontrada",
       });
     }
 
@@ -140,14 +140,14 @@ const deleteCategory = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Category deleted successfully",
+      msg: "Categoría eliminada correctamente",
     });
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };

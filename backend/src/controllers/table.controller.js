@@ -11,7 +11,7 @@ const createTable = async (req, res) => {
     if (exists) {
       return res.status(400).json({
         ok: false,
-        msg: "Table number already exists",
+        msg: "El número de mesa ya existe",
       });
     }
 
@@ -31,7 +31,7 @@ const createTable = async (req, res) => {
 
     res.status(201).json({
       ok: true,
-      msg: "Table created successfully",
+      msg: "Mesa creada correctamente",
       data: populated,
     });
   } catch (error) {
@@ -39,7 +39,7 @@ const createTable = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -53,7 +53,7 @@ const getTables = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Tables fetched successfully",
+      msg: "Mesas obtenidas correctamente",
       data: tables,
     });
   } catch (error) {
@@ -61,7 +61,7 @@ const getTables = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -78,13 +78,13 @@ const getTableById = async (req, res) => {
     if (!table) {
       return res.status(404).json({
         ok: false,
-        msg: "Table not found",
+        msg: "Mesa no encontrada",
       });
     }
 
     res.status(200).json({
       ok: true,
-      msg: "Table fetched successfully",
+      msg: "Mesa obtenida correctamente",
       data: table,
     });
   } catch (error) {
@@ -92,7 +92,7 @@ const getTableById = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -107,7 +107,7 @@ const updateTable = async (req, res) => {
     if (!table) {
       return res.status(404).json({
         ok: false,
-        msg: "Table not found",
+        msg: "Mesa no encontrada",
       });
     }
 
@@ -119,7 +119,7 @@ const updateTable = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Table updated successfully",
+      msg: "Mesa actualizada correctamente",
       data: updatedTable,
     });
   } catch (error) {
@@ -127,7 +127,7 @@ const updateTable = async (req, res) => {
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
@@ -142,7 +142,7 @@ const deleteTable = async (req, res) => {
     if (!table) {
       return res.status(404).json({
         ok: false,
-        msg: "Table not found",
+        msg: "Mesa no encontrada",
       });
     }
 
@@ -150,14 +150,14 @@ const deleteTable = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      msg: "Table deleted successfully",
+      msg: "Mesa eliminada correctamente",
     });
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       ok: false,
-      msg: "Internal server error",
+      msg: "Error interno del servidor",
     });
   }
 };
