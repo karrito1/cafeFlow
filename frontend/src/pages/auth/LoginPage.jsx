@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { login as loginApi } from "../../api/authApi";
+import { login as loginApi, loginCustomer } from "../../api/authApi";
 
 function LoginPage() {
+  const [mode, setMode] = useState("staff");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,11 +17,16 @@ function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await loginApi({ email, password });
+      const apiFn = mode === "customer" ? loginCustomer : loginApi;
+      const res = await apiFn({ email, password });
       if (res.ok && res.data) {
         login(res.data.user, res.data.token);
-        const route = res.data.user.role === "waiter" ? "/tables" : "/dashboard";
-        navigate(route);
+        if (mode === "customer") {
+          navigate("/points");
+        } else {
+          const route = res.data.user.role === "waiter" ? "/tables" : "/dashboard";
+          navigate(route);
+        }
       } else {
         setError(res.msg || "Credenciales inválidas");
       }
@@ -45,8 +51,35 @@ function LoginPage() {
               className="max-w-[180px] h-auto mx-auto"
             />
             <p className="text-base-content/60 text-sm mt-3">
-              Inicia sesión en tu cuenta
+              {mode === "customer"
+                ? "Accede a tus puntos y recompensas"
+                : "Inicia sesión en tu cuenta"}
             </p>
+          </div>
+
+          <div className="flex bg-base-200 rounded-lg p-1 mb-6">
+            <button
+              type="button"
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+                mode === "staff"
+                  ? "bg-primary text-primary-content shadow-sm"
+                  : "text-base-content/60 hover:text-base-content"
+              }`}
+              onClick={() => { setMode("staff"); setError(""); }}
+            >
+              Empleado
+            </button>
+            <button
+              type="button"
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+                mode === "customer"
+                  ? "bg-primary text-primary-content shadow-sm"
+                  : "text-base-content/60 hover:text-base-content"
+              }`}
+              onClick={() => { setMode("customer"); setError(""); }}
+            >
+              Cliente
+            </button>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -84,14 +117,16 @@ function LoginPage() {
               />
             </div>
 
-            <label className="label mb-4">
-              <Link
-                to="/forgot-password"
-                className="label-text-alt text-base-content/50 hover:text-primary link link-hover text-sm"
-              >
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </label>
+            {mode === "staff" && (
+              <label className="label mb-4">
+                <Link
+                  to="/forgot-password"
+                  className="label-text-alt text-base-content/50 hover:text-primary link link-hover text-sm"
+                >
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </label>
+            )}
 
             {error && (
               <div
@@ -120,9 +155,27 @@ function LoginPage() {
               className={`btn btn-primary w-full text-primary-content ${loading ? "loading" : ""}`}
               disabled={loading}
             >
-              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+              {loading
+                ? "Iniciando sesión..."
+                : mode === "customer"
+                ? "Iniciar Sesión"
+                : "Iniciar Sesión"}
             </button>
           </form>
+
+          {mode === "customer" && (
+            <div className="text-center mt-6">
+              <p className="text-base-content/50 text-sm">
+                ¿No tienes cuenta?{" "}
+                <Link
+                  to="/register"
+                  className="text-primary hover:text-primary/80 font-medium link link-hover"
+                >
+                  Regístrate
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ function RoleRoute({ allowedRoles }) {
   }
 
   if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/tables" replace />;
+    return <Navigate to={user.role === 'customer' ? '/points' : '/tables'} replace />;
   }
 
   return <Outlet />;

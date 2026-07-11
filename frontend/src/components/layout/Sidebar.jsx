@@ -44,6 +44,10 @@ const roleLinks = {
     { to: '/tables', label: 'Mesas', icon: 'Sofa' },
     { to: '/menu', label: 'Menú digital', icon: 'FileText' },
   ],
+  customer: [
+    { to: '/points', label: 'Mis Puntos', icon: 'Gift' },
+    { to: '/menu', label: 'Menú', icon: 'FileText' },
+  ],
 };
 
 function Sidebar() {

@@ -1,11 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  LayoutDashboard, ClipboardList, Sofa, Coffee, FileText, CreditCard,
+  LayoutDashboard, ClipboardList, Sofa, Coffee, FileText, CreditCard, Gift,
 } from 'lucide-react';
 
 const iconMap = {
-  LayoutDashboard, ClipboardList, Sofa, Coffee, FileText, CreditCard,
+  LayoutDashboard, ClipboardList, Sofa, Coffee, FileText, CreditCard, Gift,
 };
 
 const roleNav = {
@@ -19,6 +19,11 @@ const roleNav = {
   waiter: [
     { to: '/tables', label: 'Mesas', icon: 'Sofa' },
     { to: '/orders', label: 'Pedidos', icon: 'ClipboardList' },
+    { to: '/menu', label: 'Menú', icon: 'FileText' },
+  ],
+
+  customer: [
+    { to: '/points', label: 'Puntos', icon: 'Gift' },
     { to: '/menu', label: 'Menú', icon: 'FileText' },
   ],
 };

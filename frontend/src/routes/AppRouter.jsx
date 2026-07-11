@@ -28,6 +28,7 @@ import RewardListPage from '../pages/rewards/RewardListPage';
 import UserListPage from '../pages/users/UserListPage';
 import UserFormPage from '../pages/users/UserFormPage';
 import SalesReportPage from '../pages/reports/SalesReportPage';
+import PointsPage from '../pages/points/PointsPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 const LandingPage = lazy(() => import('../pages/landing/LandingPage'));
@@ -49,6 +50,7 @@ function AppRouter() {
           <Route element={<AppLayout />}>
             {/* Acceso para todos los roles autenticados */}
             <Route path="/menu" element={<MenuPage />} />
+            <Route path="/points" element={<PointsPage />} />
             <Route path="/tables" element={<TableListPage />} />
             <Route path="/tables/:id" element={<TableDetailPage />} />
             <Route path="/orders" element={<OrderListPage />} />

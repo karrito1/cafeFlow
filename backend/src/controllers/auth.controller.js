@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("../models/User");
+const Customer = require("../models/Customer");
 const { sendResetEmail } = require("../utils/mailer");
 
 const login = async (req, res) => {
@@ -22,6 +23,40 @@ const login = async (req, res) => {
       data: {
         token,
         user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Error interno del servidor" });
+  }
+};
+
+const loginCustomer = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const customer = await Customer.findOne({ email, active: true });
+    if (!customer) return res.status(401).json({ ok: false, msg: "Credenciales inválidas" });
+    const isMatch = await bcrypt.compare(password, customer.password);
+    if (!isMatch) return res.status(401).json({ ok: false, msg: "Credenciales inválidas" });
+    const token = jwt.sign(
+      { id: customer._id, role: "customer" },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+    res.json({
+      ok: true,
+      msg: "Inicio de sesión exitoso",
+      data: {
+        token,
+        user: {
+          id: customer._id,
+          name: customer.name,
+          email: customer.email,
+          role: "customer",
+          points: customer.points,
+          lifetimePoints: customer.lifetimePoints,
+          level: customer.level,
+        },
       },
     });
   } catch (error) {
@@ -115,4 +150,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { login, register, forgotPassword, resetPassword };
+module.exports = { login, loginCustomer, register, forgotPassword, resetPassword };

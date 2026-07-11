@@ -7,9 +7,9 @@ import Footer from './Footer';
 
 function AppLayout() {
   const { user } = useAuth();
-  const isWaiter = user?.role === 'waiter';
+  const isMobileRole = user?.role === 'waiter' || user?.role === 'customer';
 
-  if (isWaiter) {
+  if (isMobileRole) {
     return (
       <div className="min-h-screen flex flex-col bg-base-200 pb-16 lg:pb-0" data-theme="cafe">
         <Navbar />
@@ -25,7 +25,7 @@ function AppLayout() {
     <div className="min-h-screen flex flex-col bg-base-200 pb-16 lg:pb-0" data-theme="cafe">
       <Navbar />
       <div className="flex flex-1">
-        {!isWaiter && <Sidebar />}
+        <Sidebar />
         <main className="flex-1">
           <Outlet />
         </main>
