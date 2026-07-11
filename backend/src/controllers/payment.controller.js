@@ -27,10 +27,12 @@ const Customer = require("../models/Customer");
 const createPayment = async (req, res) => {
   try {
     const { orderId, paymentMethod, amount, change } = req.body;
+
     const payment = await Payment.create({ orderId, paymentMethod, amount, change });
 
     // Mark order as paid
     const order = await Order.findById(orderId);
+
     if (order) {
       order.status = "paid";
       await order.save();
@@ -40,14 +42,13 @@ const createPayment = async (req, res) => {
     let earnedPoints = 0;
     if (order && order.customerId) {
       const customer = await Customer.findById(order.customerId);
+
       if (customer) {
-        // 500 COP = 1 Point
         earnedPoints = Math.floor(order.total / 500);
 
         customer.points = (customer.points || 0) + earnedPoints;
         customer.lifetimePoints = (customer.lifetimePoints || 0) + earnedPoints;
 
-        // Evaluate Tier progression based on lifetime points
         if (customer.lifetimePoints >= 2000) {
           customer.level = "gold";
         } else if (customer.lifetimePoints >= 500) {
