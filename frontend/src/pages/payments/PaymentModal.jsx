@@ -132,148 +132,150 @@ function PaymentModal({ open, onClose }) {
   if (!open) return null;
 
   return (
-    <dialog className="modal modal-open">
-      <div className="modal-box max-w-2xl">
-        {/* Encabezado */}
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="font-bold text-2xl">Registrar Pago</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+      <div className="card bg-base-100 w-full max-w-2xl shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
+        <div className="card-body px-6 py-6">
+          {/* Encabezado */}
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-bold text-2xl">Registrar Pago</h3>
 
-          <button className="btn btn-sm btn-circle" onClick={onClose}>
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* Formulario */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* Pedido */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Pedido</span>
-            </label>
-
-            <select
-              className="select select-bordered"
-              value={selectedOrder}
-              onChange={(e) => setSelectedOrder(e.target.value)}
-            >
-              <option value="">Seleccione un pedido</option>
-
-              {orders
-                .filter((o) => o.status !== "paid")
-                .map((order) => (
-                <option key={order._id} value={order._id}>
-                  Pedido #{order._id.slice(-5)} - Mesa{" "}
-                  {order.tableId?.tableNumber}
-                  {order.customerId?.name ? ` - ${order.customerId.name}` : " (sin cliente)"}
-                </option>
-              ))}
-            </select>
+            <button className="btn btn-ghost btn-sm btn-square" onClick={onClose}>
+              <X size={18} />
+            </button>
           </div>
 
-          {/* Cliente */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Cliente</span>
-            </label>
+          {/* Formulario */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Pedido */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Pedido</span>
+              </label>
 
-            <input
-              type="text"
-              className={`input input-bordered ${orderSelected && !orderSelected?.customerId ? 'input-warning' : ''}`}
-              disabled
-              value={orderSelected?.customerId?.name || ""}
-              placeholder={orderSelected ? "Sin cliente - No se acumularán puntos" : ""}
-            />
+              <select
+                className="select select-bordered"
+                value={selectedOrder}
+                onChange={(e) => setSelectedOrder(e.target.value)}
+              >
+                <option value="">Seleccione un pedido</option>
+
+                {orders
+                  .filter((o) => o.status !== "paid")
+                  .map((order) => (
+                  <option key={order._id} value={order._id}>
+                    Pedido #{order._id.slice(-5)} - Mesa{" "}
+                    {order.tableId?.tableNumber}
+                    {order.customerId?.name ? ` - ${order.customerId.name}` : " (sin cliente)"}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Cliente */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Cliente</span>
+              </label>
+
+              <input
+                type="text"
+                className={`input input-bordered ${orderSelected && !orderSelected?.customerId ? 'input-warning' : ''}`}
+                disabled
+                value={orderSelected?.customerId?.name || ""}
+                placeholder={orderSelected ? "Sin cliente - No se acumularán puntos" : ""}
+              />
+            </div>
+
+            {/* Método de pago */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Método de pago</span>
+              </label>
+
+              <select
+                className="select select-bordered"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              >
+                <option value="cash">Efectivo</option>
+                <option value="card">Tarjeta</option>
+                <option value="transfer">Transferencia</option>
+                <option value="mixed">Mixto</option>
+              </select>
+            </div>
+
+            {/* Total */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Total</span>
+              </label>
+
+              <input
+                type="text"
+                className="input input-bordered"
+                disabled
+                value={formatCurrency(orderSelected?.total)}
+              />
+            </div>
+
+            {/* Valor recibido */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Valor recibido</span>
+              </label>
+
+              <input
+                type="number"
+                className="input input-bordered"
+                value={amountReceived}
+                onChange={(e) => setAmountReceived(e.target.value)}
+                placeholder="Ingrese el valor recibido"
+              />
+            </div>
+
+            {/* Cambio */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Cambio</span>
+              </label>
+
+              <input
+                type="text"
+                className="input input-bordered"
+                disabled
+                value={formatCurrency(change)}
+              />
+            </div>
           </div>
 
-          {/* Método de pago */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Método de pago</span>
-            </label>
+          {/* Botones */}
+          <div className="flex justify-end gap-3 pt-4">
+            <button className="btn btn-ghost" onClick={onClose}>
+              Cancelar
+            </button>
 
-            <select
-              className="select select-bordered"
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            >
-              <option value="cash">Efectivo</option>
-              <option value="card">Tarjeta</option>
-              <option value="transfer">Transferencia</option>
-              <option value="mixed">Mixto</option>
-            </select>
+            <button className="btn btn-primary" onClick={handleSave}>
+              Registrar Pago
+            </button>
           </div>
-
-          {/* Total */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Total</span>
-            </label>
-
-            <input
-              type="text"
-              className="input input-bordered"
-              disabled
-              value={formatCurrency(orderSelected?.total)}
-            />
-          </div>
-
-          {/* Valor recibido */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Valor recibido</span>
-            </label>
-
-            <input
-              type="number"
-              className="input input-bordered"
-              value={amountReceived}
-              onChange={(e) => setAmountReceived(e.target.value)}
-              placeholder="Ingrese el valor recibido"
-            />
-          </div>
-
-          {/* Cambio */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Cambio</span>
-            </label>
-
-            <input
-              type="text"
-              className="input input-bordered"
-              disabled
-              value={formatCurrency(change)}
-            />
-          </div>
-        </div>
-
-        {/* Botones */}
-        <div className="modal-action">
-          <button className="btn btn-outline" onClick={onClose}>
-            Cancelar
-          </button>
-
-          <button className="btn btn-primary" onClick={handleSave}>
-            Registrar Pago
-          </button>
         </div>
       </div>
 
-      {/* Toast (reemplaza alert()) */}
+      {/* Toast */}
       {toast && (
         <div className="toast toast-top toast-end z-[100]">
           <div
             className={`alert border-0 text-white shadow-lg ${
               toast.type === "error"
-                ? "bg-[#B45309]" // ámbar oscuro para errores
-                : "bg-[#3F2D20]" // marrón oscuro (mismo tono que "Nuevo Pago") para éxito
+                ? "bg-[#B45309]"
+                : "bg-[#3F2D20]"
             }`}
           >
             <span>{toast.message}</span>
           </div>
         </div>
       )}
-    </dialog>
+    </div>
   );
 }
 
