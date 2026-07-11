@@ -12,7 +12,7 @@ const getOrders = async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("tableId", "tableNumber name")
-      .populate("customerId", "name email points level")
+      .populate("customerId", "name email points lifetimePoints level")
       .populate("waiterId", "name")
       .populate("products.productId", "name price");
     res.json({ ok: true, msg: "Pedidos obtenidos", data: orders });
@@ -26,7 +26,7 @@ const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate("tableId", "tableNumber name")
-      .populate("customerId", "name email points level")
+      .populate("customerId", "name email points lifetimePoints level")
       .populate("waiterId", "name")
       .populate("products.productId", "name price");
     if (!order) return res.status(404).json({ ok: false, msg: "Pedido no encontrado" });

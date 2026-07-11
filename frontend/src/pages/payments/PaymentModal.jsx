@@ -102,7 +102,13 @@ function PaymentModal({ open, onClose }) {
       });
 
       if (response.ok) {
-        showToast(response.msg || "Pago registrado correctamente.", "success");
+        const pts = response.data?.earnedPoints || 0;
+        const msg = pts > 0
+          ? `${response.msg} (+${pts} pts)`
+          : orderSelected?.customerId
+            ? response.msg
+            : "Pago registrado. No se acumularon puntos (sin cliente)";
+        showToast(msg, "success");
 
         setSelectedOrder("");
         setOrderSelected(null);
@@ -152,10 +158,13 @@ function PaymentModal({ open, onClose }) {
             >
               <option value="">Seleccione un pedido</option>
 
-              {orders.map((order) => (
+              {orders
+                .filter((o) => o.status !== "paid")
+                .map((order) => (
                 <option key={order._id} value={order._id}>
                   Pedido #{order._id.slice(-5)} - Mesa{" "}
                   {order.tableId?.tableNumber}
+                  {order.customerId?.name ? ` - ${order.customerId.name}` : " (sin cliente)"}
                 </option>
               ))}
             </select>
@@ -169,9 +178,10 @@ function PaymentModal({ open, onClose }) {
 
             <input
               type="text"
-              className="input input-bordered"
+              className={`input input-bordered ${orderSelected && !orderSelected?.customerId ? 'input-warning' : ''}`}
               disabled
               value={orderSelected?.customerId?.name || ""}
+              placeholder={orderSelected ? "Sin cliente - No se acumularán puntos" : ""}
             />
           </div>
 
