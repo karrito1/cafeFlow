@@ -131,7 +131,10 @@ function NewCustomerModal({ isOpen, onClose, onCreated }) {
             </div>
 
             {apiError && (
-              <div role="alert" className="bg-red-500 text-white rounded-lg py-2 text-sm">
+              <div role="alert" className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-xl">
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                </svg>
                 <span>{apiError}</span>
               </div>
             )}
@@ -258,7 +261,8 @@ function CustomerListPage() {
         </div>
 
         {error && (
-          <div role="alert" className="bg-red-500 text-white rounded-lg">
+          <div role="alert" className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-xl">
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
             <span>{error}</span>
           </div>
         )}

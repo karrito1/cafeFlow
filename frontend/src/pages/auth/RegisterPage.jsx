@@ -183,7 +183,7 @@ function RegisterPage() {
             {error && (
               <div
                 role="alert"
-                className="alert mb-4 py-2.5 text-sm bg-red-500 text-white rounded-lg"
+                className="flex items-center gap-2 mb-4 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-xl"
               >
                 <svg
                   className="w-4 h-4 shrink-0"
