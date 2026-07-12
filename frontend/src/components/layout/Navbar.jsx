@@ -1,5 +1,6 @@
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import HamburgerMenu from './HamburgerMenu';
 
 const waiterLinks = [
   { to: '/tables', label: 'Mesas' },
@@ -44,6 +45,7 @@ function Navbar() {
         )}
       </div>
       <div className="flex-none flex items-center gap-3">
+        {user?.role === 'admin' && <HamburgerMenu />}
         {user && (
           <>
             <span className="text-sm text-base-content/70 hidden sm:block">
