@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { toastSuccess, toastApiError, toastNetworkError } from '../../utils/toast';
 import { getTable, updateTable, deleteTable } from '../../api/tableApi';
 import { getOrders } from '../../api/orderApi';
 import { useAuth } from '../../context/AuthContext';
@@ -52,12 +52,12 @@ function TableDetailPage() {
       const res = await updateTable(id, { status: newStatus });
       if (res.ok) {
         setMesa((prev) => ({ ...prev, status: newStatus }));
-        toast.success('Estado actualizado');
+        toastSuccess('Estado actualizado', 'La mesa cambió de estado');
       } else {
-        toast.error(res.msg || 'Error al actualizar estado');
+        toastApiError(res, 'Error al actualizar estado');
       }
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     }
   };
 
@@ -66,13 +66,13 @@ function TableDetailPage() {
     try {
       const res = await deleteTable(id);
       if (res.ok) {
-        toast.success('Mesa eliminada');
+        toastSuccess('Mesa eliminada', 'Volviendo a la lista de mesas');
         navigate('/tables');
       } else {
-        toast.error(res.msg || 'Error al eliminar mesa');
+        toastApiError(res, 'Error al eliminar mesa');
       }
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setDeleting(false);
       setShowConfirm(false);

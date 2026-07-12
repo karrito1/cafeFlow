@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "sonner";
+import { toastSuccess, toastApiError, toastNetworkError } from "../../utils/toast";
 import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi";
 import { useAuth } from "../../context/AuthContext";
 import { Users, Plus, Trash2, Pencil } from "lucide-react";
@@ -141,9 +141,9 @@ function UserListPage() {
     try {
       const res = await getUsers();
       if (res.ok) setUsers(res.data);
-      else toast.error(res.msg || 'Error al cargar usuarios');
+      else toastApiError(res, 'Error al cargar usuarios');
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setLoading(false);
     }
@@ -163,12 +163,12 @@ function UserListPage() {
       if (form.password) data.password = form.password;
       const res = await updateUser(user._id, data);
       if (!res.ok) throw res;
-      toast.success('Usuario actualizado');
+      toastSuccess('Usuario actualizado', 'Los cambios se guardaron correctamente');
     } else {
       data.password = form.password;
       const res = await createUser(data);
       if (!res.ok) throw res;
-      toast.success('Usuario creado');
+      toastSuccess('Usuario creado', 'Ya puede iniciar sesión con sus credenciales');
     }
     await fetchData();
   };
@@ -177,12 +177,12 @@ function UserListPage() {
     try {
       const res = await deleteUser(id);
       if (res.ok) {
-        toast.success('Usuario eliminado');
+        toastSuccess('Usuario eliminado', 'La cuenta fue desactivada');
       } else {
-        toast.error(res.msg || 'Error al eliminar usuario');
+        toastApiError(res, 'Error al eliminar usuario');
       }
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     }
     setDeleting(null);
     await fetchData();

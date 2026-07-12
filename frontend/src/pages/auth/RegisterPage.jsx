@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerCustomer } from "../../api/customerApi";
-import { toast } from "sonner";
+import { toastSuccess } from "../../utils/toast";
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function RegisterPage() {
         password: form.password,
       });
       if (res.ok) {
-        toast.success("Cuenta creada. Inicia sesión para continuar");
+        toastSuccess("Cuenta creada", "Inicia sesión para continuar");
         navigate("/login");
       } else {
         setError(res.msg || "Error al crear la cuenta");

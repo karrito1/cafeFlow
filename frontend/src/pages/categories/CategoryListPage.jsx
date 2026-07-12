@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
+import { toastSuccess, toastApiError, toastNetworkError } from '../../utils/toast';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categoryApi';
 import { FolderOpen, Trash2, Pencil } from 'lucide-react';
 import ActionButton from '../../components/ui/ActionButton';
@@ -88,9 +88,9 @@ function CategoryListPage() {
     try {
       const res = await getCategories();
       if (res.ok) setCategories(res.data);
-      else toast.error(res.msg || 'Error al cargar categorías');
+      else toastApiError(res, 'Error al cargar categorías');
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setLoading(false);
     }
@@ -107,11 +107,11 @@ function CategoryListPage() {
     if (category) {
       const res = await updateCategory(category._id, data);
       if (!res.ok) throw res;
-      toast.success('Categoría actualizada');
+      toastSuccess('Categoría actualizada', 'Los cambios se guardaron correctamente');
     } else {
       const res = await createCategory(data);
       if (!res.ok) throw res;
-      toast.success('Categoría creada');
+      toastSuccess('Categoría creada', 'Ya puedes asignarle productos');
     }
     await fetchData();
   };
@@ -120,12 +120,12 @@ function CategoryListPage() {
     try {
       const res = await deleteCategory(id);
       if (res.ok) {
-        toast.success('Categoría eliminada');
+        toastSuccess('Categoría eliminada', 'Los productos asociados quedarán sin categoría');
       } else {
-        toast.error(res.msg || 'Error al eliminar categoría');
+        toastApiError(res, 'Error al eliminar categoría');
       }
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     }
     setDeleting(null);
     await fetchData();

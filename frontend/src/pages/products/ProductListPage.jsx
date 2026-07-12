@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
+import { toastSuccess, toastApiError, toastNetworkError } from '../../utils/toast';
 import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
 import { formatCurrency } from '../../utils/formatters';
@@ -66,7 +66,7 @@ function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
       };
       const res = isEdit ? await updateProduct(productId, data) : await createProduct(data);
       if (res.ok) {
-        toast.success(isEdit ? 'Producto actualizado' : 'Producto creado');
+        toastSuccess(isEdit ? 'Producto actualizado' : 'Producto creado', isEdit ? 'Los cambios se guardaron' : 'Ya está disponible en el menú');
         onSaved();
         onClose();
       } else {
@@ -168,9 +168,9 @@ function ProductListPage() {
       const [prodRes, catRes] = await Promise.all([getProducts(), getCategories()]);
       if (prodRes.ok) setProducts(prodRes.data);
       if (catRes.ok) setCategories(catRes.data);
-      if (!prodRes.ok) toast.error(prodRes.msg || 'Error al cargar productos');
+      if (!prodRes.ok) toastApiError(prodRes, 'Error al cargar productos');
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setLoading(false);
     }
@@ -182,12 +182,12 @@ function ProductListPage() {
     try {
       const res = await deleteProduct(id);
       if (res.ok) {
-        toast.success('Producto eliminado');
+        toastSuccess('Producto eliminado', 'Ya no aparecerá en el menú');
       } else {
-        toast.error(res.msg || 'Error al eliminar producto');
+        toastApiError(res, 'Error al eliminar producto');
       }
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     }
     setDeleting(null);
     await fetchData();

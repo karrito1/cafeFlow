@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { toastSuccess, toastApiError, toastNetworkError } from '../../utils/toast';
 import { getOrder, updateOrder } from '../../api/orderApi';
 import { ORDER_STATUS } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -55,12 +55,12 @@ function OrderDetailPage() {
         const msg = pts > 0
           ? `Pedido pagado. +${pts} punto(s) agregado(s)`
           : `Pedido marcado como ${ORDER_STATUS_BADGES[newStatus]?.label || newStatus}`;
-        toast.success(msg);
+        toastSuccess(msg);
       } else {
-        toast.error(res.msg || 'Error al actualizar estado');
+        toastApiError(res, 'Error al actualizar estado');
       }
     } catch {
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setUpdating(false);
     }

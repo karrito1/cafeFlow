@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
+import { toastSuccess, toastApiError, toastNetworkError } from '../../utils/toast';
 import { Users, Trash2, Plus, UserCheck, X, UserPlus } from 'lucide-react';
 import { getCustomers, registerCustomer, deleteCustomer } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
@@ -187,11 +187,11 @@ function CustomerListPage() {
       if (res.ok) setCustomers(res.data);
       else {
         setError(res.msg || 'Error al cargar clientes');
-        toast.error(res.msg || 'Error al cargar clientes');
+        toastApiError(res, 'Error al cargar clientes');
       }
     } catch {
       setError('Error al conectar con el servidor');
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setLoading(false);
     }
@@ -201,7 +201,7 @@ function CustomerListPage() {
 
   const handleCreated = (newCustomer) => {
     setCustomers((prev) => [{ ...newCustomer, assignedTable: null }, ...prev]);
-    toast.success('Cliente creado');
+    toastSuccess('Cliente creado', 'Se agregó al programa de fidelización');
   };
 
   const handleDelete = async () => {
@@ -212,14 +212,14 @@ function CustomerListPage() {
       if (res.ok) {
         setCustomers((prev) => prev.filter((c) => c._id !== toDelete._id));
         setToDelete(null);
-        toast.success('Cliente eliminado');
+        toastSuccess('Cliente eliminado', 'El registro fue removido');
       } else {
         setError(res.msg || 'Error al eliminar');
-        toast.error(res.msg || 'Error al eliminar cliente');
+        toastApiError(res, 'Error al eliminar cliente');
       }
     } catch {
       setError('Error al conectar con el servidor');
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setDeleting(false);
     }

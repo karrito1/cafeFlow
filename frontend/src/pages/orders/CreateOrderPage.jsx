@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import { toastSuccess, toastApiError, toastNetworkError } from '../../utils/toast';
 import { getTables } from '../../api/tableApi';
 import { getProducts } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
@@ -184,15 +184,15 @@ function CreateOrderPage() {
     try {
       const res = await createOrder(payload);
       if (res.ok) {
-        toast.success('Pedido creado exitosamente');
+        toastSuccess('Pedido creado', 'Redirigiendo al detalle del pedido');
         navigate(`/orders/${res.data._id}`);
       } else {
         setError(res.msg || 'Error al crear el pedido');
-        toast.error(res.msg || 'Error al crear el pedido');
+        toastApiError(res, 'Error al crear el pedido');
       }
     } catch {
       setError('Error al conectar con el servidor');
-      toast.error('Error al conectar con el servidor');
+      toastNetworkError();
     } finally {
       setSaving(false);
     }
