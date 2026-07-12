@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categoryApi';
 import { FolderOpen, Trash2, Pencil } from 'lucide-react';
 import ActionButton from '../../components/ui/ActionButton';
+import EmptyState from '../../components/ui/EmptyState';
 
 function CategoryModal({ isOpen, onClose, onSave, category }) {
   const [form, setForm] = useState({ name: '', description: '', order: '0' });
@@ -152,16 +153,12 @@ function CategoryListPage() {
         </div>
 
         {categories.length === 0 ? (
-          <div className="card bg-base-100 shadow-sm">
-            <div className="card-body items-center py-16 text-center">
-              <FolderOpen size={48} className="mb-4 opacity-30 mx-auto" />
-              <h3 className="text-lg font-semibold text-base-content">No hay categorías</h3>
-              <p className="text-sm text-base-content/40">Crea tu primera categoría para organizar los productos</p>
-              <button className="btn btn-primary mt-4" onClick={() => { setEditing(null); setModalOpen(true); }}>
-                + Crear Categoría
-              </button>
-            </div>
-          </div>
+          <EmptyState
+            icon={FolderOpen}
+            title="No hay categorías"
+            description="Crea tu primera categoría para organizar los productos"
+            action={<button className="btn btn-primary" onClick={() => { setEditing(null); setModalOpen(true); }}>+ Crear Categoría</button>}
+          />
         ) : (
           <div className="card bg-base-100 shadow-sm border border-base-200">
             <div className="overflow-x-auto">

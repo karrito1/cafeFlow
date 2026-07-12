@@ -4,6 +4,7 @@ import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi"
 import { useAuth } from "../../context/AuthContext";
 import { Users, Plus, Trash2, Pencil } from "lucide-react";
 import ActionButton from '../../components/ui/ActionButton';
+import EmptyState from '../../components/ui/EmptyState';
 
 function UserModal({ isOpen, onClose, onSave, user }) {
   const [form, setForm] = useState({
@@ -219,26 +220,16 @@ function UserListPage() {
         </div>
 
         {filteredUsers.length === 0 ? (
-          <div className="card bg-base-100 shadow-sm">
-            <div className="card-body items-center py-16 text-center">
-              <Users size={48} className="mb-4 opacity-30 mx-auto" />
-              <h3 className="text-lg font-semibold text-base-content">
-                No hay usuarios
-              </h3>
-              <p className="text-sm text-base-content/40">
-                Crea el primer usuario del sistema
-              </p>
-              <button
-                className="btn btn-primary mt-4"
-                onClick={() => {
-                  setEditing(null);
-                  setModalOpen(true);
-                }}
-              >
+          <EmptyState
+            icon={Users}
+            title="No hay usuarios"
+            description="Crea el primer usuario del sistema"
+            action={
+              <button className="btn btn-primary" onClick={() => { setEditing(null); setModalOpen(true); }}>
                 + Crear Usuario
               </button>
-            </div>
-          </div>
+            }
+          />
         ) : (
           <div className="card bg-base-100 shadow-sm border border-base-200">
             <div className="overflow-x-auto">

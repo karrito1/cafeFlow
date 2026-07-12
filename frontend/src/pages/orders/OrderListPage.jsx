@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { ORDER_STATUS } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { ClipboardList, Search, User, Filter } from 'lucide-react';
+import EmptyState from '../../components/ui/EmptyState';
 
 const statusConfig = {
   [ORDER_STATUS.ACTIVE]: { label: 'Activo', badge: 'badge-soft badge-info' },
@@ -111,20 +112,11 @@ function OrderListPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="card bg-base-100 shadow-sm">
-            <div className="card-body items-center py-16 text-center">
-              <ClipboardList size={48} className="mb-4 opacity-30 mx-auto" />
-              <h3 className="text-lg font-semibold text-base-content">
-                {myOrdersOnly && orders.length > 0 ? 'No tienes pedidos' : orders.length === 0 ? 'No hay pedidos' : 'Sin resultados'}
-              </h3>
-              <p className="text-sm text-base-content/40">
-                {orders.length === 0 ? 'Crea tu primer pedido' : myOrdersOnly ? 'Desactiva el filtro "Mis pedidos" para ver todos' : 'Intenta con otros filtros'}
-              </p>
-              {orders.length === 0 && (
-                <p className="text-sm text-base-content/40 mt-2">Crea un pedido desde la sección de mesas</p>
-              )}
-            </div>
-          </div>
+          <EmptyState
+            icon={ClipboardList}
+            title={myOrdersOnly && orders.length > 0 ? 'No tienes pedidos' : orders.length === 0 ? 'No hay pedidos' : 'Sin resultados'}
+            description={orders.length === 0 ? 'Crea tu primer pedido' : myOrdersOnly ? 'Desactiva el filtro "Mis pedidos" para ver todos' : 'Intenta con otros filtros'}
+          />
         ) : (
           <div className="overflow-x-auto rounded-xl shadow-sm border border-base-200">
             <table className="table table-zebra">

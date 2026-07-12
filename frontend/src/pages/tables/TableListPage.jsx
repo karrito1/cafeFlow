@@ -6,6 +6,7 @@ import { getTables, createTable, updateTable, deleteTable } from '../../api/tabl
 import { getCustomers } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
 import { Sofa, User } from 'lucide-react';
+import EmptyState from '../../components/ui/EmptyState';
 
 const statusStyle = {
   [TABLE_STATUS.FREE]: {
@@ -395,18 +396,12 @@ function TableListPage() {
             ))}
           </div>
         ) : (
-          <div className="card bg-base-100 shadow-sm">
-            <div className="card-body items-center py-16 text-center">
-              <Sofa size={48} className="mb-4 opacity-30 mx-auto" />
-              <h3 className="text-lg font-semibold text-base-content">No hay mesas registradas</h3>
-              <p className="text-sm text-base-content/40">Crea tu primera mesa para empezar</p>
-              {user?.role === 'admin' && (
-                <button className="btn btn-primary mt-4" onClick={() => setShowModal(true)}>
-                  + Crear Mesa
-                </button>
-              )}
-            </div>
-          </div>
+          <EmptyState
+            icon={Sofa}
+            title="No hay mesas registradas"
+            description="Crea tu primera mesa para empezar"
+            action={user?.role === 'admin' ? <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Crear Mesa</button> : null}
+          />
         )}
 
         <NewTableModal

@@ -1,4 +1,5 @@
 import { CreditCard, Plus, Search, DollarSign } from "lucide-react";
+import EmptyState from '../../components/ui/EmptyState';
 import { useEffect, useState } from "react";
 import { getPayments } from "../../api/paymentApi";
 import PaymentModal from "../../pages/payments/PaymentModal";
@@ -167,8 +168,12 @@ function PaymentPage() {
                   </tr>
                 ) : filteredPayments.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-10">
-                      No hay pagos que coincidan con la búsqueda.
+                    <td colSpan="6">
+                      <EmptyState
+                        icon={CreditCard}
+                        title="No hay pagos"
+                        description="Los pagos aparecerán aquí cuando se registren"
+                      />
                     </td>
                   </tr>
                 ) : (

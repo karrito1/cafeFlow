@@ -5,6 +5,7 @@ import { getCategories } from '../../api/categoryApi';
 import { formatCurrency } from '../../utils/formatters';
 import { X, Coffee, Trash2, Pencil } from 'lucide-react';
 import ActionButton from '../../components/ui/ActionButton';
+import EmptyState from '../../components/ui/EmptyState';
 
 function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
   const [form, setForm] = useState({
@@ -255,20 +256,12 @@ function ProductListPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="card bg-base-100 shadow-sm">
-            <div className="card-body items-center py-16 text-center">
-              <Coffee size={48} className="mb-4 opacity-30 mx-auto" />
-              <h3 className="text-lg font-semibold text-base-content">
-                {products.length === 0 ? 'No hay productos' : 'Sin resultados'}
-              </h3>
-              <p className="text-sm text-base-content/40">
-                {products.length === 0 ? 'Agrega tu primer producto al menú' : 'Intenta con otros filtros'}
-              </p>
-              {products.length === 0 && (
-                <button className="btn btn-primary mt-4" onClick={openCreate}>+ Crear Producto</button>
-              )}
-            </div>
-          </div>
+          <EmptyState
+            icon={Coffee}
+            title={products.length === 0 ? 'No hay productos' : 'Sin resultados'}
+            description={products.length === 0 ? 'Agrega tu primer producto al menú' : 'Intenta con otros filtros'}
+            action={products.length === 0 ? <button className="btn btn-primary" onClick={openCreate}>+ Crear Producto</button> : null}
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map((p) => (

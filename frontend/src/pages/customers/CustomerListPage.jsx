@@ -4,6 +4,7 @@ import { Users, Trash2, Plus, UserCheck, X, UserPlus } from 'lucide-react';
 import { getCustomers, registerCustomer, deleteCustomer } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
 import ActionButton from '../../components/ui/ActionButton';
+import EmptyState from '../../components/ui/EmptyState';
 
 const LEVEL_BADGE = {
   bronze: 'badge-warning',
@@ -270,18 +271,12 @@ function CustomerListPage() {
 
         {/* Tabla o estado vacío */}
         {customers.length === 0 ? (
-          <div className="card bg-base-100 shadow-sm">
-            <div className="card-body items-center py-16 text-center">
-              <Users size={48} className="mb-4 opacity-30 mx-auto" />
-              <h3 className="text-lg font-semibold text-base-content/60">No hay clientes registrados</h3>
-              <p className="text-sm text-base-content/40">Registra el primer cliente para empezar</p>
-              {isAdmin && (
-                <button className="btn btn-primary mt-4 gap-2" onClick={() => setShowCreate(true)}>
-                  <Plus size={18} /> Nuevo Cliente
-                </button>
-              )}
-            </div>
-          </div>
+          <EmptyState
+            icon={Users}
+            title="No hay clientes registrados"
+            description="Registra el primer cliente para empezar"
+            action={isAdmin ? <button className="btn btn-primary gap-2" onClick={() => setShowCreate(true)}><Plus size={18} /> Nuevo Cliente</button> : null}
+          />
         ) : (
           <div className="card bg-base-100 shadow-sm border border-base-200 overflow-hidden">
             <div className="overflow-x-auto">

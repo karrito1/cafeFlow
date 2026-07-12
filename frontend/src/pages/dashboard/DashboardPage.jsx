@@ -6,9 +6,8 @@ import { getOrders } from '../../api/orderApi';
 import { getTables } from '../../api/tableApi';
 import { getCustomers } from '../../api/customerApi';
 import { formatCurrency } from '../../utils/formatters';
-import {
-  Coffee, ClipboardList, Sofa, User, LayoutDashboard,
-} from 'lucide-react';
+import { Coffee, ClipboardList, Sofa, LayoutDashboard } from 'lucide-react';
+import EmptyState from '../../components/ui/EmptyState';
 
 const iconMap = { Coffee, ClipboardList, Sofa, LayoutDashboard };
 
@@ -169,13 +168,11 @@ function DashboardPage() {
                 </table>
               </div>
             ) : (
-              <div className="py-8 text-center">
-                <ClipboardList size={40} className="mx-auto mb-2 opacity-30" />
-                <p className="text-sm text-base-content/50">No hay pedidos aún</p>
-                <Link to="/orders/new" className="btn btn-primary btn-sm mt-3">
-                  Crear Primer Pedido
-                </Link>
-              </div>
+              <EmptyState
+                icon={ClipboardList}
+                title="No hay pedidos aún"
+                action={<Link to="/orders/new" className="btn btn-primary btn-sm">Crear Primer Pedido</Link>}
+              />
             )}
           </div>
         </div>
