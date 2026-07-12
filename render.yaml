@@ -3,7 +3,7 @@ services:
     name: cafeflow-backend
     runtime: node
     rootDir: backend
-    buildCommand: npm install
+    buildCommand: cd ../frontend && npm install && npm run build && cd ../backend && npm install
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
@@ -18,13 +18,5 @@ services:
         sync: false
       - key: PORT
         value: 4000
-
-  - type: static
-    name: cafeflow-frontend
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    notFoundUrl: /index.html
-    envVars:
       - key: VITE_API_URL
-        sync: false
+        value: ""
