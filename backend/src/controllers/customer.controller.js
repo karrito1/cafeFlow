@@ -29,7 +29,7 @@ const registerCustomer = async (req, res) => {
 
 const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find({ active: true }).select("-password").lean();
+    const customers = await Customer.find({ active: true }).select("-password").sort({ points: -1 }).lean();
 
     // For each customer, find if they have an assigned table
     const customerIds = customers.map((c) => c._id);
