@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { getTable, deleteTable } from '../../api/tableApi';
+import { getTable, updateTable, deleteTable } from '../../api/tableApi';
+import { getOrders } from '../../api/orderApi';
 import { useAuth } from '../../context/AuthContext';
 import { formatCurrency } from '../../utils/formatters';
 import { Search, Coffee, UtensilsCrossed, Trash2, Eye } from 'lucide-react';
