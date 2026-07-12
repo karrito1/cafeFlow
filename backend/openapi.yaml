@@ -7,6 +7,8 @@ info:
     Todas las respuestas siguen el formato `{ ok, msg, data }`.
   version: 1.0.0
 servers:
+  - url: https://cafeflow-backend-ebqx.onrender.com/api
+    description: Producción
   - url: http://localhost:4000/api
     description: Desarrollo local
 
