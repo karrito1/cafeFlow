@@ -1,5 +1,6 @@
 import { CreditCard, Plus, Search, DollarSign } from "lucide-react";
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../components/ui/StatusBadge';
 import { useEffect, useState } from "react";
 import { getPayments } from "../../api/paymentApi";
 import PaymentModal from "../../pages/payments/PaymentModal";
@@ -187,7 +188,12 @@ function PaymentPage() {
 
                       <td>${payment.change}</td>
 
-                      <td>{payment.status}</td>
+                      <td>
+                        <StatusBadge
+                          color={payment.status === 'paid' ? 'success' : payment.status === 'failed' ? 'error' : 'warning'}
+                          label={payment.status === 'paid' ? 'Pagado' : payment.status === 'failed' ? 'Fallido' : 'Pendiente'}
+                        />
+                      </td>
 
                       <td>
                         {new Date(payment.paymentDate).toLocaleDateString()}

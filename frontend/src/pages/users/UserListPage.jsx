@@ -4,6 +4,7 @@ import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi"
 import { useAuth } from "../../context/AuthContext";
 import { Users, Plus, Trash2, Pencil } from "lucide-react";
 import ActionButton from '../../components/ui/ActionButton';
+import StatusBadge, { USER_ROLE_BADGES } from '../../components/ui/StatusBadge';
 import EmptyState from '../../components/ui/EmptyState';
 
 function UserModal({ isOpen, onClose, onSave, user }) {
@@ -251,26 +252,13 @@ function UserListPage() {
                       </td>
                       <td className="text-base-content/70">{user.email}</td>
                       <td>
-                        <span
-                          className={`badge ${
-                            user.role === "admin"
-                              ? "badge-soft badge-warning"
-                              : "badge-soft badge-neutral"
-                          }`}
-                        >
-                          {user.role === "admin" ? "Admin" : "Mesero"}
-                        </span>
+                        <StatusBadge {...USER_ROLE_BADGES[user.role] || USER_ROLE_BADGES.waiter} />
                       </td>
                       <td>
-                        <span
-                          className={`badge ${
-                            user.active
-                              ? "badge-soft badge-success"
-                              : "badge-soft badge-error"
-                          } text-xs`}
-                        >
-                          {user.active ? "Activo" : "Inactivo"}
-                        </span>
+                        <StatusBadge
+                          color={user.active ? 'success' : 'error'}
+                          label={user.active ? 'Activo' : 'Inactivo'}
+                        />
                       </td>
                       <td className="text-right">
                         <div className="flex gap-1 justify-end">

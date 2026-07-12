@@ -8,6 +8,7 @@ import { getCustomers } from '../../api/customerApi';
 import { formatCurrency } from '../../utils/formatters';
 import { Coffee, ClipboardList, Sofa, User, LayoutDashboard } from 'lucide-react';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge, { ORDER_STATUS_BADGES } from '../../components/ui/StatusBadge';
 
 const iconMap = { Coffee, ClipboardList, Sofa, LayoutDashboard };
 
@@ -80,12 +81,6 @@ function DashboardPage() {
     fetchStats();
   }, []);
 
-  const statusBadge = {
-    active: 'badge-soft badge-info',
-    confirmed: 'badge-soft badge-primary',
-    paid: 'badge-soft badge-success',
-    cancelled: 'badge-soft badge-error',
-  };
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
@@ -155,9 +150,7 @@ function DashboardPage() {
                         <td className="text-sm text-base-content/70">{order.waiterId?.name || '—'}</td>
                         <td className="text-sm text-base-content">{formatCurrency(order.total)}</td>
                         <td>
-                          <span className={`badge ${statusBadge[order.status] || 'badge-soft'} text-xs`}>
-                            {order.status}
-                          </span>
+                          <StatusBadge {...ORDER_STATUS_BADGES[order.status]} />
                         </td>
                         <td className="text-sm text-base-content/60">
                           {new Date(order.createdAt).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}

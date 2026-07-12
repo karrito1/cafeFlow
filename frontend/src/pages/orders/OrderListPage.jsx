@@ -2,17 +2,10 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getOrders } from '../../api/orderApi';
 import { useAuth } from '../../context/AuthContext';
-import { ORDER_STATUS } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { ClipboardList, Search, User, Filter } from 'lucide-react';
 import EmptyState from '../../components/ui/EmptyState';
-
-const statusConfig = {
-  [ORDER_STATUS.ACTIVE]: { label: 'Activo', badge: 'badge-soft badge-info' },
-  [ORDER_STATUS.CONFIRMED]: { label: 'Confirmado', badge: 'badge-soft badge-warning' },
-  [ORDER_STATUS.PAID]: { label: 'Pagado', badge: 'badge-soft badge-success' },
-  [ORDER_STATUS.CANCELLED]: { label: 'Cancelado', badge: 'badge-soft badge-error' },
-};
+import StatusBadge, { ORDER_STATUS_BADGES } from '../../components/ui/StatusBadge';
 
 function OrderListPage() {
   const navigate = useNavigate();
@@ -133,7 +126,7 @@ function OrderListPage() {
               </thead>
               <tbody>
                 {filtered.map((order) => {
-                  const config = statusConfig[order.status] || statusConfig[ORDER_STATUS.ACTIVE];
+                  const badge = ORDER_STATUS_BADGES[order.status] || ORDER_STATUS_BADGES.active;
                   return (
                     <tr key={order._id} className="hover cursor-pointer" onClick={() => navigate(`/orders/${order._id}`)}>
                       <td className="font-medium">
@@ -143,7 +136,7 @@ function OrderListPage() {
                       <td className="text-sm">{order.products?.length || 0} productos</td>
                       <td className="font-semibold">{formatCurrency(order.total)}</td>
                       <td>
-                        <span className={`badge ${config.badge} text-xs`}>{config.label}</span>
+                        <StatusBadge {...badge} />
                       </td>
                       <td className="text-sm text-base-content/50">{formatDate(order.createdAt)}</td>
                       <td>

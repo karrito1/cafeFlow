@@ -1,18 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { TABLE_STATUS } from '../../utils/constants';
-import { getTable, updateTable, deleteTable } from '../../api/tableApi';
-import { getOrders } from '../../api/orderApi';
+import { getTable, deleteTable } from '../../api/tableApi';
 import { useAuth } from '../../context/AuthContext';
 import { formatCurrency } from '../../utils/formatters';
 import { Search, Coffee, UtensilsCrossed, Trash2, Eye } from 'lucide-react';
-
-const statusStyle = {
-  [TABLE_STATUS.FREE]: { label: 'Disponible', badge: 'badge-soft badge-success' },
-  [TABLE_STATUS.OCCUPIED]: { label: 'Ocupada', badge: 'badge-soft badge-error' },
-  [TABLE_STATUS.PENDING_PAYMENT]: { label: 'Pendiente pago', badge: 'badge-soft badge-warning' },
-};
+import StatusBadge, { TABLE_STATUS_BADGES } from '../../components/ui/StatusBadge';
 
 function TableDetailPage() {
   const { id } = useParams();
@@ -110,7 +103,7 @@ function TableDetailPage() {
     );
   }
 
-  const estilo = statusStyle[mesa.status] || statusStyle[TABLE_STATUS.FREE];
+  const badge = TABLE_STATUS_BADGES[mesa.status] || TABLE_STATUS_BADGES.free;
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
@@ -134,7 +127,7 @@ function TableDetailPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl font-bold text-base-content">Mesa {mesa.tableNumber}</h1>
-                  <span className={`badge ${estilo.badge} text-sm`}>{estilo.label}</span>
+                  <StatusBadge {...badge} size="text-sm" />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-4 text-sm text-base-content/60">
                   <span>Capacidad: <strong className="text-base-content">{mesa.capacity} {mesa.capacity === 1 ? 'persona' : 'personas'}</strong></span>

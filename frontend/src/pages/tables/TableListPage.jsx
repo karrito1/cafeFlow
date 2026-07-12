@@ -7,23 +7,12 @@ import { getCustomers } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
 import { Sofa, User } from 'lucide-react';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge, { TABLE_STATUS_BADGES } from '../../components/ui/StatusBadge';
 
-const statusStyle = {
-  [TABLE_STATUS.FREE]: {
-    label: 'Disponible',
-    badge: 'badge-soft badge-success',
-    border: 'border-success',
-  },
-  [TABLE_STATUS.OCCUPIED]: {
-    label: 'Ocupada',
-    badge: 'badge-soft badge-error',
-    border: 'border-error',
-  },
-  [TABLE_STATUS.PENDING_PAYMENT]: {
-    label: 'Pendiente pago',
-    badge: 'badge-soft badge-warning',
-    border: 'border-warning',
-  },
+const TABLE_BORDER = {
+  free: 'border-success',
+  occupied: 'border-error',
+  pendingPayment: 'border-warning',
 };
 
 function NewTableModal({ isOpen, onClose, onCreated }) {
@@ -231,11 +220,11 @@ function QuickStatusMenu({ mesaId, currentStatus, onStatusChange, isAdmin }) {
 
 function TableCard({ mesa, onStatusChange, isAdmin }) {
   const navigate = useNavigate();
-  const style = statusStyle[mesa.status] || statusStyle[TABLE_STATUS.FREE];
+  const badge = TABLE_STATUS_BADGES[mesa.status] || TABLE_STATUS_BADGES.free;
 
   return (
     <div
-      className="card bg-base-100 shadow-sm border border-base-300 cursor-pointer hover:border-primary transition-colors"
+      className={`card bg-base-100 shadow-sm border ${TABLE_BORDER[mesa.status] || TABLE_BORDER.free} cursor-pointer hover:border-primary transition-colors`}
       onClick={() => navigate(`/tables/${mesa._id}`)}
     >
       <div className="card-body items-center text-center p-4">
@@ -251,7 +240,7 @@ function TableCard({ mesa, onStatusChange, isAdmin }) {
 
         <span className="text-sm text-base-content">{mesa.capacity} {mesa.capacity === 1 ? 'persona' : 'personas'}</span>
 
-        <span className={`badge ${style.badge} text-xs`}>{style.label}</span>
+        <StatusBadge {...badge} />
 
         {mesa.name && (
           <span className="text-xs text-base-content/40">{mesa.name}</span>

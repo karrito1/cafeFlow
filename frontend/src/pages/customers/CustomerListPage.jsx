@@ -5,18 +5,8 @@ import { getCustomers, registerCustomer, deleteCustomer } from '../../api/custom
 import { useAuth } from '../../context/AuthContext';
 import ActionButton from '../../components/ui/ActionButton';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge, { CUSTOMER_LEVEL_BADGES } from '../../components/ui/StatusBadge';
 
-const LEVEL_BADGE = {
-  bronze: 'badge-warning',
-  silver: 'badge-ghost',
-  gold:   'badge-accent',
-};
-
-const LEVEL_LABEL = {
-  bronze: 'Bronce',
-  silver: 'Plata',
-  gold:   'Oro',
-};
 
 /* ─── Modal: Nuevo Cliente ─── */
 function NewCustomerModal({ isOpen, onClose, onCreated }) {
@@ -310,9 +300,7 @@ function CustomerListPage() {
                       </td>
                       {/* Nivel */}
                       <td>
-                        <span className={`badge badge-soft ${LEVEL_BADGE[c.level] || 'badge-ghost'} text-xs`}>
-                          {LEVEL_LABEL[c.level] || c.level}
-                        </span>
+                        <StatusBadge {...CUSTOMER_LEVEL_BADGES[c.level] || { color: 'neutral', label: c.level }} />
                       </td>
                       {/* Puntos */}
                       <td className="text-center">

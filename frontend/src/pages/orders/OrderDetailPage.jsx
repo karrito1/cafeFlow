@@ -6,13 +6,7 @@ import { ORDER_STATUS } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { useAuth } from '../../context/AuthContext';
 import { Search, Coffee, ArrowLeft } from 'lucide-react';
-
-const statusConfig = {
-  [ORDER_STATUS.ACTIVE]: { label: 'Activo', badge: 'badge-soft badge-info' },
-  [ORDER_STATUS.CONFIRMED]: { label: 'Confirmado', badge: 'badge-soft badge-warning' },
-  [ORDER_STATUS.PAID]: { label: 'Pagado', badge: 'badge-soft badge-success' },
-  [ORDER_STATUS.CANCELLED]: { label: 'Cancelado', badge: 'badge-soft badge-error' },
-};
+import StatusBadge, { ORDER_STATUS_BADGES } from '../../components/ui/StatusBadge';
 
 const nextStatus = {
   [ORDER_STATUS.ACTIVE]: ORDER_STATUS.CONFIRMED,
@@ -60,7 +54,7 @@ function OrderDetailPage() {
         const pts = res.data?.earnedPoints || 0;
         const msg = pts > 0
           ? `Pedido pagado. +${pts} punto(s) agregado(s)`
-          : `Pedido marcado como ${statusConfig[newStatus]?.label || newStatus}`;
+          : `Pedido marcado como ${ORDER_STATUS_BADGES[newStatus]?.label || newStatus}`;
         toast.success(msg);
       } else {
         toast.error(res.msg || 'Error al actualizar estado');
@@ -97,7 +91,7 @@ function OrderDetailPage() {
     );
   }
 
-  const config = statusConfig[order.status] || statusConfig[ORDER_STATUS.ACTIVE];
+  const badge = ORDER_STATUS_BADGES[order.status] || ORDER_STATUS_BADGES.active;
   const canAdvance = nextStatus[order.status];
   const canCancel = order.status !== ORDER_STATUS.PAID && order.status !== ORDER_STATUS.CANCELLED;
 
@@ -123,7 +117,7 @@ function OrderDetailPage() {
                   <h1 className="text-2xl font-bold text-base-content">
                     Pedido #{order._id.slice(-6).toUpperCase()}
                   </h1>
-                  <span className={`badge ${config.badge} text-sm`}>{config.label}</span>
+                  <StatusBadge {...badge} size="text-sm" />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-4 text-sm text-base-content/60">
                   <span>Mesa: <strong className="text-base-content">{order.tableId?.name || `Mesa ${order.tableId?.tableNumber || '—'}`}</strong></span>
@@ -202,7 +196,7 @@ function OrderDetailPage() {
                     {updating ? (
                       <><span className="loading loading-spinner loading-xs"></span> Actualizando...</>
                     ) : (
-                      `Marcar como ${statusConfig[canAdvance].label}`
+                      `Marcar como ${ORDER_STATUS_BADGES[canAdvance].label}`
                     )}
                   </button>
                 )}
