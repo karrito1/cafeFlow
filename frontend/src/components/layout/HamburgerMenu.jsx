@@ -38,7 +38,7 @@ function HamburgerMenu() {
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-64 bg-base-100 shadow-xl flex flex-col">
+          <div className="absolute left-0 top-0 bottom-0 w-64 bg-base-100 shadow-xl flex flex-col">
             <div className="flex items-center justify-between px-4 py-4 border-b border-base-200">
               <span className="font-bold text-primary">Más opciones</span>
               <button className="btn btn-ghost btn-sm btn-square" onClick={() => setOpen(false)}>

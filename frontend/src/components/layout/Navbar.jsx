@@ -22,6 +22,7 @@ function Navbar() {
   return (
     <nav className="navbar bg-base-100 border-b border-base-200 px-4 shadow-sm">
       <div className="flex-1 flex items-center gap-2">
+        {user?.role === 'admin' && <HamburgerMenu />}
         <span className="text-xl font-bold text-primary">CafeFlow</span>
         {isWaiter && (
           <div className="hidden lg:flex gap-1 ml-4">
@@ -45,7 +46,6 @@ function Navbar() {
         )}
       </div>
       <div className="flex-none flex items-center gap-3">
-        {user?.role === 'admin' && <HamburgerMenu />}
         {user && (
           <>
             <span className="text-sm text-base-content/70 hidden sm:block">
