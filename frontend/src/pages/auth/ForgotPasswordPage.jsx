@@ -120,10 +120,10 @@ function ForgotPasswordPage() {
 
               <button
                 type="submit"
-                className={`btn btn-primary w-full text-primary-content ${loading ? "loading" : ""}`}
+                className="btn btn-primary w-full text-primary-content"
                 disabled={loading}
               >
-                {loading ? "Enviando..." : "Enviar enlace de recuperación"}
+                {loading ? <><span className="loading loading-spinner loading-xs" /> Enviando...</> : "Enviar enlace de recuperación"}
               </button>
 
               <div className="text-center mt-4">

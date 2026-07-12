@@ -147,10 +147,10 @@ function ResetPasswordPage() {
 
               <button
                 type="submit"
-                className={`btn btn-primary w-full text-primary-content ${loading ? "loading" : ""}`}
+                className="btn btn-primary w-full text-primary-content"
                 disabled={loading}
               >
-                {loading ? "Guardando..." : "Restablecer contraseña"}
+                {loading ? <><span className="loading loading-spinner loading-xs" /> Guardando...</> : "Restablecer contraseña"}
               </button>
 
               <div className="text-center mt-4">

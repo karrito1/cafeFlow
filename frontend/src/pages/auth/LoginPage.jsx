@@ -152,14 +152,10 @@ function LoginPage() {
 
             <button
               type="submit"
-              className={`btn btn-primary w-full text-primary-content ${loading ? "loading" : ""}`}
+              className="btn btn-primary w-full text-primary-content"
               disabled={loading}
             >
-              {loading
-                ? "Iniciando sesión..."
-                : mode === "customer"
-                ? "Iniciar Sesión"
-                : "Iniciar Sesión"}
+              {loading ? <><span className="loading loading-spinner loading-xs" /> Iniciando sesión...</> : "Iniciar Sesión"}
             </button>
           </form>
 

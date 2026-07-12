@@ -204,10 +204,10 @@ function RegisterPage() {
 
             <button
               type="submit"
-              className={`btn btn-primary w-full text-primary-content ${loading ? "loading" : ""}`}
+              className="btn btn-primary w-full text-primary-content"
               disabled={loading}
             >
-              {loading ? "Creando cuenta..." : "Crear Cuenta"}
+              {loading ? <><span className="loading loading-spinner loading-xs" /> Creando cuenta...</> : "Crear Cuenta"}
             </button>
           </form>
 
