@@ -34,7 +34,7 @@ function BottomNav() {
   const links = roleNav[user?.role] || roleNav.waiter;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 lg:hidden z-50 bg-base-100 border-t border-base-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
+    <nav className="fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-base-100 border-t border-base-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
       <div className="flex items-center justify-around h-16 px-2">
         {links.map((link) => {
           const active = location.pathname === link.to || location.pathname.startsWith(link.to + '/');
