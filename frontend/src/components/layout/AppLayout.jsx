@@ -4,8 +4,10 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
 import Footer from './Footer';
+import useScrollLock from '../../hooks/useScrollLock';
 
 function AppLayout() {
+  useScrollLock();
   const { user } = useAuth();
   const isMobileRole = user?.role === 'waiter' || user?.role === 'customer';
 
