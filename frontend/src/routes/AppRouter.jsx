@@ -27,7 +27,6 @@ import RewardListPage from '../pages/rewards/RewardListPage';
 
 import UserListPage from '../pages/users/UserListPage';
 import UserFormPage from '../pages/users/UserFormPage';
-import SalesReportPage from '../pages/reports/SalesReportPage';
 import PointsPage from '../pages/points/PointsPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
@@ -73,7 +72,6 @@ function AppRouter() {
               <Route path="/users" element={<UserListPage />} />
               <Route path="/users/new" element={<UserFormPage />} />
               <Route path="/users/:id/edit" element={<UserFormPage />} />
-              <Route path="/reports/sales" element={<SalesReportPage />} />
             </Route>
           </Route>
         </Route>

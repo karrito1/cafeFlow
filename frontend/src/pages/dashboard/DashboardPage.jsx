@@ -16,7 +16,6 @@ const quickLinks = [
   { label: 'Nuevo Pedido', path: '/orders/new', icon: 'ClipboardList', color: 'btn-primary' },
   { label: 'Mesas', path: '/tables', icon: 'Sofa', color: 'btn-soft btn-primary' },
   { label: 'Productos', path: '/products', icon: 'Coffee', color: 'btn-soft btn-primary' },
-  { label: 'Reportes', path: '/reports/sales', icon: 'LayoutDashboard', color: 'btn-soft btn-primary' },
 ];
 
 function StatCard({ label, value, icon, loading, colorClass }) {

@@ -2,12 +2,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Coffee, FolderOpen, ClipboardList, Sofa,
-  CreditCard, User, Gift, Users, FileText, TrendingUp,
+  CreditCard, User, Gift, Users, FileText,
 } from 'lucide-react';
 
 const iconMap = {
   LayoutDashboard, Coffee, FolderOpen, ClipboardList, Sofa,
-  CreditCard, User, Gift, Users, FileText, TrendingUp,
+  CreditCard, User, Gift, Users, FileText,
 };
 
 const roleLinks = {
@@ -22,7 +22,6 @@ const roleLinks = {
     { to: '/rewards', label: 'Recompensas', icon: 'Gift' },
     { to: '/users', label: 'Usuarios', icon: 'Users' },
     { to: '/menu', label: 'Menú digital', icon: 'FileText' },
-    { to: '/reports/sales', label: 'Ventas', icon: 'TrendingUp' },
   ],
   barista: [
     { to: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
@@ -36,7 +35,6 @@ const roleLinks = {
     { to: '/tables', label: 'Mesas', icon: 'Sofa' },
     { to: '/payments', label: 'Pagos', icon: 'CreditCard' },
     { to: '/customers', label: 'Clientes', icon: 'User' },
-    { to: '/reports/sales', label: 'Ventas', icon: 'TrendingUp' },
     { to: '/menu', label: 'Menú digital', icon: 'FileText' },
   ],
   waiter: [
