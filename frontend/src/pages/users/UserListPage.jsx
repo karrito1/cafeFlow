@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi";
 import { useAuth } from "../../context/AuthContext";
-import { Users, Plus, Trash2 } from "lucide-react";
+import { Users, Plus, Trash2, Pencil } from "lucide-react";
+import ActionButton from '../../components/ui/ActionButton';
 
 function UserModal({ isOpen, onClose, onSave, user }) {
   const [form, setForm] = useState({
@@ -281,21 +282,22 @@ function UserListPage() {
                         </span>
                       </td>
                       <td className="text-right">
-                        <button
-                          className="btn btn-ghost btn-xs"
-                          onClick={() => {
-                            setEditing(user);
-                            setModalOpen(true);
-                          }}
-                        >
-                          Editar
-                        </button>
-                        <button
-                          className="btn btn-ghost btn-xs text-error"
-                          onClick={() => setDeleting(user)}
-                        >
-                          Eliminar
-                        </button>
+                        <div className="flex gap-1 justify-end">
+                          <ActionButton
+                            icon={Pencil}
+                            label="Editar"
+                            onClick={() => {
+                              setEditing(user);
+                              setModalOpen(true);
+                            }}
+                          />
+                          <ActionButton
+                            icon={Trash2}
+                            label="Eliminar"
+                            variant="danger"
+                            onClick={() => setDeleting(user)}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}

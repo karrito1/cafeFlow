@@ -3,7 +3,8 @@ import { toast } from 'sonner';
 import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../../api/productApi';
 import { getCategories } from '../../api/categoryApi';
 import { formatCurrency } from '../../utils/formatters';
-import { X, Coffee, Trash2 } from 'lucide-react';
+import { X, Coffee, Trash2, Pencil } from 'lucide-react';
+import ActionButton from '../../components/ui/ActionButton';
 
 function ProductModal({ isOpen, onClose, onSaved, productId, categories }) {
   const [form, setForm] = useState({
@@ -292,9 +293,9 @@ function ProductListPage() {
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-[11px] text-base-content/40">{catMap[p.categoryId?._id || p.categoryId] || '—'}</span>
-                    <div className="flex gap-1">
-                      <button className="btn btn-ghost btn-xs" onClick={() => openEdit(p._id)}>Editar</button>
-                      <button className="btn btn-ghost btn-xs text-error" onClick={() => setDeleting(p)}>Eliminar</button>
+                    <div className="flex gap-1 justify-end">
+                      <ActionButton icon={Pencil} label="Editar" onClick={() => openEdit(p._id)} />
+                      <ActionButton icon={Trash2} label="Eliminar" variant="danger" onClick={() => setDeleting(p)} />
                     </div>
                   </div>
                 </div>

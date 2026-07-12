@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { Users, Trash2, Plus, UserCheck, X, UserPlus } from 'lucide-react';
 import { getCustomers, registerCustomer, deleteCustomer } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
+import ActionButton from '../../components/ui/ActionButton';
 
 const LEVEL_BADGE = {
   bronze: 'badge-warning',
@@ -347,12 +348,12 @@ function CustomerListPage() {
                       {/* Acciones */}
                       {isAdmin && (
                         <td className="text-right">
-                          <button
-                            className="btn btn-ghost btn-sm text-error hover:bg-error/10 gap-1"
+                          <ActionButton
+                            icon={Trash2}
+                            label="Eliminar"
+                            variant="danger"
                             onClick={() => setToDelete(c)}
-                          >
-                            <Trash2 size={14} /> Eliminar
-                          </button>
+                          />
                         </td>
                       )}
                     </tr>

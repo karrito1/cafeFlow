@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categoryApi';
-import { FolderOpen, Trash2 } from 'lucide-react';
+import { FolderOpen, Trash2, Pencil } from 'lucide-react';
+import ActionButton from '../../components/ui/ActionButton';
 
 function CategoryModal({ isOpen, onClose, onSave, category }) {
   const [form, setForm] = useState({ name: '', description: '', order: '0' });
@@ -180,8 +181,10 @@ function CategoryListPage() {
                       <td className="font-medium text-base-content">{cat.name}</td>
                       <td className="text-sm text-base-content/60 max-w-xs truncate">{cat.description || '—'}</td>
                       <td className="text-right">
-                        <button className="btn btn-ghost btn-xs" onClick={() => { setEditing(cat); setModalOpen(true); }}>Editar</button>
-                        <button className="btn btn-ghost btn-xs text-error" onClick={() => setDeleting(cat)}>Eliminar</button>
+                        <div className="flex gap-1 justify-end">
+                          <ActionButton icon={Pencil} label="Editar" onClick={() => { setEditing(cat); setModalOpen(true); }} />
+                          <ActionButton icon={Trash2} label="Eliminar" variant="danger" onClick={() => setDeleting(cat)} />
+                        </div>
                       </td>
                     </tr>
                   ))}
