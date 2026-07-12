@@ -1,3 +1,5 @@
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
 function getToken() {
   try {
     const stored = localStorage.getItem('user');
@@ -18,7 +20,7 @@ async function request(url, options = {}) {
   if (options.body && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json';
   }
-  const res = await fetch(url, { ...options, headers });
+  const res = await fetch(BASE_URL + url, { ...options, headers });
   return res.json();
 }
 
