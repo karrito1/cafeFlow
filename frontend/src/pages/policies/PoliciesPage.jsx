@@ -5,7 +5,7 @@ function PoliciesPage() {
   return (
     <div className="p-4 md:p-6 lg:p-8">
       <div className="max-w-3xl mx-auto">
-        <Link to="/" className="inline-flex items-center gap-1 text-sm text-base-content/50 hover:text-primary mb-6 transition-colors">
+        <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm text-base-content/50 hover:text-primary mb-6 transition-colors">
           <ArrowLeft size={16} /> Volver al panel
         </Link>
 
