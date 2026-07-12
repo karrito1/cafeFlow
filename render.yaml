@@ -24,6 +24,7 @@ services:
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
+    notFoundUrl: /index.html
     envVars:
       - key: VITE_API_URL
         sync: false
