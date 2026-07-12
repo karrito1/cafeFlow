@@ -7,7 +7,6 @@ const validateCreateOrder = [
   body("products.*.productId").isMongoId().withMessage("El producto no es válido"),
   body("products.*.quantity").isInt({ min: 1 }).withMessage("La cantidad debe ser al menos 1"),
   body("subtotal").isNumeric().withMessage("El subtotal es obligatorio"),
-  body("taxes").isNumeric().withMessage("Los impuestos son obligatorios"),
   body("total").isNumeric().withMessage("El total es obligatorio"),
 ];
 

@@ -152,8 +152,7 @@ function CreateOrderPage() {
   const rawSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountValue = rawSubtotal * discountPercent;
   const subtotal = rawSubtotal - discountValue;
-  const taxes = subtotal * 0.19;
-  const total = subtotal + taxes;
+  const total = subtotal;
 
   const handleSubmit = async () => {
     setError('');
@@ -176,7 +175,6 @@ function CreateOrderPage() {
       customerId: selectedCustomer || null,
       subtotal: Math.round(rawSubtotal),
       discount: Math.round(discountValue),
-      taxes: Math.round(taxes),
       total: Math.round(total),
     };
 
@@ -496,10 +494,6 @@ function CreateOrderPage() {
                           <span>-{formatCurrency(discountValue)}</span>
                         </div>
                       )}
-                      <div className="flex justify-between text-base-content/60">
-                        <span>IVA 19%</span>
-                        <span>{formatCurrency(taxes)}</span>
-                      </div>
                       <div className="flex justify-between text-lg font-bold text-base-content pt-1">
                         <span>Total</span>
                         <span>{formatCurrency(total)}</span>

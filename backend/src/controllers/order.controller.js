@@ -51,10 +51,8 @@ const createOrder = async (req, res) => {
     }
 
     const orderData = { ...req.body, discount: serverDiscount };
-    if (customerId) {
-      orderData.total = rawSubtotal - serverDiscount + (rawSubtotal - serverDiscount) * 0.19;
-      orderData.taxes = (rawSubtotal - serverDiscount) * 0.19;
-    }
+    orderData.total = rawSubtotal - serverDiscount;
+    orderData.taxes = Math.round((rawSubtotal - serverDiscount) * 0.19 / 1.19);
     orderData.total = Math.round(orderData.total || 0);
     orderData.taxes = Math.round(orderData.taxes || 0);
 
