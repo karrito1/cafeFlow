@@ -142,7 +142,7 @@ function TableDetailPage() {
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-3">Cambiar Estado</h3>
                 <div className="flex flex-wrap gap-2">
-                  {Object.entries(statusStyle).map(([key, s]) => {
+                  {Object.entries(TABLE_STATUS_BADGES).map(([key, { label }]) => {
                     if (key === mesa.status) return null;
                     return (
                       <button
@@ -150,7 +150,7 @@ function TableDetailPage() {
                         className="btn btn-outline btn-sm"
                         onClick={() => changeStatus(key)}
                       >
-                        {s.label}
+                        {label}
                       </button>
                     );
                   })}
