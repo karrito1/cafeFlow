@@ -86,8 +86,8 @@ function OrderListPage() {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="">Todos los estados</option>
-            {Object.entries(statusConfig).map(([key, config]) => (
-              <option key={key} value={key}>{config.label}</option>
+            {Object.entries(ORDER_STATUS_BADGES).map(([key, { label }]) => (
+              <option key={key} value={key}>{label}</option>
             ))}
           </select>
           <label className="flex items-center gap-2 cursor-pointer ml-auto">
