@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const Customer = require("../models/Customer");
 const Table = require("../models/Table");
+const Order = require("../models/Order");
 
 const registerCustomer = async (req, res) => {
   try {
@@ -97,6 +98,14 @@ const deleteCustomer = async (req, res) => {
     const { id } = req.params;
     const customer = await Customer.findById(id);
     if (!customer) return res.status(404).json({ ok: false, msg: "Cliente no encontrado" });
+
+    const orderCount = await Order.countDocuments({ customerId: id, status: { $nin: ['cancelled'] } });
+    if (orderCount > 0) {
+      return res.status(400).json({
+        ok: false,
+        msg: `El cliente tiene ${orderCount} pedido(s) asociado(s). No se puede eliminar.`,
+      });
+    }
 
     // Remove from any table that has this customer assigned
     await Table.updateMany({ currentCustomer: id }, { $set: { currentCustomer: null } });

@@ -35,4 +35,6 @@ const orderSchema = new Schema(
   { timestamps: true },
 );
 
+orderSchema.index({ customerId: 1 });
+
 module.exports = model("Order", orderSchema);
