@@ -65,7 +65,7 @@ function UserModal({ isOpen, onClose, onSave, user }) {
                 <span className="label-text font-medium">Nombre completo</span>
               </label>
               <input
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 autoFocus
@@ -77,7 +77,7 @@ function UserModal({ isOpen, onClose, onSave, user }) {
               </label>
               <input
                 type="email"
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -90,7 +90,7 @@ function UserModal({ isOpen, onClose, onSave, user }) {
               </label>
               <input
                 type="password"
-                className="input input-bordered"
+                className="input input-bordered w-full"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 placeholder={user ? "Sin cambios" : "Mínimo 6 caracteres"}
@@ -101,7 +101,7 @@ function UserModal({ isOpen, onClose, onSave, user }) {
                 <span className="label-text font-medium">Rol</span>
               </label>
               <select
-                className="select select-bordered"
+                className="select select-bordered w-full"
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
               >

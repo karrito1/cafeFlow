@@ -51,14 +51,14 @@ function CategoryModal({ isOpen, onClose, onSave, category }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="form-control">
               <label className="label"><span className="label-text font-medium">Nombre</span></label>
-              <input className="input input-bordered" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoFocus />
+              <input className="input input-bordered w-full" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoFocus />
             </div>
             <div className="form-control">
-              <input className="input input-bordered" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descripción (opcional)" />
+              <input className="input input-bordered w-full" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descripción (opcional)" />
             </div>
             <div className="form-control">
               <label className="label"><span className="label-text font-medium">Orden</span></label>
-              <input type="number" className="input input-bordered" value={form.order} onChange={(e) => setForm({ ...form, order: e.target.value })} />
+              <input type="number" className="input input-bordered w-full" value={form.order} onChange={(e) => setForm({ ...form, order: e.target.value })} />
             </div>
             {error && <div className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-xl"><svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>{error}</div>}
             <div className="flex justify-end gap-3 pt-2">
