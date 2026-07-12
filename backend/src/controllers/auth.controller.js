@@ -103,15 +103,16 @@ const forgotPassword = async (req, res) => {
     if (!email) return res.status(400).json({ ok: false, msg: "El correo es obligatorio" });
 
     const user = await User.findOne({ email, active: true });
-    if (!user) return res.json({ ok: true, msg: "Si el correo está registrado, recibirás un enlace" });
+    const customer = !user ? await Customer.findOne({ email, active: true }) : null;
+    const account = user || customer;
 
-    
+    if (!account) return res.json({ ok: true, msg: "Si el correo está registrado, recibirás un enlace" });
 
     const token = crypto.randomBytes(32).toString("hex");
 
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    await user.save();
+    account.resetPasswordToken = token;
+    account.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000);
+    await account.save();
 
     await sendResetEmail(email, token);
 
@@ -131,17 +132,24 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ ok: false, msg: "La contraseña debe tener al menos 6 caracteres" });
     }
 
-    const user = await User.findOne({
+    let account = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: new Date() },
     });
 
-    if (!user) return res.status(400).json({ ok: false, msg: "Token inválido o expirado" });
+    if (!account) {
+      account = await Customer.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: new Date() },
+      });
+    }
 
-    user.password = await bcrypt.hash(password, 12);
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
-    await user.save();
+    if (!account) return res.status(400).json({ ok: false, msg: "Token inválido o expirado" });
+
+    account.password = await bcrypt.hash(password, 12);
+    account.resetPasswordToken = null;
+    account.resetPasswordExpires = null;
+    await account.save();
 
     res.json({ ok: true, msg: "Contraseña restablecida exitosamente" });
   } catch (error) {

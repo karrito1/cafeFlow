@@ -14,6 +14,8 @@ const customerSchema = new Schema(
       default: "bronze",
     },
     active: { type: Boolean, default: true },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
   },
   { timestamps: true },
 );
