@@ -6,7 +6,7 @@ import { getOrders } from '../../api/orderApi';
 import { getTables } from '../../api/tableApi';
 import { getCustomers } from '../../api/customerApi';
 import { formatCurrency } from '../../utils/formatters';
-import { Coffee, ClipboardList, Sofa, LayoutDashboard } from 'lucide-react';
+import { Coffee, ClipboardList, Sofa, User, LayoutDashboard } from 'lucide-react';
 import EmptyState from '../../components/ui/EmptyState';
 
 const iconMap = { Coffee, ClipboardList, Sofa, LayoutDashboard };
