@@ -28,6 +28,7 @@ import RewardListPage from '../pages/rewards/RewardListPage';
 import UserListPage from '../pages/users/UserListPage';
 import UserFormPage from '../pages/users/UserFormPage';
 import PointsPage from '../pages/points/PointsPage';
+import PoliciesPage from '../pages/policies/PoliciesPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 const LandingPage = lazy(() => import('../pages/landing/LandingPage'));
@@ -55,6 +56,7 @@ function AppRouter() {
             <Route path="/orders" element={<OrderListPage />} />
             <Route path="/orders/new" element={<CreateOrderPage />} />
             <Route path="/orders/:id" element={<OrderDetailPage />} />
+            <Route path="/policies" element={<PoliciesPage />} />
 
             {/* Acceso solo admin */}
             <Route element={<RoleRoute allowedRoles={['admin']} />}>
