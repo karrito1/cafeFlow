@@ -10,11 +10,11 @@ const Footer = () => {
             <div className="flex items-center gap-2 mb-4">
               <Coffee className="w-8 h-8" />
               <span className="text-2xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Café Aroma
+                CaféFlow
               </span>
             </div>
             <p className="text-landing-primary-fg/80 leading-relaxed">
-              El mejor café colombiano para cada momento especial de tu día.
+              Gestión inteligente para tu negocio. Todo lo que necesitas en una sola plataforma.
             </p>
           </div>
 
@@ -24,8 +24,8 @@ const Footer = () => {
               <a href="/#nosotros" className="block text-landing-primary-fg/80 hover:text-landing-primary-fg transition-colors duration-200">
                 Nosotros
               </a>
-              <a href="/#productos" className="block text-landing-primary-fg/80 hover:text-landing-primary-fg transition-colors duration-200">
-                Productos
+              <a href="/#funcionalidades" className="block text-landing-primary-fg/80 hover:text-landing-primary-fg transition-colors duration-200">
+                Funcionalidades
               </a>
               <a href="/#fidelizacion" className="block text-landing-primary-fg/80 hover:text-landing-primary-fg transition-colors duration-200">
                 Fidelización
@@ -84,7 +84,7 @@ const Footer = () => {
 
         <div className="border-t border-landing-primary-fg/20 mt-8 pt-8 text-center">
           <p className="text-landing-primary-fg/80">
-            © 2026 Café Aroma. Todos los derechos reservados.
+            © 2026 CaféFlow. Todos los derechos reservados.
           </p>
         </div>
       </div>

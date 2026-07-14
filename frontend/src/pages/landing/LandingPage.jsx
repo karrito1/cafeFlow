@@ -15,8 +15,8 @@ const LandingPage = () => {
   return (
     <div>
       <Helmet>
-        <title>Café Aroma - El mejor café colombiano para cada momento</title>
-        <meta name="description" content="Descubre sabores únicos, café de origen colombiano y una experiencia diseñada para los verdaderos amantes del café. Programa de fidelización y atención personalizada." />
+        <title>CaféFlow - Gestión inteligente para tu negocio</title>
+        <meta name="description" content="Plataforma SaaS todo-en-uno para gestionar pedidos, clientes, pagos, productos y programas de fidelización. Impulsa tu negocio con CaféFlow." />
       </Helmet>
 
       <HeroSection />

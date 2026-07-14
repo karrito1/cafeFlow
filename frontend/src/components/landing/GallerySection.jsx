@@ -12,7 +12,7 @@ const galleryImages = [
   },
   {
     src: 'https://images.unsplash.com/photo-1547218554-703953332c3b',
-    alt: 'Clientes disfrutando del ambiente acogedor de Café Aroma'
+    alt: 'Negocio gestionado eficientemente con CaféFlow'
   },
   {
     src: 'https://images.unsplash.com/photo-1672976794949-0b6a1612b860',
@@ -35,7 +35,7 @@ const GallerySection = () => {
             Galería
           </h2>
           <p className="text-lg text-landing-muted-fg">
-            Un vistazo a la experiencia Café Aroma
+            Así se ve la gestión inteligente con CaféFlow
           </p>
         </motion.div>
 

@@ -26,7 +26,7 @@ const HeroSection = () => {
           className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
           style={{ letterSpacing: '-0.02em' }}
         >
-          El mejor café para cada momento
+          Gestiona tu negocio con inteligencia
         </motion.h1>
 
         <motion.p
@@ -35,7 +35,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed"
         >
-          Descubre sabores únicos, café de origen colombiano y una experiencia diseñada para los verdaderos amantes del café.
+          La plataforma todo-en-uno para gestionar pedidos, clientes, pagos, inventario y programas de fidelización. Diseñada para restaurantes, cafeterías y cualquier negocio que quiera crecer.
         </motion.p>
 
         <motion.div
@@ -46,10 +46,10 @@ const HeroSection = () => {
         >
           <Button
             size="lg"
-            onClick={() => scrollTo('productos')}
+            onClick={() => scrollTo('funcionalidades')}
             className="text-lg transition-all duration-200 active:scale-[0.98]"
           >
-            Ver Productos
+            Ver Funcionalidades
           </Button>
           <Button
             size="lg"

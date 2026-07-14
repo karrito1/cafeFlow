@@ -16,10 +16,10 @@ const LoyaltySection = ({ customersCount = 2847, rewardsCount = 1234 }) => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Programa de Fidelización
+            Programa de Fidelización Integrado
           </h2>
           <p className="text-lg text-landing-secondary-fg/80 max-w-2xl mx-auto">
-            Únete a nuestro programa y disfruta de beneficios exclusivos con cada visita
+            Incluye un sistema de puntos y recompensas para que tus clientes se mantengan fieles a tu negocio
           </p>
         </motion.div>
 
@@ -34,7 +34,7 @@ const LoyaltySection = ({ customersCount = 2847, rewardsCount = 1234 }) => {
               <CardContent className="pt-6">
                 <Users className="w-12 h-12 text-landing-primary mx-auto mb-4" />
                 <p className="text-3xl font-bold text-landing-card-fg mb-2">{customersCount.toLocaleString('es-CO')}</p>
-                <p className="text-landing-muted-fg">Clientes Registrados</p>
+                <p className="text-landing-muted-fg">Negocios Activos</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -49,7 +49,7 @@ const LoyaltySection = ({ customersCount = 2847, rewardsCount = 1234 }) => {
               <CardContent className="pt-6">
                 <Gift className="w-12 h-12 text-landing-primary mx-auto mb-4" />
                 <p className="text-3xl font-bold text-landing-card-fg mb-2">{rewardsCount.toLocaleString('es-CO')}</p>
-                <p className="text-landing-muted-fg">Recompensas Entregadas</p>
+                <p className="text-landing-muted-fg">Clientes Fidelizados</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -64,7 +64,7 @@ const LoyaltySection = ({ customersCount = 2847, rewardsCount = 1234 }) => {
               <CardContent className="pt-6">
                 <Award className="w-12 h-12 text-landing-primary mx-auto mb-4" />
                 <p className="text-3xl font-bold text-landing-card-fg mb-2">47.2k</p>
-                <p className="text-landing-muted-fg">Puntos Acumulados</p>
+                <p className="text-landing-muted-fg">Pedidos Procesados</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -78,37 +78,37 @@ const LoyaltySection = ({ customersCount = 2847, rewardsCount = 1234 }) => {
           className="bg-landing-card rounded-2xl p-8 max-w-3xl mx-auto"
         >
           <h3 className="text-2xl font-bold text-landing-card-fg mb-6 text-center">
-            Beneficios del Programa
+            Cómo funciona
           </h3>
           <ul className="space-y-4 mb-8">
             <li className="flex items-start gap-3">
               <Badge variant="default" className="mt-1">1</Badge>
               <p className="text-landing-card-fg leading-relaxed">
-                Gana puntos por cada compra que realices en nuestras tiendas
+                Tus clientes acumulan puntos automáticamente con cada compra que realizan
               </p>
             </li>
             <li className="flex items-start gap-3">
               <Badge variant="default" className="mt-1">2</Badge>
               <p className="text-landing-card-fg leading-relaxed">
-                Canjea tus puntos por bebidas gratis, descuentos especiales y productos exclusivos
+                Configura recompensas personalizadas: descuentos, productos gratis o beneficios exclusivos
               </p>
             </li>
             <li className="flex items-start gap-3">
               <Badge variant="default" className="mt-1">3</Badge>
               <p className="text-landing-card-fg leading-relaxed">
-                Accede a promociones exclusivas y lanzamientos anticipados de nuevos productos
+                Envía notificaciones automáticas para mantener a tus clientes informados y comprometidos
               </p>
             </li>
             <li className="flex items-start gap-3">
               <Badge variant="default" className="mt-1">4</Badge>
               <p className="text-landing-card-fg leading-relaxed">
-                Recibe beneficios especiales en tu cumpleaños y aniversario como cliente
+                Analiza el comportamiento de tus clientes con reportes detallados del programa
               </p>
             </li>
           </ul>
           <div className="text-center">
             <Button size="lg" className="transition-all duration-200 active:scale-[0.98]">
-              Consultar Mis Puntos
+              Comenzar Ahora
             </Button>
           </div>
         </motion.div>

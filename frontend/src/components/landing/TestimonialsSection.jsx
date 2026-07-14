@@ -3,23 +3,27 @@ import TestimonialCard from './TestimonialCard';
 
 const testimonials = [
   {
-    quote: 'El mejor café que he probado en mi vida. La atención es excepcional y el ambiente es perfecto para trabajar o relajarse.',
+    quote: 'CaféFlow transformó la gestión de mi restaurante. Ahora puedo ver las ventas en tiempo real y mis clientes están más felices con el programa de fidelización.',
     name: 'María González',
+    role: 'Dueña de restaurante',
     rating: 5
   },
   {
-    quote: 'Café Aroma se ha convertido en mi lugar favorito. El programa de fidelización es genial y los baristas conocen exactamente cómo me gusta mi café.',
+    quote: 'Desde que uso CaféFlow, el control de inventario dejó de ser un problema. Ahorro tiempo y dinero, y el equipo de trabajo lo adoptó rápidamente.',
     name: 'Carlos Ramírez',
+    role: 'Gerente de cafetería',
     rating: 5
   },
   {
-    quote: 'La calidad del café es incomparable. Cada visita es una experiencia única y el personal siempre está dispuesto a recomendar nuevas opciones.',
+    quote: 'La plataforma es increíblemente intuitiva. En menos de una semana ya estábamos usando todas las funcionalidades. Los reportes me ayudan a tomar mejores decisiones.',
     name: 'Ana Martínez',
+    role: 'Directora de operaciones',
     rating: 5
   },
   {
-    quote: 'Desde que descubrí Café Aroma, no he vuelto a otro lugar. El sabor del café colombiano auténtico y el ambiente acogedor hacen la diferencia.',
+    quote: 'CaféFlow es exactamente lo que necesitábamos. Un solo sistema para pedidos, clientes y pagos. No puedo imaginar volver a gestionar el negocio sin él.',
     name: 'Luis Hernández',
+    role: 'Emprendedor',
     rating: 5
   }
 ];
@@ -36,16 +40,17 @@ const TestimonialsSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-landing-fg mb-4">
-            Lo que dicen nuestros clientes
+            Lo que dicen nuestros usuarios
           </h2>
         </motion.div>
 
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard
               key={index}
               quote={testimonial.quote}
               name={testimonial.name}
+              role={testimonial.role}
               rating={testimonial.rating}
               delay={index * 0.1}
             />

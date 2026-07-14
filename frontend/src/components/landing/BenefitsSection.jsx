@@ -5,23 +5,23 @@ import BenefitCard from './BenefitCard';
 const fallbackBenefits = [
   {
     icon: Coffee,
-    title: 'Café Premium',
-    description: 'Granos seleccionados de las mejores fincas colombianas, tostados artesanalmente para garantizar el sabor perfecto.'
+    title: 'Gestión de Pedidos',
+    description: 'Administra pedidos en tiempo real, desde la toma hasta la entrega, optimizando tiempos y reduciendo errores.'
   },
   {
     icon: Leaf,
-    title: 'Ingredientes Frescos',
-    description: 'Utilizamos solo ingredientes naturales y frescos en cada preparación, sin aditivos ni conservantes artificiales.'
+    title: 'Control de Inventario',
+    description: 'Lleva el control de tu stock automáticamente, con alertas de reabastecimiento y reportes detallados.'
   },
   {
     icon: Star,
-    title: 'Atención Personalizada',
-    description: 'Nuestro equipo de baristas expertos está dedicado a crear la experiencia perfecta para cada cliente.'
+    title: 'Fidelización de Clientes',
+    description: 'Programa de puntos y recompensas integrado que mantiene a tus clientes volviendo una y otra vez.'
   },
   {
     icon: Trophy,
-    title: 'Calidad Garantizada',
-    description: 'Cada taza pasa por rigurosos controles de calidad para asegurar la excelencia en cada sorbo.'
+    title: 'Reportes e Insights',
+    description: 'Dashboards con métricas clave de ventas, clientes y productos para tomar decisiones inteligentes.'
   }
 ];
 
@@ -45,7 +45,7 @@ const BenefitsSection = ({ rewards = [] }) => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-landing-fg mb-4">
-            ¿Por qué elegirnos?
+            ¿Por qué CaféFlow?
           </h2>
         </motion.div>
 

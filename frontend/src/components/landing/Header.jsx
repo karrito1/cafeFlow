@@ -21,7 +21,7 @@ const Header = () => {
   const navItems = [
     { name: 'Inicio', href: '/#hero' },
     { name: 'Nosotros', href: '/#nosotros' },
-    { name: 'Productos', href: '/#productos' },
+    { name: 'Funcionalidades', href: '/#funcionalidades' },
     { name: 'Fidelización', href: '/#fidelizacion' },
     { name: 'Contacto', href: '/#contacto' }
   ];
@@ -51,7 +51,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-2 group">
             <Coffee className="w-8 h-8 text-landing-primary transition-transform duration-300 group-hover:rotate-12" />
             <span className="text-2xl font-bold text-landing-primary" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Café Aroma
+              CaféFlow
             </span>
           </Link>
 

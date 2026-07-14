@@ -13,10 +13,10 @@ const ContactSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-landing-fg mb-4">
-            Contáctanos
+            ¿Listo para empezar?
           </h2>
           <p className="text-lg text-landing-muted-fg">
-            Estamos aquí para servirte
+            Contáctanos y descubre cómo CaféFlow puede transformar tu negocio
           </p>
         </motion.div>
 
@@ -40,7 +40,7 @@ const ContactSection = () => {
               <Mail className="w-6 h-6 text-landing-primary mt-1" />
               <div>
                 <p className="font-semibold text-landing-fg mb-1">Email</p>
-                <p className="text-landing-muted-fg">contacto@cafearoma.com</p>
+                <p className="text-landing-muted-fg">contacto@cafeflow.com</p>
               </div>
             </div>
 
@@ -58,8 +58,8 @@ const ContactSection = () => {
               <Clock className="w-6 h-6 text-landing-primary mt-1" />
               <div>
                 <p className="font-semibold text-landing-fg mb-1">Horario</p>
-                <p className="text-landing-muted-fg">Lunes a Viernes: 7:00 AM - 8:00 PM</p>
-                <p className="text-landing-muted-fg">Sábados y Domingos: 8:00 AM - 9:00 PM</p>
+                <p className="text-landing-muted-fg">Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                <p className="text-landing-muted-fg">Soporte técnico disponible 24/7</p>
               </div>
             </div>
           </motion.div>
@@ -79,7 +79,7 @@ const ContactSection = () => {
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Ubicación de Café Aroma"
+              title="Ubicación de CaféFlow"
             />
           </motion.div>
         </div>

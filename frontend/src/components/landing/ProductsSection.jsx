@@ -23,7 +23,7 @@ const ProductsSection = ({ products, categories, loading, error }) => {
   }, [categories]);
 
   return (
-    <section id="productos" className="py-20 bg-landing-muted">
+    <section id="funcionalidades" className="py-20 bg-landing-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -33,10 +33,10 @@ const ProductsSection = ({ products, categories, loading, error }) => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-landing-fg mb-4">
-            Nuestros Productos
+            Funcionalidades
           </h2>
           <p className="text-lg text-landing-muted-fg max-w-2xl mx-auto">
-            Explora nuestra selección de cafés premium y bebidas especiales
+            Todo lo que necesitas para gestionar tu negocio en una sola plataforma
           </p>
         </motion.div>
 
