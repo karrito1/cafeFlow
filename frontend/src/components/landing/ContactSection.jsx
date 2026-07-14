@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { motion } from "framer-motion";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 const ContactSection = () => {
   return (
@@ -32,7 +32,7 @@ const ContactSection = () => {
               <Phone className="w-6 h-6 text-landing-primary mt-1" />
               <div>
                 <p className="font-semibold text-landing-fg mb-1">Teléfono</p>
-                <p className="text-landing-muted-fg">+57 300 123 4567</p>
+                <p className="text-landing-muted-fg">+57 304 636 3941</p>
               </div>
             </div>
 
@@ -40,7 +40,9 @@ const ContactSection = () => {
               <Mail className="w-6 h-6 text-landing-primary mt-1" />
               <div>
                 <p className="font-semibold text-landing-fg mb-1">Email</p>
-                <p className="text-landing-muted-fg">contacto@cafeflow.com</p>
+                <p className="text-landing-muted-fg">
+                  angeldavidagudelocuartas13@gmail.com
+                </p>
               </div>
             </div>
 
@@ -49,7 +51,7 @@ const ContactSection = () => {
               <div>
                 <p className="font-semibold text-landing-fg mb-1">Dirección</p>
                 <p className="text-landing-muted-fg">
-                  Calle 72 #10-34, Bogotá, Colombia
+                  Cra. 1 #35-92, Cartago, Valle del Cauca
                 </p>
               </div>
             </div>
@@ -58,8 +60,12 @@ const ContactSection = () => {
               <Clock className="w-6 h-6 text-landing-primary mt-1" />
               <div>
                 <p className="font-semibold text-landing-fg mb-1">Horario</p>
-                <p className="text-landing-muted-fg">Lunes a Viernes: 8:00 AM - 6:00 PM</p>
-                <p className="text-landing-muted-fg">Soporte técnico disponible 24/7</p>
+                <p className="text-landing-muted-fg">
+                  Lunes a Viernes: 8:00 AM - 6:00 PM
+                </p>
+                <p className="text-landing-muted-fg">
+                  Soporte técnico disponible 24/7
+                </p>
               </div>
             </div>
           </motion.div>
@@ -72,7 +78,7 @@ const ContactSection = () => {
             className="rounded-2xl overflow-hidden shadow-lg h-[400px]"
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6087234567!2d-74.0617!3d4.6533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMzknMTEuOSJOIDc0wrAwMyc0Mi4xIlc!5e0!3m2!1sen!2sco!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d497.0052313897364!2d-75.93504243586173!3d4.762720298956031!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e387030a4bdcced%3A0x2bb288301f88de80!2sUrbanizaci%C3%B3n%20Monte%20Esmeralda!5e0!3m2!1ses-419!2sco!4v1783988590328!5m2!1ses-419!2sco"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -80,7 +86,7 @@ const ContactSection = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Ubicación de CaféFlow"
-            />
+            ></iframe>
           </motion.div>
         </div>
       </div>
