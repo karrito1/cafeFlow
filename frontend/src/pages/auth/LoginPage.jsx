@@ -65,7 +65,10 @@ function LoginPage() {
                   ? "bg-primary text-primary-content shadow-sm"
                   : "text-base-content/60 hover:text-base-content"
               }`}
-              onClick={() => { setMode("staff"); setError(""); }}
+              onClick={() => {
+                setMode("staff");
+                setError("");
+              }}
             >
               Empleado
             </button>
@@ -76,7 +79,10 @@ function LoginPage() {
                   ? "bg-primary text-primary-content shadow-sm"
                   : "text-base-content/60 hover:text-base-content"
               }`}
-              onClick={() => { setMode("customer"); setError(""); }}
+              onClick={() => {
+                setMode("customer");
+                setError("");
+              }}
             >
               Cliente
             </button>
@@ -118,12 +124,18 @@ function LoginPage() {
             </div>
 
             {mode === "staff" && (
-              <label className="label mb-4">
+              <label className="label mb-4 flex justify-between">
                 <Link
                   to="/forgot-password"
                   className="label-text-alt text-base-content/50 hover:text-primary link link-hover text-sm"
                 >
                   ¿Olvidaste tu contraseña?
+                </Link>
+                <Link
+                  to="/"
+                  className="label-text-alt text-base-content/50 hover:text-primary link link-hover text-sm"
+                >
+                  Regresar
                 </Link>
               </label>
             )}
@@ -155,7 +167,14 @@ function LoginPage() {
               className="btn btn-primary w-full text-primary-content"
               disabled={loading}
             >
-              {loading ? <><span className="loading loading-spinner loading-xs" /> Iniciando sesión...</> : "Iniciar Sesión"}
+              {loading ? (
+                <>
+                  <span className="loading loading-spinner loading-xs" />{" "}
+                  Iniciando sesión...
+                </>
+              ) : (
+                "Iniciar Sesión"
+              )}
             </button>
           </form>
 
