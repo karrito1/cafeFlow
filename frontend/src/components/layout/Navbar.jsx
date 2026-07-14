@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import HamburgerMenu from './HamburgerMenu';
@@ -13,8 +14,10 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const isWaiter = user?.role === 'waiter';
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
+    setShowLogoutModal(false);
     logout();
     navigate('/login');
   };
@@ -54,12 +57,30 @@ function Navbar() {
             <span className="badge badge-soft badge-primary text-xs hidden sm:block">
               {user.role}
             </span>
-            <button className="btn btn-ghost btn-sm text-base-content/60 hover:text-base-content" onClick={handleLogout}>
+            <button className="btn btn-ghost btn-sm text-base-content/60 hover:text-base-content" onClick={() => setShowLogoutModal(true)}>
               Salir
             </button>
           </>
         )}
       </div>
+
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setShowLogoutModal(false)} />
+          <div className="relative bg-base-100 rounded-xl shadow-xl p-6 w-80 text-center">
+            <h3 className="font-bold text-lg mb-2">¿Cerrar sesión?</h3>
+            <p className="text-base-content/70 mb-6">¿Estás seguro que deseas salir?</p>
+            <div className="flex justify-end gap-2">
+              <button className="btn btn-ghost btn-sm" onClick={() => setShowLogoutModal(false)}>
+                Cancelar
+              </button>
+              <button className="btn btn-error btn-sm" onClick={handleLogout}>
+                Salir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
